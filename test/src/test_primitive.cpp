@@ -2,13 +2,14 @@
 
 #include <gtest/gtest.h>
 
-#include <geom_model/curves.h>
-#include <geom_model/surfaces.h>
+#include <gm/curves.h>
+#include <gm/surfaces.h>
 #include <util/debug.h>
 
 #include <cmath>
 
 using namespace std;
+using namespace gm;
 
 TEST(TestPrimitive, vec_operations)
 {
@@ -22,8 +23,8 @@ TEST(TestPrimitive, vec_operations)
     ASSERT_EQ(u / 3, Vec(1. / 3, 2. / 3, 1));
     ASSERT_EQ(dot(u, v), 10);
     ASSERT_EQ(cross(u, v), Vec(6, 0, -2));
-    ASSERT_EQ(u.norm(), sqrt(14));
-    ASSERT_EQ(v.norm(), sqrt(10));
+    ASSERT_EQ(norm(u), sqrt(14));
+    ASSERT_EQ(norm(v), sqrt(10));
 }
 
 TEST(TestPrimitive, point_operations)
@@ -54,7 +55,7 @@ TEST(TestPrimitive, diff2_correct)
     Vec x(1, 0, 0), y(0, 1, 0), z(0, 0, 1);
     Point c(0, 0, 0);
     SphericalSurface s(r, Axis::from_xy(x, y, c));
-    ParametricPoint p(2, 1);
+    SurfPoint p(2, 1);
 
     ASSERT_NEAR(norm(s.dfu(p) - s.AbstractSurface::dfu(p)), 0, 1e-2);
     ASSERT_NEAR(norm(s.dfv(p) - s.AbstractSurface::dfv(p)), 0, 1e-2);
@@ -74,7 +75,7 @@ TEST(TestPrimitive, init_axis)
     ASSERT_EQ(ax[0], x);
     ASSERT_EQ(ax[1], y);
     ASSERT_EQ(ax[2], z);
-    ASSERT_EQ(ax.center(), c);
+    ASSERT_EQ(ax.c(), c);
 }
 
 TEST(TestPrimitive, rotation)

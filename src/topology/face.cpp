@@ -1,10 +1,12 @@
-#include <geom_model/face.h>
+#include <gm/face.h>
 
 #include <util/util.h>
 
 #include <fmt/ostream.h>
 
 using namespace std;
+
+namespace gm {
 
 struct Face::Impl {
     Impl(shared_ptr<AbstractSurface> surface, bool same_sense);
@@ -102,3 +104,5 @@ const AbstractSurface& Face::Impl::surface() const
 {
     return *surface_;
 }
+
+} // namespace gm

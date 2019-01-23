@@ -1,8 +1,12 @@
-#include <geom_model/geom_util.h>
-#include <geom_model/mat.h>
+#include <gm/compare.h>
+#include <gm/mat.h>
 #include <util/math.h>
 
+#include <cmath>
+
 using namespace std;
+
+namespace gm {
 
 struct Mat::Impl {
     Impl();
@@ -59,48 +63,19 @@ Mat Mat::eye()
     return Mat({1, 0, 0, 0, 1, 0, 0, 0, 1});
 }
 
-Mat Mat::rotate_x(double angle)
-{
-    return rotate_x(cos(angle), sin(angle));
-}
-
-Mat Mat::rotate_y(double angle)
-{
-    return rotate_y(cos(angle), sin(angle));
-}
-
-Mat Mat::rotate_z(double angle)
-{
-    return rotate_z(cos(angle), sin(angle));
-}
-
-Mat Mat::rotate_x(double c, double s)
-{
-    return Mat({1, 0, 0, 0, c, s, 0, -s, c});
-}
-
-Mat Mat::rotate_y(double c, double s)
-{
-    return Mat({c, 0, s, 0, 1, 0, -s, 0, c});
-}
-
-Mat Mat::rotate_z(double c, double s)
-{
-    return Mat({c, s, 0, -s, c, 0, 0, 0, 1});
-}
-
 #define sqr(x) ((x) * (x))
 
 Mat Mat::rotate(double angle, const Vec& ax)
 {
     auto u = unit(ax);
     auto x = u[0], y = u[1], z = u[2];
-    auto c = cos(angle), s = sin(angle);
+    auto c = ::cos(angle), s = ::sin(angle);
     return Mat({c + sqr(x) * (1 - c), x * y * (1 - c) - z * s,
                 x * z * (1 - c) + y * s, y * x * (1 - c) + z * s,
                 c + sqr(y) * (1 - c), y * z * (1 - c) - x * s,
                 z * x * (1 - c) - y * s, z * y * (1 - c) + x * s,
                 c + sqr(z) * (1 - c)});
+
 }
 
 #undef sqr
@@ -349,3 +324,5 @@ bool Mat::Impl::operator==(const Mat::Impl& other) const
 {
     return coord_ == other.coord_;
 }
+
+} // namespace gm

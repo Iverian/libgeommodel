@@ -1,5 +1,5 @@
-#include <geom_model/oriented_edge.h>
-#include <geom_model/shell.h>
+#include <gm/oriented_edge.h>
+#include <gm/shell.h>
 
 #include <util/itertools.h>
 #include <util/util.h>
@@ -12,6 +12,8 @@
 #include <fmt/ostream.h>
 
 using namespace std;
+
+namespace gm {
 
 struct Shell::Impl {
     Impl();
@@ -169,3 +171,5 @@ ostream& operator<<(ostream& os, const Shell& x)
                RangePrint(begin(x.faces()), end(x.faces())));
     return os;
 }
+
+} // namespace gm

@@ -3,7 +3,7 @@ enable_testing()
 
 file(GLOB TEST_SOURCES "src/test_*.cpp")
 
-###################################################################################################
+####################################################
 # Make all tests in sigle executable
 add_executable(all_tests
     "src/all_tests.cpp"
@@ -18,33 +18,10 @@ target_include_directories(all_tests
 
 target_link_libraries(all_tests
     PRIVATE
-        geom_model
+        ${PROJECT_TARGET_NAME}
         CONAN_PKG::gtest
         CONAN_PKG::fmt
 )
 
 add_test(all_tests all_tests)
-###################################################################################################
-
-###################################################################################################
-# Make separate tests
-foreach(_TEST_FILE ${TEST_SOURCES})
-    get_filename_component(_TEST_NAME ${_TEST_FILE} NAME_WE)
-    add_executable(${_TEST_NAME} ${_TEST_FILE})
-
-    target_include_directories(${_TEST_NAME}
-        PRIVATE
-            "../src"
-            ${CONAN_INCLUDE_DIRS_GTEST}
-    )
-
-    target_link_libraries(${_TEST_NAME}
-        PRIVATE
-            geom_model
-            CONAN_PKG::gtest
-            CONAN_PKG::fmt
-    )
-
-    add_test(${_TEST_NAME} ${_TEST_NAME})
-endforeach()
-###################################################################################################
+####################################################

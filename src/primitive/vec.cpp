@@ -1,251 +1,243 @@
-#include <geom_model/point.h>
-#include <geom_model/vec.h>
+#include <gm/point.h>
+#include <gm/vec.h>
 
-#include "vec_impl.h"
+#include <gm/compare.h>
 #include <util/math.h>
+
+#include <fmt/ostream.h>
 
 using namespace std;
 
-Vec::Vec()
-    : pimpl_(make_unique<VecImpl>())
+namespace gm {
+
+Vec::Vec() noexcept
+    : data_ {0, 0, 0}
 {
 }
 
-Vec::Vec(double x, double y, double z)
-    : pimpl_(make_unique<VecImpl>(x, y, z))
+Vec::Vec(value_type x, value_type y, value_type z) noexcept
+    : data_ {x, y, z}
 {
 }
 
-Vec::Vec(double magnitude, const array<double, 3>& coord)
-    : Vec(coord)
-{
-    *this *= magnitude;
-}
-
-Vec::Vec(const initializer_list<double>& list)
-    : pimpl_(make_unique<VecImpl>(list))
+Vec::Vec(value_type magnitude, const array<value_type, N>& dir) noexcept
+    : data_ {magnitude * dir[0], magnitude * dir[1], magnitude * dir[2]}
 {
 }
 
-Vec::Vec(const array<double, 3>& coord)
-    : pimpl_(make_unique<VecImpl>(coord))
+Vec::Vec(const array<value_type, N>& coord) noexcept
+    : data_ {coord[0], coord[1], coord[2]}
 {
 }
 
-Vec::Vec(const Point& a, const Point& b)
-    : Vec(b - a)
+Vec::Vec(const initializer_list<value_type>& list) noexcept
+    : Vec()
+{
+    size_type i = 0;
+    for (auto j = ::begin(list); i < N && j != ::end(list); ++j) {
+        data_[i++] = *j;
+    }
+}
+
+Vec::Vec(const Point& p) noexcept
+    : data_ {p[0], p[1], p[2]}
 {
 }
 
-Vec::Vec(const pair<Point, Point>& diff)
-    : Vec(diff.second - diff.first)
+Vec::pointer Vec::data() noexcept
 {
+    return data_;
 }
 
-Vec::Vec(const Point& p)
-    : pimpl_(p.pimpl_)
+Vec::const_pointer Vec::data() const noexcept
 {
+    return data_;
 }
 
-Vec::Vec(Point&& p)
-    : pimpl_(move(p.pimpl_))
+Vec::size_type Vec::size() const noexcept
 {
+    return N;
 }
 
-array<double, 3>::iterator Vec::begin()
+Vec::reference Vec::operator[](size_type i) noexcept
 {
-    copy();
-    return pimpl_->begin();
+    return data_[i];
 }
 
-array<double, 3>::iterator Vec::end()
+Vec::const_reference Vec::operator[](size_type i) const noexcept
 {
-    copy();
-    return pimpl_->end();
+    return data_[i];
 }
 
-array<double, 3>::const_iterator Vec::cbegin() const
+Vec::iterator Vec::begin() noexcept
 {
-    return pimpl_->cbegin();
+    return ::begin(data_);
 }
 
-array<double, 3>::const_iterator Vec::cend() const
+Vec::iterator Vec::end() noexcept
 {
-    return pimpl_->cend();
+    return ::end(data_);
 }
 
-Vec& Vec::operator+=(const Vec& other)
+Vec::const_iterator Vec::begin() const noexcept
 {
-    copy();
-    *pimpl_ += *other.pimpl_;
+    return ::begin(data_);
+}
+
+Vec::const_iterator Vec::end() const noexcept
+{
+    return ::end(data_);
+}
+
+array<Vec::value_type, Vec::N> Vec::raw() const noexcept
+{
+    return {data_[0], data_[1], data_[2]};
+}
+
+Vec& Vec::operator+=(const Vec& rhs) noexcept
+{
+    data_[0] += rhs[0];
+    data_[1] += rhs[1];
+    data_[2] += rhs[2];
     return *this;
 }
 
-Vec& Vec::operator-=(const Vec& other)
+Vec& Vec::operator-=(const Vec& rhs) noexcept
 {
-    copy();
-    *pimpl_ -= *other.pimpl_;
+    data_[0] -= rhs[0];
+    data_[1] -= rhs[1];
+    data_[2] -= rhs[2];
     return *this;
 }
 
-Vec& Vec::operator*=(double x)
+Vec& Vec::operator*=(const_reference rhs) noexcept
 {
-    copy();
-    *pimpl_ *= x;
+    data_[0] *= rhs;
+    data_[1] *= rhs;
+    data_[2] *= rhs;
     return *this;
 }
 
-Vec& Vec::operator/=(double x)
+Vec& Vec::operator/=(const_reference rhs) noexcept
 {
-    copy();
-    *pimpl_ /= x;
+    data_[0] /= rhs;
+    data_[1] /= rhs;
+    data_[2] /= rhs;
     return *this;
 }
 
-Vec Vec::operator+(const Vec& other) const
+Vec operator-(const Vec& obj) noexcept
 {
-    Vec result = *this;
-    return (result += other);
+    return {-obj[0], -obj[1], -obj[2]};
 }
 
-Vec Vec::operator-() const
+Vec operator+(const Vec& lhs, const Vec& rhs) noexcept
 {
-    Vec result = *this;
-    return (result *= -1);
+    auto result = lhs;
+    return (result += rhs);
 }
 
-Vec Vec::operator-(const Vec& other) const
+Vec operator-(const Vec& lhs, const Vec& rhs) noexcept
 {
-    Vec result = *this;
-    return (result -= other);
+    auto result = lhs;
+    return (result -= rhs);
 }
 
-Vec Vec::operator*(double x) const
+Vec operator*(const Vec& lhs, Vec::const_reference rhs) noexcept
 {
-    Vec result = *this;
-    return (result *= x);
+    auto result = lhs;
+    return (result *= rhs);
 }
 
-Vec Vec::operator/(double x) const
+Vec operator*(Vec::const_reference lhs, const Vec& rhs) noexcept
 {
-    Vec result = *this;
-    return (result /= x);
+    auto result = rhs;
+    return (result *= lhs);
 }
 
-double Vec::sqr() const
+Vec operator/(const Vec& lhs, Vec::const_reference rhs) noexcept
 {
-    return pimpl_->sqr();
+    auto result = lhs;
+    return (result /= rhs);
 }
 
-double Vec::norm() const
+bool operator==(const Vec& lhs, const Vec& rhs) noexcept
 {
-    return sqrt(sqr());
+    return isnear(lhs, rhs, Tolerance::DOUBLE);
 }
 
-Vec& Vec::normalize()
-{
-    copy();
-    return (*this /= norm());
-}
-
-Vec Vec::normalize() const
-{
-    Vec result = *this;
-    return result.normalize();
-}
-
-bool operator==(const Vec& lhs, const Vec& rhs)
-{
-    return *lhs.pimpl_ == *rhs.pimpl_;
-}
-
-bool operator!=(const Vec& lhs, const Vec& rhs)
+bool operator!=(const Vec& lhs, const Vec& rhs) noexcept
 {
     return !(lhs == rhs);
 }
 
-const double& Vec::operator[](size_t i) const noexcept
+double dot(const Vec& lhs, const Vec& rhs) noexcept
 {
-    return (*pimpl_)[i];
+    return lhs[0] * rhs[0] + lhs[1] * rhs[1] + lhs[2] * rhs[2];
 }
 
-size_t Vec::size() const noexcept
+Vec cross(const Vec& a, const Vec& b) noexcept
 {
-    return pimpl_->size();
+    return {a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2],
+            a[0] * b[1] - a[1] * b[0]};
 }
 
-const array<double, 3>& Vec::raw() const noexcept
+double sqr(const Vec& obj) noexcept
 {
-    return pimpl_->raw();
+    return dot(obj, obj);
 }
 
-ostream& operator<<(ostream& os, const Vec& v)
+double norm(const Vec& obj) noexcept
 {
-    return os << *v.pimpl_;
+    return sqrt(sqr(obj));
 }
 
-void Vec::copy()
+double dist(const Vec& lhs, const Vec& rhs) noexcept
 {
-    if (pimpl_.use_count() > 1) {
-        pimpl_ = make_shared<VecImpl>(*pimpl_);
-    }
+    return norm(rhs - lhs);
 }
 
-double dist(const Vec& x, const Vec& y)
+bool isnear(const Vec& lhs, const Vec& rhs, Tolerance tol) noexcept
 {
-    return norm(x - y);
+    return iszero(dist(lhs, rhs), tol);
 }
 
-double norm(const Vec& x)
+bool isnan(const Vec& obj) noexcept
 {
-    return x.norm();
+    return ::isnan(obj[0]) || ::isnan(obj[1]) || ::isnan(obj[2]);
 }
 
-double sqr(const Vec& a)
+bool isinf(const Vec& obj) noexcept
 {
-    return a.sqr();
+    return ::isinf(obj[0]) || ::isinf(obj[1]) || ::isinf(obj[2]);
 }
 
-double cos(const Vec& a, const Vec& b)
+double cos(const Vec& a, const Vec& b) noexcept
 {
     return dot(a, b) / (norm(a) * norm(b));
 }
 
-double sin(const Vec& a, const Vec& b)
+double sin(const Vec& a, const Vec& b) noexcept
 {
     return norm(cross(a, b)) / (norm(a) * norm(b));
 }
 
-double angle(const Vec& a, const Vec& b)
+double angle(const Vec& a, const Vec& b) noexcept
 {
-    auto x = dot(a, b), y = norm(cross(a, b));
+    auto x = dot(a, b);
+    auto y = norm(cross(a, b));
     return atan2(y, x);
 }
 
-bool Vec::isnan() const
+Vec unit(const Vec& obj) noexcept
 {
-    return pimpl_->isnan();
+    return obj / norm(obj);
 }
 
-Vec cross(const Vec& a, const Vec& b)
+ostream& operator<<(ostream& os, const Vec& obj)
 {
-    return Vec(a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2],
-               a[0] * b[1] - a[1] * b[0]);
+    fmt::print(os, "[{:.5g}, {:5.g}, {:.5g}]", obj[0], obj[1], obj[2]);
+    return os;
 }
 
-Vec operator*(double x, const Vec& v)
-{
-    return v * x;
-}
-
-Vec unit(const Vec& v)
-{
-    return v.normalize();
-}
-
-Vec unit(Vec&& v)
-{
-    Vec result(move(v));
-    result.normalize();
-    return result;
-}
+} // namespace gm

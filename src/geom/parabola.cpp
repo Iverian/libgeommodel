@@ -1,4 +1,7 @@
-#include <geom_model/parabola.h>
+#define _USE_MATH_DEFINES
+
+#include <gm/compare.h>
+#include <gm/parabola.h>
 
 #include <util/math.h>
 
@@ -6,125 +9,94 @@
 
 using namespace std;
 
-struct Parabola::Impl {
-    Impl();
-    Impl(double f, Axis ax);
+namespace gm {
 
-    Point f(double u) const;
-    Vec df(double u) const;
-    Vec df2(double u) const;
-    ostream& print(ostream& os) const;
-    double project(const Point& p) const;
-    double length(double begin, double end) const;
-
-private:
-    double f_;
-    Axis ax_;
-};
-
-Parabola::~Parabola() = default;
-Parabola::Parabola(Parabola&&) noexcept = default;
-Parabola& Parabola::operator=(Parabola&&) noexcept = default;
-
-Parabola::Parabola(const Parabola& other)
-    : pimpl_(make_unique<Impl>(*other.pimpl_))
-{
-}
-
-Parabola& Parabola::operator=(const Parabola& other)
-{
-    *pimpl_ = *other.pimpl_;
-    return *this;
-}
-
-Parabola::Parabola()
-    : pimpl_(make_unique<Impl>())
-{
-}
-
-Parabola::Parabola(double f, Axis ax)
-    : pimpl_(make_unique<Impl>(f, ax))
-{
-}
-
-Point Parabola::f(double u) const
-{
-    return pimpl_->f(u);
-}
-
-Vec Parabola::df(double u) const
-{
-    return pimpl_->df(u);
-}
-
-Vec Parabola::df2(double u) const
-{
-    return pimpl_->df2(u);
-}
-
-ostream& Parabola::print(ostream& os) const
-{
-    return pimpl_->print(os);
-}
-
-double Parabola::project(const Point& p) const
-{
-    return pimpl_->project(p);
-}
-
-Parabola::Impl::Impl()
+Parabola::Parabola() noexcept
     : f_(1)
     , ax_()
 {
 }
 
-Parabola::Impl::Impl(double f, Axis ax)
+Parabola::Parabola(double f, Axis ax) noexcept
     : f_(fabs(f))
     , ax_(move(ax))
 {
 }
 
-Point Parabola::Impl::f(double u) const
+Point Parabola::f(double u) const noexcept
 {
-    return ax_.pglobal(f_ * sqr(u), 2 * u * f_, 0);
+    return ax_.pglobal(f_ * ::sqr(u), 2 * u * f_, 0);
 }
 
-Vec Parabola::Impl::df(double u) const
+Vec Parabola::df(double u) const noexcept
 {
-    return 2 * f_ * ax_.vglobal(u, 1, 0);
+    return ax_.vglobal(2 * f_ * u, 2 * f_, 0);
 }
 
-Vec Parabola::Impl::df2(double u) const
+Vec Parabola::df2(double u) const noexcept
 {
     return ax_.vglobal(2 * f_, 0, 0);
 }
 
-ostream& Parabola::Impl::print(ostream& os) const
+ostream& Parabola::print(ostream& os) const
 {
-    fmt::print(os, "{{ \"type\": \"parabola\", \"f\": {0}, \"axis\": {1} }}", f_,
-               ax_);
+    fmt::print(os, "{{ \"type\": \"parabola\", \"f\": {0}, \"axis\": {1} }}",
+               f_, ax_);
     return os;
 }
-// Проекция -- решение уравнения u^3 + a u - b == 0
-double Parabola::Impl::project(const Point& p) const
+
+// проекция: решение уравнения u^3 + P u + Q == 0
+double Parabola::project(const Point& p) const
 {
     auto [c, x, y, z] = ax_.get_view();
-    auto w = (p - c) - z * dot(p - c, z);
-    auto a = (2 * f_ - dot(w, x)) / f_, b = dot(w, y) / f_;
+    auto w = p - c;
 
-    auto d = 9 * b + sqrt(12 * pow(a, 3) + 81 * sqr(b));
-    auto numer = (-2 * pow(3, 1. / 3) * a + pow(2, 1. / 3) * pow(d, 2. / 3));
-    auto denom = pow(6, 2. / 3) * pow(d, 1. / 3);
-    return numer / denom;
+    vector<double> roots;
+    roots.reserve(3);
+
+    auto P = 2 - dot(w, x) / (2 * f_);
+    auto Q = -dot(w, y) / (2 * f_);
+    auto D = ::pow(P / 3, 3) - ::sqr(Q / 2);
+
+    if (iszero(D)) {
+        auto x = ::pow(-Q / 2, 1. / 3);
+        if (iszero(x)) {
+            roots.emplace_back(0);
+        } else {
+            roots.emplace_back(x);
+            roots.emplace_back(2 * x);
+        }
+    } else if (D > 0) {
+        auto y = ::sqrt(D);
+        auto x = ::pow(-Q / 2 + y, 1. / 3) + ::pow(-Q / 2 - y, 1. / 3);
+        roots.emplace_back(x);
+    } else {
+        auto A = ::sqrt(-P / 3);
+        auto B = ::acos(3 * Q * A / (2 * P)) / 3;
+        auto C = 2 * M_PI / 3;
+
+        for (auto i = 0; i < 3; ++i) {
+            roots.emplace_back(2 * A * ::cos(B - C * i));
+        }
+    }
+
+    return *min_element(begin(roots), end(roots),
+                        [this, &p](auto& lhs, auto& rhs) {
+                            return dist(f(lhs), p) < dist(f(rhs), p);
+                        });
 }
 
-#define sign(x) (signbit(x) ? (-1) : (1))
-
-double Parabola::Impl::length(double begin, double end) const
+inline double F(double x)
 {
-    return abs(f_)
-        * (pow(4 + sqr(begin), 1.5) / sign(begin) + pow(4 + sqr(end), 1.5),
-           sign(end));
+    return x * ::sqrt(1 + ::sqr(x)) + ::asinh(x);
 }
 
-#undef sign
+double Parabola::approx_length(double begin, double end, size_t n) const
+{
+    if (begin >= end) {
+        swap(begin, end);
+    }
+    return 2 * f_ * (F(end) - F(begin));
+}
+
+} // namespace gm

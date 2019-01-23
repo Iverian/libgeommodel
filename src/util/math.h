@@ -1,8 +1,7 @@
 #ifndef GEOM_MODEL_SRC_UTIL_MATH_H_
 #define GEOM_MODEL_SRC_UTIL_MATH_H_
 
-#include <geom_model/parametric_point.h>
-#include <geom_model/vec.h>
+#include <gm/surf_point.h>
 
 #include "std_defines.h"
 
@@ -36,7 +35,7 @@ T diff2(Function f, double t)
 }
 
 template <class T, class Function>
-T diff11(Function f, ParametricPoint t)
+T diff11(Function f, gm::SurfPoint t)
 {
     double h = 1e-4;
     return (-3
@@ -57,18 +56,6 @@ T trapz(const std::vector<T>& vals, U step)
     for (auto it = std::cbegin(vals); it != std::prev(std::cend(vals)); ++it)
         result += step * (*it + *std::next(it)) / 2;
     return result;
-}
-
-template <size_t n>
-void ortogonalize(std::array<Vec, n>& arr)
-{
-    array<double, n - 1> coeff;
-    for (size_t i = 1; i < n; ++i) {
-        coeff[i - 1] = -dot(arr[i - 1], arr[i]) / sqr(arr[i - 1]);
-        for (size_t j = 0; j < i; ++j) {
-            arr[i] += coeff[j] * arr[j];
-        }
-    }
 }
 
 #endif // GEOM_MODEL_SRC_UTIL_MATH_H_

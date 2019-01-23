@@ -1,216 +1,254 @@
-#include <geom_model/point.h>
-#include <geom_model/vec.h>
+#include <gm/point.h>
+#include <gm/vec.h>
 
-#include "vec_impl.h"
+#include <fmt/ostream.h>
 #include <util/math.h>
-
-#include <algorithm>
-#include <array>
 
 using namespace std;
 
-Point::Point()
-    : pimpl_(make_unique<VecImpl>())
+namespace gm {
+
+Point::Point() noexcept
+    : data_{0, 0, 0}
 {
 }
 
-Point::Point(double x, double y, double z)
-    : pimpl_(make_unique<VecImpl>(x, y, z))
+Point::Point(value_type x, value_type y, value_type z) noexcept
+    : data_{x, y, z}
 {
 }
 
-Point::Point(const initializer_list<double>& list)
-    : pimpl_(make_unique<VecImpl>(list))
+Point::Point(const array<value_type, N>& coord) noexcept
+    : data_{coord[0], coord[1], coord[2]}
 {
 }
 
-Point::Point(const array<double, 3>& coord)
-    : pimpl_(make_unique<VecImpl>(coord))
+Point::Point(const initializer_list<value_type>& list) noexcept
+    : Point()
+{
+    size_type i = 0;
+    for (auto j = ::begin(list); i < N && j != ::end(list); ++i, ++j) {
+        data_[i] = *j;
+    }
+}
+
+Point::Point(const Vec& lhs, const Vec& rhs) noexcept
+    : Point(rhs - lhs)
 {
 }
 
-Point::Point(const Vec& v)
-    : pimpl_(v.pimpl_)
+Point::Point(const Vec& v) noexcept
+    : data_{v[0], v[1], v[2]}
 {
 }
 
-Point::Point(Vec&& v)
-    : pimpl_(move(v.pimpl_))
+Point::pointer Point::data() noexcept
 {
+    return data_;
 }
 
-array<double, 3>::iterator Point::begin()
+Point::const_pointer Point::data() const noexcept
 {
-    copy();
-    return pimpl_->begin();
+    return data_;
 }
 
-array<double, 3>::iterator Point::end()
+Point::size_type Point::size() const noexcept
 {
-    copy();
-    return pimpl_->end();
+    return N;
 }
 
-array<double, 3>::const_iterator Point::cbegin() const
+Point::reference Point::operator[](size_type i) noexcept
 {
-    return pimpl_->cbegin();
+    return data_[i];
 }
 
-array<double, 3>::const_iterator Point::cend() const
+Point::const_reference Point::operator[](size_type i) const noexcept
 {
-    return pimpl_->cend();
+    return data_[i];
 }
 
-Point& Point::operator+=(const Point& other)
+Point::iterator Point::begin() noexcept
 {
-    copy();
-    *pimpl_ += *other.pimpl_;
+    return ::begin(data_);
+}
+
+Point::iterator Point::end() noexcept
+{
+    return ::end(data_);
+}
+
+Point::const_iterator Point::begin() const noexcept
+{
+    return ::begin(data_);
+}
+
+Point::const_iterator Point::end() const noexcept
+{
+    return ::end(data_);
+}
+
+array<Point::value_type, Point::N> Point::raw() const noexcept
+{
+    return {data_[0], data_[1], data_[2]};
+}
+
+Point& Point::operator+=(const Point& rhs) noexcept
+{
+    data_[0] += rhs[0];
+    data_[1] += rhs[1];
+    data_[2] += rhs[2];
     return *this;
 }
 
-Point& Point::operator-=(const Point& other)
+Point& Point::operator-=(const Point& rhs) noexcept
 {
-    copy();
-    *pimpl_ -= *other.pimpl_;
+    data_[0] -= rhs[0];
+    data_[1] -= rhs[1];
+    data_[2] -= rhs[2];
     return *this;
 }
 
-Point& Point::operator*=(double x)
+Point& Point::operator*=(const_reference rhs) noexcept
 {
-    copy();
-    *pimpl_ *= x;
+    data_[0] *= rhs;
+    data_[1] *= rhs;
+    data_[2] *= rhs;
     return *this;
 }
 
-Point& Point::operator/=(double x)
+Point& Point::operator/=(const_reference rhs) noexcept
 {
-    copy();
-    *pimpl_ /= x;
+    data_[0] /= rhs;
+    data_[1] /= rhs;
+    data_[2] /= rhs;
     return *this;
 }
 
-Point Point::operator+(const Point& other) const
+Point operator+(const Point& lhs, const Point& rhs) noexcept
 {
-    Point result = *this;
-    return (result += other);
+    auto result = lhs;
+    return (result += rhs);
 }
 
-Point Point::operator-() const
+Point operator-(const Point& lhs, const Point& rhs) noexcept
 {
-    Point result = *this;
-    return (result *= -1);
+    auto result = lhs;
+    return (result -= rhs);
 }
 
-Point Point::operator-(const Point& other) const
+Point operator*(const Point& lhs, Point::const_reference rhs) noexcept
 {
-    Point result = *this;
-    return (result -= other);
+    auto result = lhs;
+    return (result *= rhs);
 }
 
-Point Point::operator*(double x) const
+Point operator*(Point::const_reference lhs, const Point& rhs) noexcept
 {
-    Point result = *this;
-    return (result *= x);
+    auto result = rhs;
+    return (result *= lhs);
 }
 
-Point Point::operator/(double x) const
+Point operator/(const Point& lhs, Point::const_reference rhs) noexcept
 {
-    Point result = *this;
-    return (result /= x);
+    auto result = lhs;
+    return (result /= rhs);
 }
 
-double Point::dist(const Point& other) const
+Point operator-(const Point& obj) noexcept
 {
-    return sqrt((*this - other).pimpl_->sqr());
+    return {-obj[0], -obj[1], -obj[2]};
 }
 
-bool Point::isnear(const Point& other, double eps) const
+Point operator+(const Point& lhs, const Vec& rhs) noexcept
 {
-    return dist(other) < eps;
+    auto result = lhs;
+    result[0] += rhs[0];
+    result[1] += rhs[1];
+    result[2] += rhs[2];
+    return result;
 }
 
-bool Point::isnan() const
+Point operator+(const Vec& lhs, const Point& rhs) noexcept
 {
-    return pimpl_->isnan();
+    auto result = rhs;
+    result[0] += lhs[0];
+    result[1] += lhs[1];
+    result[2] += lhs[2];
+    return result;
 }
 
-bool operator==(const Point& lhs, const Point& rhs)
+Point operator-(const Point& lhs, const Vec& rhs) noexcept
 {
-    return *lhs.pimpl_ == *rhs.pimpl_;
+    auto result = lhs;
+    result[0] -= rhs[0];
+    result[1] -= rhs[1];
+    result[2] -= rhs[2];
+    return result;
 }
 
-bool operator!=(const Point& lhs, const Point& rhs)
+Point operator-(const Vec& lhs, const Point& rhs) noexcept
+{
+    auto result = lhs;
+    result[0] -= rhs[0];
+    result[1] -= rhs[1];
+    result[2] -= rhs[2];
+    return Point(result);
+}
+
+bool operator==(const Point& lhs, const Point& rhs) noexcept
+{
+    return isnear(lhs, rhs, Tolerance::DOUBLE);
+}
+
+bool operator!=(const Point& lhs, const Point& rhs) noexcept
 {
     return !(lhs == rhs);
 }
 
-const double& Point::operator[](size_t i) const noexcept
+double dot(const Point& lhs, const Point& rhs) noexcept
 {
-    return (*pimpl_)[i];
+    return lhs[0] * rhs[0] + lhs[1] * rhs[1] + lhs[2] * rhs[2];
 }
 
-size_t Point::size() const noexcept
+double dot(const Vec& lhs, const Point& rhs) noexcept
 {
-    return pimpl_->size();
+    return lhs[0] * rhs[0] + lhs[1] * rhs[1] + lhs[2] * rhs[2];
 }
 
-const array<double, 3>& Point::raw() const noexcept
+double dot(const Point& lhs, const Vec& rhs) noexcept
 {
-    return pimpl_->raw();
+    return lhs[0] * rhs[0] + lhs[1] * rhs[1] + lhs[2] * rhs[2];
 }
 
-double dist(const Point& a, const Point& b)
+double sqr(const Point& obj) noexcept
 {
-    return a.dist(b);
+    return dot(obj, obj);
 }
 
-double angle(const Point& a, const Point& b, const Point& c, const Vec& norm)
+double dist(const Point& lhs, const Point& rhs) noexcept
 {
-    auto ba = Vec(b, a), bc = Vec(b, c);
-    auto result = angle(ba, bc);
-    if (dot(cross(ba, bc), norm) > 0) {
-        result = 2 * M_PI - result;
-    }
-    return result;
+    return sqrt(sqr(rhs - lhs));
 }
 
-Point operator+(const Point& p, const Vec& v)
+bool isnan(const Point& obj) noexcept
 {
-    return p + Point(v);
+    return ::isnan(obj[0]) || ::isnan(obj[1]) || ::isnan(obj[2]);
 }
 
-Point operator+(const Vec& v, const Point& p)
+bool isinf(const Point& obj) noexcept
 {
-    return p + v;
+    return ::isinf(obj[0]) || ::isinf(obj[1]) || ::isinf(obj[2]);
 }
 
-Point operator-(const Point& p, const Vec& v)
+bool isnear(const Point& lhs, const Point& rhs, Tolerance tol) noexcept
 {
-    return p - Point(v);
+    return iszero(dist(lhs, rhs), tol);
 }
 
-Point operator-(const Vec& v, const Point& p)
+ostream& operator<<(ostream& os, const Point& obj)
 {
-    return Point(v) - p;
+    fmt::print(os, "[{:.5g}, {:5.g}, {:.5g}]", obj[0], obj[1], obj[2]);
+    return os;
 }
 
-Point operator*(double x, const Point& p)
-{
-    return p * x;
-}
-
-ostream& operator<<(ostream& os, const Point& p)
-{
-    return os << *p.pimpl_;
-}
-
-bool isnear(const Point& lhs, const Point& rhs, double eps)
-{
-    return lhs.isnear(rhs, eps);
-}
-
-void Point::copy()
-{
-    if (pimpl_.use_count() > 1)
-        pimpl_ = make_shared<VecImpl>(*pimpl_);
-}
+} // namespace gm

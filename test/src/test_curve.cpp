@@ -1,10 +1,11 @@
 #include <gtest/gtest.h>
 
-#include <geom_model/curves.h>
+#include <gm/curves.h>
 
 #include <stdexcept>
 
 using namespace std;
+using namespace gm;
 
 TEST(TestCurve, circle_project)
 {
@@ -52,7 +53,7 @@ TEST(TestCurve, normal_test)
     Ellipse curve(1, 2, ax);
     double u = 1;
     auto t = curve.tangent(u), n = curve.normal(u);
-    cout << "t=" << t.normalize() << ", n=" << n.normalize() << endl;
+    cout << "t=" << unit(t) << ", n=" << unit(n) << endl;
 
     ASSERT_NEAR(dot(t, n), 0, 1e-5);
 }

@@ -1,5 +1,5 @@
-#ifndef GEOM_MODEL_INCLUDE_FACE_H_
-#define GEOM_MODEL_INCLUDE_FACE_H_
+#ifndef GEOM_MODEL_INCLUDE_GM_FACE_H_
+#define GEOM_MODEL_INCLUDE_GM_FACE_H_
 
 #include "abstract_surface.h"
 #include "oriented_edge.h"
@@ -34,4 +34,4 @@ std::ostream& operator<<(std::ostream& os, const Face& f);
 } // namespace gm
 
 
-#endif // GEOM_MODEL_INCLUDE_FACE_H_
+#endif // GEOM_MODEL_INCLUDE_GM_FACE_H_

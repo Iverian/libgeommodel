@@ -1,5 +1,5 @@
-#ifndef GEOM_MODEL_INCLUDE_PARABOLA_H_
-#define GEOM_MODEL_INCLUDE_PARABOLA_H_
+#ifndef GEOM_MODEL_INCLUDE_GM_PARABOLA_H_
+#define GEOM_MODEL_INCLUDE_GM_PARABOLA_H_
 
 #include "abstract_curve.h"
 #include "axis.h"
@@ -27,4 +27,4 @@ private:
 
 } // namespace gm
 
-#endif // GEOM_MODEL_INCLUDE_PARABOLA_H_
+#endif // GEOM_MODEL_INCLUDE_GM_PARABOLA_H_

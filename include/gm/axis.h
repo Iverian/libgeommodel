@@ -1,5 +1,5 @@
-#ifndef GEOM_MODEL_INCLUDE_AXIS_H_
-#define GEOM_MODEL_INCLUDE_AXIS_H_
+#ifndef GEOM_MODEL_INCLUDE_GM_AXIS_H_
+#define GEOM_MODEL_INCLUDE_GM_AXIS_H_
 
 #include "point.h"
 #include "vec.h"
@@ -75,4 +75,4 @@ private:
 };
 }
 
-#endif // GEOM_MODEL_INCLUDE_AXIS_H_
+#endif // GEOM_MODEL_INCLUDE_GM_AXIS_H_

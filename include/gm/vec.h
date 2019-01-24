@@ -1,5 +1,5 @@
-#ifndef GEOM_MODEL_INCLUDE_VEC_H_
-#define GEOM_MODEL_INCLUDE_VEC_H_
+#ifndef GEOM_MODEL_INCLUDE_GM_VEC_H_
+#define GEOM_MODEL_INCLUDE_GM_VEC_H_
 
 #include <array>
 #include <ostream>
@@ -96,4 +96,4 @@ private:
 };
 }
 
-#endif // GEOM_MODEL_INCLUDE_VEC_H_
+#endif // GEOM_MODEL_INCLUDE_GM_VEC_H_

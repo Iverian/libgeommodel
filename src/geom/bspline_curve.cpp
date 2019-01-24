@@ -6,6 +6,7 @@
 #include <primitive/wpoint.h>
 #include <util/math.h>
 #include <util/util.h>
+#include <util/debug.h>
 
 #include <algorithm>
 #include <optional>
@@ -199,10 +200,8 @@ double BSplineCurve::Impl::project(const Point& p, const BSplineCurve& c) const
         }
         u = v;
     }
-
-    if (!result.has_value()) {
-        THROW_(runtime_error, "unable to project point {} on curve {}", p, c);
-    }
+    check_if(result.has_value(), "unable to project point {} on curve {}", p,
+             c);
 
     return result.value();
 }

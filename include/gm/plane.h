@@ -1,5 +1,5 @@
-#ifndef GEOM_MODEL_INCLUDE_PLANE_H_
-#define GEOM_MODEL_INCLUDE_PLANE_H_
+#ifndef GEOM_MODEL_INCLUDE_GM_PLANE_H_
+#define GEOM_MODEL_INCLUDE_GM_PLANE_H_
 
 #include "abstract_surface.h"
 #include "axis.h"
@@ -32,4 +32,4 @@ private:
 
 } // namespace gm
 
-#endif // GEOM_MODEL_INCLUDE_PLANE_H_
+#endif // GEOM_MODEL_INCLUDE_GM_PLANE_H_

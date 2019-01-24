@@ -1,5 +1,5 @@
-#ifndef GEOM_MODEL_INCLUDE_ABSTRACT_CURVE_H_
-#define GEOM_MODEL_INCLUDE_ABSTRACT_CURVE_H_
+#ifndef GEOM_MODEL_INCLUDE_GM_ABSTRACT_CURVE_H_
+#define GEOM_MODEL_INCLUDE_GM_ABSTRACT_CURVE_H_
 
 #include "point.h"
 #include "vec.h"
@@ -37,4 +37,4 @@ protected:
 
 } // namespace gm
 
-#endif // GEOM_MODEL_INCLUDE_ABSTRACT_CURVE_H_
+#endif // GEOM_MODEL_INCLUDE_GM_ABSTRACT_CURVE_H_

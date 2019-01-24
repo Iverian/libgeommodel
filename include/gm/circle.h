@@ -1,5 +1,5 @@
-#ifndef GEOM_MODEL_INCLUDE_CIRCLE_H_
-#define GEOM_MODEL_INCLUDE_CIRCLE_H_
+#ifndef GEOM_MODEL_INCLUDE_GM_CIRCLE_H_
+#define GEOM_MODEL_INCLUDE_GM_CIRCLE_H_
 
 #include "axis.h"
 #include "ellipse.h"
@@ -21,4 +21,4 @@ protected:
 
 } // namespace gm
 
-#endif // GEOM_MODEL_INCLUDE_CIRCLE_H_
+#endif // GEOM_MODEL_INCLUDE_GM_CIRCLE_H_

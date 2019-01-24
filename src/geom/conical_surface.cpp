@@ -72,12 +72,11 @@ SurfPoint ConicalSurface::project(const Point& p) const
     auto u = atan2v(dot(w, y), dot(w, x));
     array<double, 2> v;
 
-    transform(cbegin(u), cend(u), begin(v),
-              [this, &c, &x, &y, &z, &p](const auto& i) {
-                  return Line(ta_ * ::cos(i) * x + ta_ * ::sin(i) * y + z,
-                              r_ * ::cos(i) * x + r_ * ::sin(i) * y + c)
-                      .project(p);
-              });
+    transform(cbegin(u), cend(u), begin(v), [&](const auto& i) {
+        return Line(ta_ * ::cos(i) * x + ta_ * ::sin(i) * y + z,
+                    r_ * ::cos(i) * x + r_ * ::sin(i) * y + c)
+            .project(p);
+    });
 
     return dist(f({u[0], v[0]}), p) < dist(f({u[1], v[1]}), p)
         ? SurfPoint {u[0], v[0]}

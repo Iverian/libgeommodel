@@ -1,5 +1,5 @@
-#ifndef GEOM_MODEL_INCLUDE_SURF_POINT_H_
-#define GEOM_MODEL_INCLUDE_SURF_POINT_H_
+#ifndef GEOM_MODEL_INCLUDE_GM_SURF_POINT_H_
+#define GEOM_MODEL_INCLUDE_GM_SURF_POINT_H_
 
 #include <algorithm>
 #include <iostream>
@@ -134,4 +134,4 @@ constexpr double min(const SurfPoint& p)
 
 } // namespace gm
 
-#endif // GEOM_MODEL_INCLUDE_SURF_POINT_H_
+#endif // GEOM_MODEL_INCLUDE_GM_SURF_POINT_H_

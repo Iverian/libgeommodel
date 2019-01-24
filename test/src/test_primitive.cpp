@@ -84,7 +84,7 @@ TEST(TestPrimitive, rotation)
     auto a = unit({1, 0, 0});
     auto b = unit({1, 1, 0});
     auto c = M_PI_2;
-    DEBUG_FMT_("r(a): {}, r(b): {}", ax.rotate_z(c, a), ax.rotate_z(c, b));
+    debug_fmt(cout, "r(a): {}, r(b): {}", ax.rotate_z(c, a), ax.rotate_z(c, b));
 
     SUCCEED();
 }

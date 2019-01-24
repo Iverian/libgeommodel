@@ -1,5 +1,5 @@
-#ifndef GEOM_MODEL_INCLUDE_SURFACES_H_
-#define GEOM_MODEL_INCLUDE_SURFACES_H_
+#ifndef GEOM_MODEL_INCLUDE_GM_SURFACES_H_
+#define GEOM_MODEL_INCLUDE_GM_SURFACES_H_
 
 #include "bspline_surface.h"
 #include "conical_surface.h"
@@ -8,4 +8,4 @@
 #include "spherical_surface.h"
 #include "toroidal_surface.h"
 
-#endif // GEOM_MODEL_INCLUDE_SURFACES_H_
+#endif // GEOM_MODEL_INCLUDE_GM_SURFACES_H_

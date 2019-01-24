@@ -57,31 +57,31 @@ TEST_F(TestBSpline, eval)
     for (auto& p : test_points) {
         auto a = f.dfu(p);
         auto b = f.AbstractSurface::dfu(p);
-        DEBUG_FMT_("a: {} b: {}", a, b);
+        debug_fmt(cout, "a: {} b: {}", a, b);
         ASSERT_NEAR(dist(a, b), 0, eps2);
     }
     for (auto& p : test_points) {
         auto a = f.dfv(p);
         auto b = f.AbstractSurface::dfv(p);
-        DEBUG_FMT_("a: {} b: {}", a, b);
+        debug_fmt(cout, "a: {} b: {}", a, b);
         ASSERT_NEAR(dist(a, b), 0, eps2);
     }
     for (auto& p : test_points) {
         auto a = f.dfuu(p);
         auto b = f.AbstractSurface::dfuu(p);
-        DEBUG_FMT_("a: {} b: {}", a, b);
+        debug_fmt(cout, "a: {} b: {}", a, b);
         ASSERT_NEAR(dist(a, b), 0, eps2);
     }
     for (auto& p : test_points) {
         auto a = f.dfuv(p);
         auto b = f.AbstractSurface::dfuv(p);
-        DEBUG_FMT_("a: {} b: {}", a, b);
+        debug_fmt(cout, "a: {} b: {}", a, b);
         ASSERT_NEAR(dist(a, b), 0, eps2);
     }
     for (auto& p : test_points) {
         auto a = f.dfvv(p);
         auto b = f.AbstractSurface::dfvv(p);
-        DEBUG_FMT_("a: {} b: {}", a, b);
+        debug_fmt(cout, "a: {} b: {}", a, b);
         ASSERT_NEAR(dist(a, b), 0, eps2);
     }
 }
@@ -96,13 +96,13 @@ TEST_F(TestBSpline, projection_1)
     for (size_t i = 0; i < niter; ++i) {
         auto t = SurfPoint(PAD_(udist(rnd)), PAD_(udist(rnd)));
 
-        DEBUG_FMT_("TEST 1: POINT #{} t: {}", i, t);
+        debug_fmt(cout, "TEST 1: POINT #{} t: {}", i, t);
         auto p = c_->f(t);
         auto r = c_->project(p);
         auto q = c_->f(r);
 
         auto d_pq = dist(p, q);
-        DEBUG_FMT_("r: {} dist(p, q): {}", r, d_pq);
+        debug_fmt(cout, "r: {} dist(p, q): {}", r, d_pq);
         ASSERT_TRUE(iszero(d_pq, Tolerance::SINGLE));
     }
 }
@@ -117,13 +117,13 @@ TEST_F(TestBSpline, projection_2)
     for (size_t i = 0; i < niter; ++i) {
         auto t = SurfPoint(rnd() % 2, udist(rnd));
 
-        DEBUG_FMT_("TEST 2: POINT #{} t: {}", i, t);
+        debug_fmt(cout, "TEST 2: POINT #{} t: {}", i, t);
         auto p = c_->f(t);
         auto r = c_->project(p);
         auto q = c_->f(r);
 
         auto d_pq = dist(p, q);
-        DEBUG_FMT_("r: {} dist(p, q): {}", r, d_pq);
+        debug_fmt(cout, "r: {} dist(p, q): {}", r, d_pq);
         ASSERT_TRUE(iszero(d_pq, Tolerance::SINGLE));
     }
 }
@@ -138,13 +138,13 @@ TEST_F(TestBSpline, projection_3)
         auto p = c_->f(t);
         auto x = p + (0.5 + udist(rnd)) * c_->unit_normal(t);
 
-        DEBUG_FMT_("TEST 3: POINT #{} t: {} p: {} p + a*n: {}", i, t, p, x);
+        debug_fmt(cout, "TEST 3: POINT #{} t: {} p: {} p + a*n: {}", i, t, p, x);
         auto r = c_->project(x);
         auto q = c_->f(r);
 
         auto d_xq = dist(x, q);
         auto d_xp = dist(x, p);
-        DEBUG_FMT_("r: {} dist(x, q): {} dist(x, p): {}", r, d_xq, d_xp);
+        debug_fmt(cout, "r: {} dist(x, q): {} dist(x, p): {}", r, d_xq, d_xp);
         ASSERT_TRUE(d_xq < d_xp || isnear(d_xp, d_xq, Tolerance::SINGLE));
     }
 }

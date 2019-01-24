@@ -1,92 +1,64 @@
 #ifndef GEOM_MODEL_SRC_UTIL_DEBUG_H_
 #define GEOM_MODEL_SRC_UTIL_DEBUG_H_
 
-#include <exception>
 #include <iostream>
+#include <stdexcept>
 
 #include <fmt/ostream.h>
 
-#ifdef _MSC_VER
-#define _WHAT_MODIFIERS
-#elif defined(__GNUG__)
-#define _WHAT_MODIFIERS _GLIBCXX_USE_NOEXCEPT
-#else
-#define _WHAT_MODIFIERS
-#endif
-
 #ifdef NDEBUG
-#define DEBUG_FLAG false
-#define dbg if (false)
-#else
-#define DEBUG_FLAG true
-#define dbg if (true)
-#endif
 
-#define cdbg                                                                  \
-    if (!DEBUG_FLAG) {                                                        \
+#define NOEXCEPTD noexcept
+static constexpr auto debug_flag = false;
+
+#else // NDEBUG
+
+#define NOEXCEPTD
+static constexpr auto debug_flag = true;
+
+#endif // NDEBUG
+
+#define DBG if (debug_flag)
+
+#define cerrd                                                                 \
+    if (!debug_flag) {                                                        \
     } else                                                                    \
         std::cerr
 
-#define DEBUG_FMT_(fmt_string, ...)                                           \
+#define coutd                                                                 \
+    if (!debug_flag) {                                                        \
+    } else                                                                    \
+        std::cout
+
+#define throw_fmt(fmt_string, ...)                                            \
     do {                                                                      \
-        if (DEBUG_FLAG) {                                                     \
-            fmt::print(std::cout, (fmt_string), __VA_ARGS__);                 \
-            std::cout << std::endl;                                           \
-        }                                                                     \
+        auto what = fmt::format("({}:{}) " fmt_string, __FILE__, __LINE__,    \
+                                ##__VA_ARGS__);                               \
+        throw std::runtime_error(what);                                       \
     } while (0)
 
-#define THROW_(exception, fmt_string, ...)                                    \
-    do {                                                                      \
-        auto what = fmt::format("[{0}, {1}]: ", __FILE__, __LINE__);          \
-        what += fmt::format((fmt_string), __VA_ARGS__);                       \
-        throw exception(what);                                                \
-    } while (0)
-
-#define CHECK_(condition, exception, fmt_string, ...)                         \
+#define check_if(condition, fmt_string, ...)                                  \
     do {                                                                      \
         if (!(condition)) {                                                   \
-            THROW_(exception, fmt_string, __VA_ARGS__);                       \
+            throw_fmt(fmt_string, ##__VA_ARGS__);                             \
         }                                                                     \
     } while (0)
 
-namespace err {
-struct my_except : std::exception {
-    const char* what() const _WHAT_MODIFIERS override
-    {
-        return msg_.c_str();
-    }
+#ifdef NDEBUG
 
-protected:
-    std::string msg_;
-};
-}
+#define debug_fmt(stream, fmt_string, ...)
+#define check_ifd(condition, fmt_string, ...)
 
-#define EXCEPT(exc_name, def_msg)                                             \
-    namespace err {                                                           \
-        struct exc_name : my_except {                                         \
-            explicit exc_name(const std::string& msg)                         \
-                : my_except()                                                 \
-            {                                                                 \
-                std::string def(def_msg);                                     \
-                msg_ = "[ERROR](" + std::string(#exc_name) + ") " + def       \
-                    + (def.empty() ? "" : " ") + msg;                         \
-            }                                                                 \
-        };                                                                    \
-    }
+#else // NDEBUG
 
-#ifndef NDEBUG
-#define _THROW_DBG_STR (std::string(__FILE__) + ":" + std::to_string(__LINE__))
-#else
-#define _THROW_DBG_STR std::string("")
-#endif
-
-#define THROW(exc_name, ...)                                                  \
-    throw exc_name(_THROW_DBG_STR + " " + std::string(__VA_ARGS__))
-
-#define CHECK_IF(cond, exc_name, ...)                                         \
+#define debug_fmt(stream, fmt_string, ...)                                    \
     do {                                                                      \
-        if (cond)                                                             \
-            THROW(exc_name, __VA_ARGS__);                                     \
+        fmt::print((stream), fmt_string, ##__VA_ARGS__);                      \
     } while (0)
+
+#define check_ifd(condition, fmt_string, ...)                                 \
+    check_if(condition, fmt_string, ##__VA_ARGS__)
+
+#endif // NDEBUG
 
 #endif // GEOM_MODEL_SRC_UTIL_DEBUG_H_

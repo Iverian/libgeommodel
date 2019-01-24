@@ -1,6 +1,7 @@
+#include <gm/compare.h>
 #include <gm/edge.h>
 #include <gm/face.h>
-#include <gm/compare.h>
+
 
 #include <util/debug.h>
 #include <util/math.h>
@@ -28,13 +29,12 @@ Edge::Edge(shared_ptr<AbstractCurve> curve, const Point& front,
     auto f = curve_->f(pfront_);
     auto b = curve_->f(pback_);
 
-    if (!isnear(f, front, Tolerance::ZERO) || !isnear(b, back, Tolerance::ZERO)) {
-        THROW_(runtime_error,
-               "unable to construct edge with \"curve\": {0}, \"begin\": {1}, "
-               "\"end\": {2}: projections \"begin_p\": {3}, \"end_p\": {4} do "
-               "not match original points",
-               *curve_, front, back, f, b);
-    }
+    check_if(isnear(f, front, Tolerance::ZERO)
+                 && isnear(b, back, Tolerance::ZERO),
+             "unable to construct edge with \"curve\": {0}, \"begin\": {1}, "
+             "\"end\": {2}: projections \"begin_p\": {3}, \"end_p\": {4} do "
+             "not match original points",
+             *curve_, front, back, f, b);
 }
 
 Edge::Edge(shared_ptr<AbstractCurve> curve, double pfront, double pback)

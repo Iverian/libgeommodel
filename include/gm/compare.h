@@ -1,5 +1,5 @@
-#ifndef GEOM_MODEL_INCLUDE_GEOM_MODEL_COMPARE_H_
-#define GEOM_MODEL_INCLUDE_GEOM_MODEL_COMPARE_H_
+#ifndef GEOM_MODEL_INCLUDE_GM_COMPARE_H__
+#define GEOM_MODEL_INCLUDE_GM_COMPARE_H__
 
 namespace gm {
 
@@ -11,4 +11,4 @@ bool iszero(double lhs, Tolerance t = Tolerance::DOUBLE) noexcept;
 
 } // namespace gm
 
-#endif // GEOM_MODEL_INCLUDE_GEOM_MODEL_COMPARE_H_
+#endif // GEOM_MODEL_INCLUDE_GM_COMPARE_H__

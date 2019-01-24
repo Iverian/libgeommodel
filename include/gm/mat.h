@@ -1,5 +1,5 @@
-#ifndef GEOM_MODEL_INCLUDE_MAT_H_
-#define GEOM_MODEL_INCLUDE_MAT_H_
+#ifndef GEOM_MODEL_INCLUDE_GM_MAT_H_
+#define GEOM_MODEL_INCLUDE_GM_MAT_H_
 
 #include "point.h"
 #include "vec.h"
@@ -80,4 +80,4 @@ private:
 };
 }
 
-#endif // GEOM_MODEL_INCLUDE_MAT_H_
+#endif // GEOM_MODEL_INCLUDE_GM_MAT_H_

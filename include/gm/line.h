@@ -1,5 +1,5 @@
-#ifndef GEOM_MODEL_INCLUDE_LINE_H_
-#define GEOM_MODEL_INCLUDE_LINE_H_
+#ifndef GEOM_MODEL_INCLUDE_GM_LINE_H_
+#define GEOM_MODEL_INCLUDE_GM_LINE_H_
 
 #include "abstract_curve.h"
 #include "point.h"
@@ -31,4 +31,4 @@ private:
 
 } // namespace gm
 
-#endif // GEOM_MODEL_INCLUDE_LINE_H_
+#endif // GEOM_MODEL_INCLUDE_GM_LINE_H_

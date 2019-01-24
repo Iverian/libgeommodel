@@ -1,5 +1,5 @@
-#ifndef GEOM_MODEL_INCLUDE_POINT_H_
-#define GEOM_MODEL_INCLUDE_POINT_H_
+#ifndef GEOM_MODEL_INCLUDE_GM_POINT_H_
+#define GEOM_MODEL_INCLUDE_GM_POINT_H_
 
 #include <array>
 #include <ostream>
@@ -98,4 +98,4 @@ private:
 };
 }
 
-#endif // GEOM_MODEL_INCLUDE_POINT_H_
+#endif // GEOM_MODEL_INCLUDE_GM_POINT_H_

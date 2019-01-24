@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(libgeommodel VERSION 1.0.0 LANGUAGES CXX)
+project(libgeommodel VERSION 2.0.0 LANGUAGES CXX)
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
     set(PROJECT_TARGET_NAME "geommodeld")

@@ -1,5 +1,5 @@
-#ifndef GEOM_MODEL_INCLUDE_EDGE_H_
-#define GEOM_MODEL_INCLUDE_EDGE_H_
+#ifndef GEOM_MODEL_INCLUDE_GM_EDGE_H_
+#define GEOM_MODEL_INCLUDE_GM_EDGE_H_
 
 #include "abstract_curve.h"
 
@@ -61,4 +61,4 @@ private:
 };
 }
 
-#endif // GEOM_MODEL_INCLUDE_EDGE_H_
+#endif // GEOM_MODEL_INCLUDE_GM_EDGE_H_

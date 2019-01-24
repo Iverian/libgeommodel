@@ -221,8 +221,7 @@ operator[](size_type i) const noexcept
 template <class T>
 typename VectorView<T>::const_reference VectorView<T>::at(size_type i) const
 {
-    CHECK_(i < size_, std::out_of_range, "i: {} is out of range [0;{})", i,
-           size_);
+    check_if(i < size_, "index {} is out of range [0;{})", i, size_);
     return data_[i];
 }
 

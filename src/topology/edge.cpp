@@ -2,7 +2,6 @@
 #include <gm/edge.h>
 #include <gm/face.h>
 
-
 #include <util/debug.h>
 #include <util/math.h>
 #include <util/to_string.h>
@@ -16,6 +15,13 @@
 using namespace std;
 
 namespace gm {
+
+Edge::Edge()
+    : pfront_(0)
+    , pback_(0)
+    , curve_(0)
+{
+}
 
 Edge::Edge(shared_ptr<AbstractCurve> curve, const Point& front,
            const Point& back)
@@ -45,6 +51,11 @@ Edge::Edge(shared_ptr<AbstractCurve> curve, double pfront, double pback)
     if (pback_ < pfront_) {
         swap(pfront_, pback_);
     }
+}
+
+bool Edge::empty() const noexcept
+{
+    return curve_ == nullptr;
 }
 
 Point Edge::f(double u) const noexcept

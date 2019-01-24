@@ -15,7 +15,7 @@ class Plane;
 
 class AbstractSurface : public std::enable_shared_from_this<AbstractSurface> {
 public:
-    virtual ~AbstractSurface() = default;
+    virtual ~AbstractSurface();
     virtual Point f(const SurfPoint& p) const noexcept = 0;
     virtual SurfPoint project(const Point& p) const = 0;
 

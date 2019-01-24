@@ -13,6 +13,8 @@ using namespace std;
 
 namespace gm {
 
+AbstractCurve::~AbstractCurve() = default;
+
 Vec AbstractCurve::df(double u) const noexcept
 {
     return ::diff<Vec>([this](double t) { return Vec(f(t)); }, u);

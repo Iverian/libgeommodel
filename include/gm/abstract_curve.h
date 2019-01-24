@@ -13,7 +13,7 @@ namespace gm {
 
 class AbstractCurve : public std::enable_shared_from_this<AbstractCurve> {
 public:
-    virtual ~AbstractCurve() = default;
+    virtual ~AbstractCurve();
     virtual Point f(double u) const noexcept = 0;
     virtual double project(const Point& p) const = 0;
 

@@ -60,32 +60,32 @@ Axis::View Axis::get_view() const noexcept
 
 Vec Axis::rotate_x(double angle, const Vec& v) const noexcept
 {
-    return Mat::rotate(angle, basis_[0]) * v;
+    return dot(Mat::rotate(angle, basis_[0]), v);
 }
 
 Vec Axis::rotate_y(double angle, const Vec& v) const noexcept
 {
-    return Mat::rotate(angle, basis_[1]) * v;
+    return dot(Mat::rotate(angle, basis_[1]) , v);
 }
 
 Vec Axis::rotate_z(double angle, const Vec& v) const noexcept
 {
-    return Mat::rotate(angle, basis_[2]) * v;
+    return dot(Mat::rotate(angle, basis_[2]) , v);
 }
 
 Point Axis::rotate_x(double angle, const Point& p) const noexcept
 {
-    return Mat::rotate(angle, basis_[0]) * (p - c_) + c_;
+    return dot(Mat::rotate(angle, basis_[0]) , p - c_) + c_;
 }
 
 Point Axis::rotate_y(double angle, const Point& p) const noexcept
 {
-    return Mat::rotate(angle, basis_[1]) * (p - c_) + c_;
+    return dot(Mat::rotate(angle, basis_[1]), p - c_) + c_;
 }
 
 Point Axis::rotate_z(double angle, const Point& p) const noexcept
 {
-    return Mat::rotate(angle, basis_[2]) * (p - c_) + c_;
+    return dot(Mat::rotate(angle, basis_[2]), p - c_) + c_;
 }
 
 Point Axis::global(const Point& p) const noexcept

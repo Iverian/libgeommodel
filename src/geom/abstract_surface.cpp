@@ -14,6 +14,8 @@ using namespace std;
 
 namespace gm {
 
+AbstractSurface::~AbstractSurface() = default;
+
 Point AbstractSurface::operator()(const SurfPoint& p) const noexcept
 {
     return f(p);

@@ -28,8 +28,8 @@ public:
     Vec df2(double u) const noexcept override;
     double project(const Point& p) const override;
 
-    const double& param_front() const;
-    const double& param_back() const;
+    double pfront() const noexcept;
+    double pback() const noexcept;
 
 protected:
     std::ostream& print(std::ostream& os) const override;

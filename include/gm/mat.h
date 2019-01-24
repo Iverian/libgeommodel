@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <ostream>
+#include <optional>
 
 namespace gm {
 
@@ -17,48 +18,42 @@ public:
     static constexpr auto mat_size = row_size * row_size;
     using data_type = std::array<double, mat_size>;
 
-    ~Mat();
-    Mat(Mat&& other) noexcept;
-    Mat& operator=(Mat&& other) noexcept;
-    Mat(const Mat& other);
-    Mat& operator=(const Mat& other);
-
     Mat();
     explicit Mat(const data_type& coord);
 
     static Mat eye();
     static Mat rotate(double angle, const Vec& ax);
 
+    double& operator()(size_t i, size_t j) noexcept;
+    double& operator[](size_t i) noexcept;
     const double& operator()(size_t i, size_t j) const noexcept;
     const double& operator[](size_t i) const noexcept;
     size_t size() const noexcept;
     const data_type& raw() const noexcept;
 
-    Mat& operator+=(const Mat& other);
-    Mat& operator-=(const Mat& other);
-    Mat& operator*=(const Mat& other);
-    Mat& operator*=(double x);
-    Mat& operator/=(double x);
-    Mat operator-() const;
-    Mat operator+(const Mat& other) const;
-    Mat operator-(const Mat& other) const;
-    Mat operator*(double x) const;
+    Mat& operator+=(const Mat& rhs);
+    Mat& operator-=(const Mat& rhs);
+    Mat& operator*=(const Mat& rhs);
+    Mat& operator*=(double rhs);
+    Mat& operator/=(double rhs);
 
-    Vec operator*(const Vec& v) const;
-    Point operator*(const Point& p) const;
-    Mat operator*(const Mat& other) const;
+    friend Mat operator+(const Mat& lhs, const Mat& rhs);
+    friend Mat operator-(const Mat& lhs, const Mat& rhs);
+    friend Mat operator*(const Mat& lhs, double rhs);
+    friend Mat operator*(double lhs, const Mat& rhs);
+    friend Mat operator/(const Mat& lhs, double rhs);
 
     friend bool operator==(const Mat& lhs, const Mat& rhs);
     friend bool operator!=(const Mat& lhs, const Mat& rhs);
 
 private:
-    struct Impl;
-    std::unique_ptr<Impl> pimpl_;
+    data_type data_;
 };
 
+double det(const Mat& x) noexcept;
+std::optional<Mat> inverse(const Mat& x) noexcept;
 Vec dot(const Mat& a, const Vec& v);
 Point dot(const Mat& a, const Point& p);
-Mat operator*(double x, const Mat& a);
 std::ostream& operator<<(std::ostream& os, const Mat& mat);
 
 } // namespace gm
@@ -68,7 +63,7 @@ template <>
 struct hash<gm::Mat> {
     size_t operator()(const gm::Mat& key) const
     {
-        size_t result = 0;
+        size_t result = 16651;
         for (size_t i = 0; i < gm::Mat::mat_size; ++i) {
             result = (result << 1) ^ hasher_(key[i]);
         }

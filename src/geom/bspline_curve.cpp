@@ -40,8 +40,8 @@ struct BSplineCurve::Impl {
     bool init_between(const Point& p, double a, double b) const;
     double bound_check(double u) const;
 
-    const double& param_front() const;
-    const double& param_back() const;
+    double pfront() const noexcept;
+    double pback() const noexcept;
 
 private:
     void init_cpoints(const vector<Point>& p, const vector<double>& w);
@@ -99,6 +99,9 @@ Vec BSplineCurve::df2(double u) const noexcept
     return pimpl_->df2(u);
 }
 
+
+
+
 ostream& BSplineCurve::print(ostream& os) const
 {
     return pimpl_->print(os);
@@ -107,6 +110,15 @@ ostream& BSplineCurve::print(ostream& os) const
 double BSplineCurve::project(const Point& p) const
 {
     return pimpl_->project(p, *this);
+}
+
+
+double BSplineCurve::pfront() const noexcept {
+    return pimpl_->pfront();
+}
+
+double BSplineCurve::pback() const noexcept {
+    return pimpl_->pback();
 }
 
 BSplineCurve::Impl::Impl(size_t degree, vector<double> knots,
@@ -152,12 +164,12 @@ Vec BSplineCurve::Impl::df2(double u) const noexcept
     return Vec(CPoint::d2(p).p()); // CPoint::d2(p).v();
 }
 
-const double& BSplineCurve::Impl::param_front() const
+double BSplineCurve::Impl::pfront() const noexcept
 {
     return knots_.front();
 }
 
-const double& BSplineCurve::Impl::param_back() const
+double BSplineCurve::Impl::pback() const noexcept
 {
     return knots_.back();
 }

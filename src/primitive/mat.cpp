@@ -8,55 +8,7 @@ using namespace std;
 
 namespace gm {
 
-struct Mat::Impl {
-    Impl();
-    explicit Impl(const Mat::data_type& coord);
-
-    const double& call(size_t i, size_t j) const noexcept;
-    const double& index(size_t i) const noexcept;
-    size_t size() const noexcept;
-    const data_type& raw() const noexcept;
-
-    Impl& operator+=(const Impl& other);
-    Impl& operator-=(const Impl& other);
-    Impl& operator*=(const Impl& other);
-    Impl& operator*=(double x);
-    Impl& operator/=(double x);
-    Impl operator-() const;
-    Impl operator+(const Impl& other) const;
-    Impl operator-(const Impl& other) const;
-    Impl operator*(double x) const;
-
-    array<double, 3> dot(const array<double, 3>& x);
-
-    bool operator==(const Impl& other) const;
-
-private:
-    Mat::data_type coord_;
-};
-
-Mat::~Mat() = default;
-Mat::Mat(Mat&& other) noexcept = default;
-Mat& Mat::operator=(Mat&& other) noexcept = default;
-Mat::Mat(const Mat& other)
-    : pimpl_(make_unique<Impl>(*other.pimpl_))
-{
-}
-Mat& Mat::operator=(const Mat& other)
-{
-    *pimpl_ = *other.pimpl_;
-    return *this;
-}
-
-Mat::Mat()
-    : pimpl_(make_unique<Mat::Impl>())
-{
-}
-
-Mat::Mat(const Mat::data_type& coord)
-    : pimpl_(make_unique<Mat::Impl>(coord))
-{
-}
+#define _(i, j) ((i) * (row_size) + (j))
 
 Mat Mat::eye()
 {
@@ -75,124 +27,52 @@ Mat Mat::rotate(double angle, const Vec& ax)
                 c + sqr(y) * (1 - c), y * z * (1 - c) - x * s,
                 z * x * (1 - c) - y * s, z * y * (1 - c) + x * s,
                 c + sqr(z) * (1 - c)});
-
 }
 
 #undef sqr
 
-const double& Mat::operator()(size_t i, size_t j) const noexcept
+double det(const Mat& x) noexcept
 {
-    return pimpl_->call(i, j);
+    return x(0, 0) * (x(1, 1) * x(2, 2) - x(1, 2) * x(2, 1))
+        - x(0, 1) * (x(1, 0) * x(2, 2) - x(1, 2) * x(2, 0))
+        + x(0, 2) * (x(1, 0) * x(2, 1) - x(1, 1) * x(2, 0));
 }
 
-const double& Mat::operator[](size_t i) const noexcept
+::optional<Mat> inverse(const Mat& x) noexcept
 {
-    return pimpl_->index(i);
-}
+    if (auto d = det(x); !iszero(d)) {
+        Mat result;
+        result(0, 0) = x(1, 1) * x(2, 2) - x(1, 2) * x(2, 1);
+        result(0, 1) = x(0, 2) * x(2, 1) - x(0, 1) * x(2, 2);
+        result(0, 2) = x(0, 1) * x(1, 2) - x(0, 2) * x(1, 1);
+        result(1, 0) = x(1, 2) * x(2, 0) - x(1, 0) * x(2, 2);
+        result(1, 1) = x(0, 0) * x(2, 2) - x(0, 2) * x(2, 0);
+        result(1, 2) = x(0, 2) * x(1, 0) - x(0, 0) * x(1, 2);
+        result(2, 0) = x(1, 0) * x(2, 1) - x(1, 1) * x(2, 0);
+        result(2, 1) = x(0, 1) * x(2, 0) - x(0, 0) * x(2, 1);
+        result(2, 2) = x(0, 0) * x(1, 1) - x(0, 1) * x(1, 0);
 
-size_t Mat::size() const noexcept
-{
-    return pimpl_->size();
-}
-
-const Mat::data_type& Mat::raw() const noexcept
-{
-    return pimpl_->raw();
-}
-
-Mat& Mat::operator+=(const Mat& other)
-{
-    *pimpl_ += *other.pimpl_;
-    return *this;
-}
-
-Mat& Mat::operator-=(const Mat& other)
-{
-    *pimpl_ -= *other.pimpl_;
-    return *this;
-}
-
-Mat& Mat::operator*=(const Mat& other)
-{
-    *pimpl_ *= *other.pimpl_;
-    return *this;
-}
-
-Mat& Mat::operator*=(double x)
-{
-    *pimpl_ *= x;
-    return *this;
-}
-
-Mat& Mat::operator/=(double x)
-{
-    *pimpl_ /= x;
-    return *this;
-}
-
-Mat Mat::operator-() const
-{
-    Mat result = *this;
-    return (result *= -1);
-}
-
-Mat Mat::operator+(const Mat& other) const
-{
-    Mat result = *this;
-    return (result += other);
-}
-
-Mat Mat::operator-(const Mat& other) const
-{
-    Mat result = *this;
-    return (result -= other);
-}
-
-Mat Mat::operator*(double x) const
-{
-    Mat result = *this;
-    return (result *= x);
-}
-
-Vec Mat::operator*(const Vec& v) const
-{
-    return Vec(pimpl_->dot(v.raw()));
-}
-
-Point Mat::operator*(const Point& p) const
-{
-    return Point(pimpl_->dot(p.raw()));
-}
-
-Mat Mat::operator*(const Mat& other) const
-{
-    auto result = *this;
-    return (result *= other);
-}
-
-bool operator==(const Mat& lhs, const Mat& rhs)
-{
-    return *lhs.pimpl_ == *rhs.pimpl_;
-}
-
-bool operator!=(const Mat& lhs, const Mat& rhs)
-{
-    return !(lhs == rhs);
+        return result / d;
+    }
+    return nullopt;
 }
 
 Vec dot(const Mat& a, const Vec& v)
 {
-    return a * v;
+    Vec result;
+    result[0] = a(0, 0) * v[0] + a(0, 1) * v[1] + a(0, 2) * v[2];
+    result[1] = a(1, 0) * v[0] + a(1, 1) * v[1] + a(1, 2) * v[2];
+    result[2] = a(2, 0) * v[0] + a(2, 1) * v[1] + a(2, 2) * v[2];
+    return result;
 }
 
 Point dot(const Mat& a, const Point& p)
 {
-    return a * p;
-}
-
-Mat operator*(double x, const Mat& a)
-{
-    return a * x;
+    Point result;
+    result[0] = a(0, 0) * p[0] + a(0, 1) * p[1] + a(0, 2) * p[2];
+    result[1] = a(1, 0) * p[0] + a(1, 1) * p[1] + a(1, 2) * p[2];
+    result[2] = a(2, 0) * p[0] + a(2, 1) * p[1] + a(2, 2) * p[2];
+    return result;
 }
 
 ostream& operator<<(ostream& os, const Mat& mat)
@@ -208,121 +88,128 @@ ostream& operator<<(ostream& os, const Mat& mat)
     return os << "]";
 }
 
-Mat::Impl::Impl()
-    : coord_{}
+Mat::Mat()
+    : data_ {}
 {
 }
 
-Mat::Impl::Impl(const Mat::data_type& coord)
-    : coord_{coord}
+Mat::Mat(const Mat::data_type& data)
+    : data_ {data}
 {
 }
 
-const double& Mat::Impl::call(size_t i, size_t j) const noexcept
+double& Mat::operator()(size_t i, size_t j) noexcept
 {
-    return coord_[row_size * i + j];
+    return data_[_(i, j)];
+}
+double& Mat::operator[](size_t i) noexcept
+{
+    return data_[i];
 }
 
-const double& Mat::Impl::index(size_t i) const noexcept
+const double& Mat::operator()(size_t i, size_t j) const noexcept
 {
-    return coord_[i];
+    return data_[_(i, j)];
 }
 
-size_t Mat::Impl::size() const noexcept
+const double& Mat::operator[](size_t i) const noexcept
+{
+    return data_[i];
+}
+
+size_t Mat::size() const noexcept
 {
     return mat_size;
 }
 
-Mat::Impl& Mat::Impl::operator+=(const Mat::Impl& other)
+Mat& Mat::operator+=(const Mat& rhs)
 {
     for (size_t i = 0; i < mat_size; ++i)
-        coord_[i] += other.coord_[i];
+        data_[i] += rhs.data_[i];
     return *this;
 }
 
-Mat::Impl& Mat::Impl::operator-=(const Mat::Impl& other)
+Mat& Mat::operator-=(const Mat& other)
 {
     for (size_t i = 0; i < mat_size; ++i)
-        coord_[i] -= other.coord_[i];
+        data_[i] -= other.data_[i];
     return *this;
 }
 
-Mat::Impl& Mat::Impl::operator*=(double x)
+Mat& Mat::operator*=(double x)
 {
     for (size_t i = 0; i < mat_size; ++i)
-        coord_[i] *= x;
+        data_[i] *= x;
     return *this;
 }
 
-#define _(i, j) ((i) * (row_size) + (j))
-
-Mat::Impl& Mat::Impl::operator*=(const Impl& other)
+Mat& Mat::operator*=(const Mat& rhs)
 {
     Mat::data_type result;
     for (size_t i = 0; i < row_size; ++i) {
         for (size_t j = 0; j < row_size; ++j) {
             result[_(i, j)] = 0;
             for (size_t k = 0; k < row_size; ++k) {
-                result[_(i, j)] += coord_[_(i, k)] * other.coord_[_(k, j)];
+                result[_(i, j)] += data_[_(i, k)] * rhs.data_[_(k, j)];
             }
         }
     }
-    coord_ = result;
+    data_ = result;
     return *this;
+}
+
+Mat& Mat::operator/=(double x)
+{
+    for (size_t i = 0; i < mat_size; ++i)
+        data_[i] /= x;
+    return *this;
+}
+
+const Mat::data_type& Mat::raw() const noexcept
+{
+    return data_;
+}
+
+Mat operator+(const Mat& lhs, const Mat& rhs)
+{
+    Mat result = lhs;
+    return (result += rhs);
+}
+
+Mat operator-(const Mat& lhs, const Mat& rhs)
+{
+    Mat result = lhs;
+    return (result -= rhs);
+}
+
+Mat operator*(const Mat& lhs, double rhs)
+{
+    Mat result = lhs;
+    return (result *= rhs);
+}
+
+Mat operator*(double lhs, const Mat& rhs)
+{
+    Mat result = rhs;
+    return (result *= lhs);
+}
+
+Mat operator/(const Mat& lhs, double rhs)
+{
+    Mat result = lhs;
+    return (result /= rhs);
+}
+
+bool operator==(const Mat& lhs, const Mat& rhs)
+{
+    return lhs.data_ == rhs.data_;
+}
+
+bool operator!=(const Mat& lhs, const Mat& rhs)
+{
+    return !(lhs == rhs);
 }
 
 #undef _
-
-Mat::Impl& Mat::Impl::operator/=(double x)
-{
-    for (size_t i = 0; i < mat_size; ++i)
-        coord_[i] /= x;
-    return *this;
-}
-
-Mat::Impl Mat::Impl::operator-() const
-{
-    Mat::Impl result = *this;
-    return (result *= -1);
-}
-
-Mat::Impl Mat::Impl::operator+(const Mat::Impl& other) const
-{
-    Mat::Impl result = *this;
-    return (result += other);
-}
-
-Mat::Impl Mat::Impl::operator-(const Mat::Impl& other) const
-{
-    Mat::Impl result = *this;
-    return (result -= other);
-}
-
-Mat::Impl Mat::Impl::operator*(double x) const
-{
-    Mat::Impl result = *this;
-    return result;
-}
-
-array<double, 3> Mat::Impl::dot(const array<double, 3>& x)
-{
-    array<double, 3> result{};
-    for (size_t i = 0; i < row_size; ++i) {
-        for (size_t j = 0; j < row_size; ++j) {
-            result[i] += call(i, j) * x[j];
-        }
-    }
-    return result;
-}
-
-const Mat::data_type& Mat::Impl::raw() const noexcept
-{
-    return coord_;
-}
-
-bool Mat::Impl::operator==(const Mat::Impl& other) const
-{
-    return coord_ == other.coord_;
-}
 
 } // namespace gm

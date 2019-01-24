@@ -11,10 +11,12 @@ namespace gm {
 
 class Edge : public AbstractCurve {
 public:
+    Edge();
     Edge(std::shared_ptr<AbstractCurve> curve, const Point& front,
          const Point& back);
     Edge(std::shared_ptr<AbstractCurve> curve, double pfront, double pback);
 
+    bool empty() const noexcept;
     std::shared_ptr<AbstractCurve> curve() const noexcept;
     Point front() const noexcept;
     Point back() const noexcept;

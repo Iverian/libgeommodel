@@ -5,8 +5,8 @@
 #include "vec.h"
 
 #include <memory>
-#include <ostream>
 #include <optional>
+#include <ostream>
 
 namespace gm {
 
@@ -16,7 +16,7 @@ class Mat {
 public:
     static constexpr auto row_size = Vec::N;
     static constexpr auto mat_size = row_size * row_size;
-    using data_type = std::array<double, mat_size>;
+    using data_type = std::array<Vec::value_type, mat_size>;
 
     Mat();
     explicit Mat(const data_type& coord);
@@ -25,9 +25,7 @@ public:
     static Mat rotate(double angle, const Vec& ax);
 
     double& operator()(size_t i, size_t j) noexcept;
-    double& operator[](size_t i) noexcept;
     const double& operator()(size_t i, size_t j) const noexcept;
-    const double& operator[](size_t i) const noexcept;
     size_t size() const noexcept;
     const data_type& raw() const noexcept;
 
@@ -45,6 +43,11 @@ public:
 
     friend bool operator==(const Mat& lhs, const Mat& rhs);
     friend bool operator!=(const Mat& lhs, const Mat& rhs);
+
+protected:
+    double& operator[](size_t i) noexcept;
+
+    const double& operator[](size_t i) const noexcept;
 
 private:
     data_type data_;
@@ -64,8 +67,10 @@ struct hash<gm::Mat> {
     size_t operator()(const gm::Mat& key) const
     {
         size_t result = 16651;
-        for (size_t i = 0; i < gm::Mat::mat_size; ++i) {
-            result = (result << 1) ^ hasher_(key[i]);
+        for (size_t i = 0; i < gm::Mat::row_size; ++i) {
+            for (size_t j = 0; j < gm::Mat::row_size; ++j) {
+                result = (result << 1) ^ hasher_(key(i, j));
+            }
         }
         return result;
     }

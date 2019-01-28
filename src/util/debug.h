@@ -1,32 +1,19 @@
 #ifndef GEOM_MODEL_SRC_UTIL_DEBUG_H_
 #define GEOM_MODEL_SRC_UTIL_DEBUG_H_
 
+#include <fmt/ostream.h>
+#include <gm/debug.h>
+
 #include <iostream>
 #include <stdexcept>
 
-#include <fmt/ostream.h>
-
-#ifdef NDEBUG
-
-#define NOEXCEPTD noexcept
-static constexpr auto debug_flag = false;
-
-#else // NDEBUG
-
-#define NOEXCEPTD
-static constexpr auto debug_flag = true;
-
-#endif // NDEBUG
-
-#define DBG if (debug_flag)
-
 #define cerrd                                                                 \
-    if (!debug_flag) {                                                        \
+    if (!gm::debug_flag) {                                                    \
     } else                                                                    \
         std::cerr
 
 #define coutd                                                                 \
-    if (!debug_flag) {                                                        \
+    if (!gm::debug_flag) {                                                    \
     } else                                                                    \
         std::cout
 

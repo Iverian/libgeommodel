@@ -1,10 +1,12 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_VEC_H_
 #define GEOM_MODEL_INCLUDE_GM_VEC_H_
 
+#include "compare.h"
+#include "dot.h"
+#include "debug.h"
+
 #include <array>
 #include <ostream>
-
-#include "compare.h"
 
 namespace gm {
 
@@ -46,7 +48,7 @@ public:
     Vec& operator+=(const Vec& rhs) noexcept;
     Vec& operator-=(const Vec& rhs) noexcept;
     Vec& operator*=(const_reference rhs) noexcept;
-    Vec& operator/=(const_reference rhs) noexcept;
+    Vec& operator/=(const_reference rhs) __GM_NOEXCEPT_RELEASE__;
 
 private:
     value_type data_[N];
@@ -58,12 +60,11 @@ Vec operator+(const Vec& lhs, const Vec& rhs) noexcept;
 Vec operator-(const Vec& lhs, const Vec& rhs) noexcept;
 Vec operator*(const Vec& lhs, Vec::const_reference rhs) noexcept;
 Vec operator*(Vec::const_reference lhs, const Vec& rhs) noexcept;
-Vec operator/(const Vec& lhs, Vec::const_reference rhs) noexcept;
+Vec operator/(const Vec& lhs, Vec::const_reference rhs) __GM_NOEXCEPT_RELEASE__;
 
 bool operator==(const Vec& lhs, const Vec& rhs) noexcept;
 bool operator!=(const Vec& lhs, const Vec& rhs) noexcept;
 
-double dot(const Vec& lhs, const Vec& rhs) noexcept;
 Vec cross(const Vec& lhs, const Vec& rhs) noexcept;
 double sqr(const Vec& obj) noexcept;
 double norm(const Vec& obj) noexcept;
@@ -71,7 +72,7 @@ double dist(const Vec& lhs, const Vec& rhs) noexcept;
 double cos(const Vec& lhs, const Vec& rhs) noexcept;
 double sin(const Vec& lhs, const Vec& rhs) noexcept;
 double angle(const Vec& lhs, const Vec& rhs) noexcept;
-Vec unit(const Vec& obj) noexcept;
+Vec unit(const Vec& obj) __GM_NOEXCEPT_RELEASE__;
 
 bool isnan(const Vec& obj) noexcept;
 bool isinf(const Vec& obj) noexcept;

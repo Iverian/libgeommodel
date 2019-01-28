@@ -1,6 +1,5 @@
 #include <gm/abstract_curve.h>
 #include <gm/compare.h>
-#include <util/debug.h>
 
 #include <iostream>
 #include <iterator>

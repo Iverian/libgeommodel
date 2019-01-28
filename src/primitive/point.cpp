@@ -3,6 +3,7 @@
 
 #include <fmt/ostream.h>
 #include <util/math.h>
+#include <util/debug.h>
 
 using namespace std;
 
@@ -116,8 +117,10 @@ Point& Point::operator*=(const_reference rhs) noexcept
     return *this;
 }
 
-Point& Point::operator/=(const_reference rhs) noexcept
+Point& Point::operator/=(const_reference rhs) __GM_NOEXCEPT_RELEASE__
 {
+    check_ifd(!iszero(rhs), "Division by zero");
+
     data_[0] /= rhs;
     data_[1] /= rhs;
     data_[2] /= rhs;
@@ -148,7 +151,7 @@ Point operator*(Point::const_reference lhs, const Point& rhs) noexcept
     return (result *= lhs);
 }
 
-Point operator/(const Point& lhs, Point::const_reference rhs) noexcept
+Point operator/(const Point& lhs, Point::const_reference rhs) __GM_NOEXCEPT_RELEASE__
 {
     auto result = lhs;
     return (result /= rhs);
@@ -197,27 +200,12 @@ Point operator-(const Vec& lhs, const Point& rhs) noexcept
 
 bool operator==(const Point& lhs, const Point& rhs) noexcept
 {
-    return isnear(lhs, rhs, Tolerance::DOUBLE);
+    return isnear(lhs, rhs, Tolerance::SINGLE);
 }
 
 bool operator!=(const Point& lhs, const Point& rhs) noexcept
 {
     return !(lhs == rhs);
-}
-
-double dot(const Point& lhs, const Point& rhs) noexcept
-{
-    return lhs[0] * rhs[0] + lhs[1] * rhs[1] + lhs[2] * rhs[2];
-}
-
-double dot(const Vec& lhs, const Point& rhs) noexcept
-{
-    return lhs[0] * rhs[0] + lhs[1] * rhs[1] + lhs[2] * rhs[2];
-}
-
-double dot(const Point& lhs, const Vec& rhs) noexcept
-{
-    return lhs[0] * rhs[0] + lhs[1] * rhs[1] + lhs[2] * rhs[2];
 }
 
 double sqr(const Point& obj) noexcept

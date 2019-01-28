@@ -5,7 +5,6 @@
 #include <gm/surf_point.h>
 #include <gm/vec.h>
 
-#include <util/debug.h>
 #include <util/math.h>
 
 #include <algorithm>

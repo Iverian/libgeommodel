@@ -9,11 +9,7 @@ namespace gm {
 
 class BSplineCurve : public AbstractCurve {
 public:
-    ~BSplineCurve();
-    BSplineCurve(const BSplineCurve&);
-    BSplineCurve(BSplineCurve&&) noexcept;
-    BSplineCurve& operator=(const BSplineCurve&);
-    BSplineCurve& operator=(BSplineCurve&&) noexcept;
+    struct Impl;
 
     BSplineCurve(size_t degree, std::vector<double> knots,
                  std::vector<Point> points,
@@ -35,8 +31,7 @@ protected:
     std::ostream& print(std::ostream& os) const override;
 
 private:
-    struct Impl;
-    std::unique_ptr<Impl> pimpl_;
+    std::shared_ptr<Impl> pimpl_;
 };
 
 } // namespace gm

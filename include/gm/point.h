@@ -1,10 +1,12 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_POINT_H_
 #define GEOM_MODEL_INCLUDE_GM_POINT_H_
 
+#include "compare.h"
+#include "debug.h"
+#include "dot.h"
+
 #include <array>
 #include <ostream>
-
-#include "compare.h"
 
 namespace gm {
 
@@ -46,7 +48,7 @@ public:
     Point& operator+=(const Point& rhs) noexcept;
     Point& operator-=(const Point& rhs) noexcept;
     Point& operator*=(const_reference rhs) noexcept;
-    Point& operator/=(const_reference rhs) noexcept;
+    Point& operator/=(const_reference rhs) __GM_NOEXCEPT_RELEASE__;
 
 private:
     value_type data_[N];
@@ -58,7 +60,7 @@ Point operator+(const Point& lhs, const Point& rhs) noexcept;
 Point operator-(const Point& lhs, const Point& rhs) noexcept;
 Point operator*(const Point& lhs, Point::const_reference rhs) noexcept;
 Point operator*(Point::const_reference lhs, const Point& rhs) noexcept;
-Point operator/(const Point& lhs, Point::const_reference rhs) noexcept;
+Point operator/(const Point& lhs, Point::const_reference rhs) __GM_NOEXCEPT_RELEASE__;
 
 Point operator+(const Point& lhs, const Vec& rhs) noexcept;
 Point operator+(const Vec& lhs, const Point& rhs) noexcept;
@@ -67,10 +69,6 @@ Point operator-(const Vec& lhs, const Point& rhs) noexcept;
 
 bool operator==(const Point& lhs, const Point& rhs) noexcept;
 bool operator!=(const Point& lhs, const Point& rhs) noexcept;
-
-double dot(const Point& lhs, const Point& rhs) noexcept;
-double dot(const Vec& lhs, const Point& rhs) noexcept;
-double dot(const Point& lhs, const Vec& rhs) noexcept;
 
 double sqr(const Point& obj) noexcept;
 double dist(const Point& lhs, const Point& rhs) noexcept;

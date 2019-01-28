@@ -1,9 +1,12 @@
 #ifndef GEOM_MODEL_SRC_GEOM_COX_DE_BOOR_H_
 #define GEOM_MODEL_SRC_GEOM_COX_DE_BOOR_H_
 
+#include <gm/compare.h>
 #include <gm/point.h>
+
 #include <util/debug.h>
 #include <util/math.h>
+
 
 #include <array>
 #include <type_traits>
@@ -29,7 +32,6 @@ struct VectorView {
     const_pointer data_;
     size_type size_;
 };
-
 
 template <class T>
 struct CoxDeBoor {
@@ -99,7 +101,7 @@ CoxDeBoor<T>::CoxDeBoor(size_t order, VectorView<double> knots,
 template <class T>
 typename CoxDeBoor<T>::Proxy CoxDeBoor<T>::proxy(double t) const
 {
-    t = pad(t);
+    // t = pad(t);
     return Proxy(*this, t, interval(t));
 }
 
@@ -114,12 +116,20 @@ size_t CoxDeBoor<T>::interval(double t) const
 {
     size_t result = 0;
     size_t end = knots_.size() - 1;
-    for (size_t i = 0; i < end; ++i) {
-        if (knots_[i] <= t && t < knots_[i + 1]) {
-            result = i;
-            break;
+
+    if (gm::isnear(t, knots_.front())) {
+        result = order_ - 1;
+    } else if (gm::isnear(t, knots_.back())) {
+        result = end - order_;
+    } else {
+        for (size_t i = 0; i < end; ++i) {
+            if (knots_[i] <= t && t < knots_[i + 1]) {
+                result = i;
+                break;
+            }
         }
     }
+
     return result;
 }
 

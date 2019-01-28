@@ -4,6 +4,7 @@
 #include <gm/surf_point.h>
 
 #include "std_defines.h"
+#include "debug.h"
 
 #include <array>
 #include <cmath>

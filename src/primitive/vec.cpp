@@ -118,8 +118,10 @@ Vec& Vec::operator*=(const_reference rhs) noexcept
     return *this;
 }
 
-Vec& Vec::operator/=(const_reference rhs) noexcept
+Vec& Vec::operator/=(const_reference rhs) __GM_NOEXCEPT_RELEASE__
 {
+    check_ifd(!iszero(rhs), "Division by zero");
+
     data_[0] /= rhs;
     data_[1] /= rhs;
     data_[2] /= rhs;
@@ -155,7 +157,7 @@ Vec operator*(Vec::const_reference lhs, const Vec& rhs) noexcept
     return (result *= lhs);
 }
 
-Vec operator/(const Vec& lhs, Vec::const_reference rhs) noexcept
+Vec operator/(const Vec& lhs, Vec::const_reference rhs) __GM_NOEXCEPT_RELEASE__
 {
     auto result = lhs;
     return (result /= rhs);
@@ -169,11 +171,6 @@ bool operator==(const Vec& lhs, const Vec& rhs) noexcept
 bool operator!=(const Vec& lhs, const Vec& rhs) noexcept
 {
     return !(lhs == rhs);
-}
-
-double dot(const Vec& lhs, const Vec& rhs) noexcept
-{
-    return lhs[0] * rhs[0] + lhs[1] * rhs[1] + lhs[2] * rhs[2];
 }
 
 Vec cross(const Vec& a, const Vec& b) noexcept
@@ -229,14 +226,17 @@ double angle(const Vec& a, const Vec& b) noexcept
     return atan2(y, x);
 }
 
-Vec unit(const Vec& obj) noexcept
+Vec unit(const Vec& obj) __GM_NOEXCEPT_RELEASE__
 {
+    auto n = norm(obj);
+    check_ifd(!iszero(n), "Unit vector of zero");
+
     return obj / norm(obj);
 }
 
 ostream& operator<<(ostream& os, const Vec& obj)
 {
-    fmt::print(os, "[{:.5g}, {:5.g}, {:.5g}]", obj[0], obj[1], obj[2]);
+    fmt::print(os, "[{:.5g}, {:.5g}, {:.5g}]", obj[0], obj[1], obj[2]);
     return os;
 }
 

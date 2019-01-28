@@ -17,6 +17,17 @@ include(CMakePackageConfigHelpers)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 
 ####################################################
+# Download cotire
+if(NOT EXISTS ${CMAKE_BINARY_DIR}/cotire.cmake)
+    message(STATUS "Downloading conan.cmake from https://github.com/sakra/cotire")
+    file(DOWNLOAD "https://raw.githubusercontent.com/sakra/cotire/master/CMake/cotire.cmake"
+                  "${CMAKE_BINARY_DIR}/cotire.cmake")
+endif()
+
+include(${CMAKE_BINARY_DIR}/cotire.cmake)
+####################################################
+
+####################################################
 # Configure conan
 if(NOT EXISTS ${CMAKE_BINARY_DIR}/conan.cmake)
     message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
@@ -80,6 +91,8 @@ target_link_libraries(
     PRIVATE
         CONAN_PKG::fmt
 )
+
+cotire(${PROJECT_TARGET_NAME})
 ####################################################
 
 ####################################################

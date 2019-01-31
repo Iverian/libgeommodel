@@ -21,13 +21,13 @@ public:
     Mat();
     explicit Mat(const data_type& coord);
 
-    static Mat eye();
-    static Mat rotate(double angle, const Vec& ax);
+    [[nodiscard]] static Mat eye();
+    [[nodiscard]] static Mat rotate(double angle, const Vec& ax);
 
-    double& operator()(size_t i, size_t j) noexcept;
-    const double& operator()(size_t i, size_t j) const noexcept;
-    size_t size() const noexcept;
-    const data_type& raw() const noexcept;
+    [[nodiscard]] double& operator()(size_t i, size_t j) noexcept;
+    [[nodiscard]] const double& operator()(size_t i, size_t j) const noexcept;
+    [[nodiscard]] size_t size() const noexcept;
+    [[nodiscard]] const data_type& raw() const noexcept;
 
     Mat& operator+=(const Mat& rhs);
     Mat& operator-=(const Mat& rhs);

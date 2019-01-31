@@ -2,25 +2,25 @@
 #include <gm/vec.h>
 
 #include <fmt/ostream.h>
-#include <util/math.h>
 #include <util/debug.h>
+#include <util/math.h>
 
 using namespace std;
 
 namespace gm {
 
 Point::Point() noexcept
-    : data_{0, 0, 0}
+    : data_ {0, 0, 0}
 {
 }
 
 Point::Point(value_type x, value_type y, value_type z) noexcept
-    : data_{x, y, z}
+    : data_ {x, y, z}
 {
 }
 
 Point::Point(const array<value_type, N>& coord) noexcept
-    : data_{coord[0], coord[1], coord[2]}
+    : data_ {coord[0], coord[1], coord[2]}
 {
 }
 
@@ -39,7 +39,7 @@ Point::Point(const Vec& lhs, const Vec& rhs) noexcept
 }
 
 Point::Point(const Vec& v) noexcept
-    : data_{v[0], v[1], v[2]}
+    : data_ {v[0], v[1], v[2]}
 {
 }
 
@@ -151,7 +151,8 @@ Point operator*(Point::const_reference lhs, const Point& rhs) noexcept
     return (result *= lhs);
 }
 
-Point operator/(const Point& lhs, Point::const_reference rhs) __GM_NOEXCEPT_RELEASE__
+Point operator/(const Point& lhs,
+                Point::const_reference rhs) __GM_NOEXCEPT_RELEASE__
 {
     auto result = lhs;
     return (result /= rhs);
@@ -231,6 +232,11 @@ bool isinf(const Point& obj) noexcept
 bool isnear(const Point& lhs, const Point& rhs, Tolerance tol) noexcept
 {
     return iszero(dist(lhs, rhs), tol);
+}
+
+bool iszero(const Point& lhs, Tolerance tol) noexcept
+{
+    return iszero(::sqrt(sqr(lhs)), tol);
 }
 
 ostream& operator<<(ostream& os, const Point& obj)

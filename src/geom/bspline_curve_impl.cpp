@@ -85,7 +85,7 @@ BSplineCurve::Impl::Impl(size_t degree, const vector<size_t>& knot_mult,
 
 Point BSplineCurve::Impl::f(double u) const noexcept
 {
-    return Point(cdb_.proxy(u).get(0).p());
+    return pget(cdb_.proxy(u).get(0));
 }
 
 Vec BSplineCurve::Impl::df(double u) const noexcept

@@ -11,9 +11,10 @@ public:
     Circle() noexcept;
     Circle(double r, Axis ax) noexcept;
 
-    double r() const noexcept;
+    [[nodiscard]] double r() const noexcept;
 
-    double approx_length(double begin, double end, size_t n) const override;
+    [[nodiscard]] double approx_length(double begin, double end,
+                                       size_t n) const override;
 
 protected:
     std::ostream& print(std::ostream& os) const override;

@@ -19,13 +19,13 @@ public:
                  std::vector<Point> points,
                  std::vector<double> weights = std::vector<double>());
 
-    Point f(double u) const noexcept override;
-    Vec df(double u) const noexcept override;
-    Vec df2(double u) const noexcept override;
-    double project(const Point& p) const override;
+    [[nodiscard]] Point f(double u) const noexcept override;
+    [[nodiscard]] Vec df(double u) const noexcept override;
+    [[nodiscard]] Vec df2(double u) const noexcept override;
+    [[nodiscard]] double project(const Point& p) const override;
 
-    double pfront() const noexcept;
-    double pback() const noexcept;
+    [[nodiscard]] double pfront() const noexcept;
+    [[nodiscard]] double pback() const noexcept;
 
 protected:
     std::ostream& print(std::ostream& os) const override;

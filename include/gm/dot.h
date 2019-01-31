@@ -9,7 +9,7 @@ namespace gm {
 template <class T, class U,
           typename = std::enable_if_t<
               std::is_same_v<typename T::value_type, typename U::value_type>>>
-typename T::value_type dot(const T& lhs, const U& rhs) noexcept
+[[nodiscard]] typename T::value_type dot(const T& lhs, const U& rhs) noexcept
 {
     using value_type = typename T::value_type;
 

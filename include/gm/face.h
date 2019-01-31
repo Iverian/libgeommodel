@@ -19,10 +19,10 @@ public:
          const FaceBound& outer_loop,
          const std::vector<FaceBound>& inner_loop = std::vector<FaceBound>());
 
-    bool same_sense() const;
-    const std::vector<FaceBound>& boundaries() const;
-    const FaceBound& outer() const;
-    const AbstractSurface& surface() const;
+    [[nodiscard]] bool same_sense() const;
+    [[nodiscard]] const std::vector<FaceBound>& boundaries() const;
+    [[nodiscard]] const FaceBound& outer() const;
+    [[nodiscard]] const AbstractSurface& surface() const;
 
 private:
     struct Impl;
@@ -32,6 +32,5 @@ private:
 std::ostream& operator<<(std::ostream& os, const Face& f);
 
 } // namespace gm
-
 
 #endif // GEOM_MODEL_INCLUDE_GM_FACE_H_

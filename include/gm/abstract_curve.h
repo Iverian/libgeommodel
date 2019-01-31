@@ -14,20 +14,21 @@ namespace gm {
 class AbstractCurve : public std::enable_shared_from_this<AbstractCurve> {
 public:
     virtual ~AbstractCurve();
-    virtual Point f(double u) const noexcept = 0;
-    virtual double project(const Point& p) const = 0;
+    [[nodiscard]] virtual Point f(double u) const noexcept = 0;
+    [[nodiscard]] virtual double project(const Point& p) const = 0;
 
-    virtual Vec df(double u) const noexcept;
-    virtual Vec df2(double u) const noexcept;
-    virtual std::optional<double> project_greater(const Point& p,
-                                                  double min) const noexcept;
-    virtual double approx_length(double begin, double end, size_t n) const;
+    [[nodiscard]] virtual Vec df(double u) const noexcept;
+    [[nodiscard]] virtual Vec df2(double u) const noexcept;
+    [[nodiscard]] virtual std::optional<double>
+    project_greater(const Point& p, double min) const noexcept;
+    [[nodiscard]] virtual double approx_length(double begin, double end,
+                                               size_t n) const;
 
-    Vec tangent(double u) const noexcept;
-    Vec normal(double u) const noexcept;
-    double curvature(double u) const noexcept;
-    Point operator()(double u) const noexcept;
-    Point gproject(const Point& p) const noexcept;
+    [[nodiscard]] Vec tangent(double u) const noexcept;
+    [[nodiscard]] Vec normal(double u) const noexcept;
+    [[nodiscard]] double curvature(double u) const noexcept;
+    [[nodiscard]] Point operator()(double u) const noexcept;
+    [[nodiscard]] Point gproject(const Point& p) const noexcept;
 
     friend std::ostream& operator<<(std::ostream& os, const AbstractCurve& c);
 

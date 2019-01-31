@@ -12,14 +12,14 @@ public:
     Line() noexcept;
     Line(Vec dir, Point c) noexcept;
 
-    const Point& c() const noexcept;
-    const Vec& dir() const noexcept;
+    [[nodiscard]] const Point& c() const noexcept;
+    [[nodiscard]] const Vec& dir() const noexcept;
 
-    Point f(double u) const noexcept override;
-    Vec df(double u) const noexcept override;
-    Vec df2(double u) const noexcept override;
-    double project(const Point& x) const override;
-    double approx_length(double begin, double end, size_t n) const override;
+    [[nodiscard]] Point f(double u) const noexcept override;
+    [[nodiscard]] Vec df(double u) const noexcept override;
+    [[nodiscard]] Vec df2(double u) const noexcept override;
+    [[nodiscard]] double project(const Point& x) const override;
+    [[nodiscard]] double approx_length(double begin, double end, size_t n) const override;
 
 protected:
     std::ostream& print(std::ostream& os) const override;

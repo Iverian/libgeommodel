@@ -16,20 +16,22 @@ public:
          const Point& back);
     Edge(std::shared_ptr<AbstractCurve> curve, double pfront, double pback);
 
-    bool empty() const noexcept;
-    std::shared_ptr<AbstractCurve> curve() const noexcept;
-    Point front() const noexcept;
-    Point back() const noexcept;
-    double pfront() const noexcept;
-    double pback() const noexcept;
+    [[nodiscard]] bool empty() const noexcept;
+    [[nodiscard]] std::shared_ptr<AbstractCurve> curve() const noexcept;
+    [[nodiscard]] Point front() const noexcept;
+    [[nodiscard]] Point back() const noexcept;
+    [[nodiscard]] double pfront() const noexcept;
+    [[nodiscard]] double pback() const noexcept;
 
-    Point f(double u) const noexcept override;
-    Vec df(double u) const noexcept override;
-    Vec df2(double u) const noexcept override;
-    double project(const Point& p) const override;
-    std::optional<double> project_greater(const Point& p, double min) const
+    [[nodiscard]] Point f(double u) const noexcept override;
+    [[nodiscard]] Vec df(double u) const noexcept override;
+    [[nodiscard]] Vec df2(double u) const noexcept override;
+    [[nodiscard]] double project(const Point& p) const override;
+    [[nodiscard]] std::optional<double> project_greater(const Point& p,
+                                                        double min) const
         noexcept override;
-    double approx_length(double begin, double end, size_t n) const override;
+    [[nodiscard]] double approx_length(double begin, double end,
+                                       size_t n) const override;
 
     friend bool operator==(const Edge& lhs, const Edge& rhs) noexcept;
     friend bool operator!=(const Edge& lhs, const Edge& rhs) noexcept;

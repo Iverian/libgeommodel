@@ -11,8 +11,8 @@ struct Shell {
     Shell();
     Shell(const Axis& ax, const std::vector<Face>& faces);
 
-    const std::vector<Face>& faces() const;
-    const Axis& ax() const;
+    [[nodiscard]] const std::vector<Face>& faces() const;
+    [[nodiscard]] const Axis& ax() const;
 
     void set_ax(const Axis& ax);
     void set_ax(Axis&& ax);

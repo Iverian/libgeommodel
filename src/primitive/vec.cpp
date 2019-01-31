@@ -199,6 +199,11 @@ bool isnear(const Vec& lhs, const Vec& rhs, Tolerance tol) noexcept
     return iszero(dist(lhs, rhs), tol);
 }
 
+bool iszero(const Vec& lhs, Tolerance tol) noexcept
+{
+    return iszero(norm(lhs), tol);
+}
+
 bool isnan(const Vec& obj) noexcept
 {
     return ::isnan(obj[0]) || ::isnan(obj[1]) || ::isnan(obj[2]);

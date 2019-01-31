@@ -32,18 +32,18 @@ public:
     Point(const Vec& lhs, const Vec& rhs) noexcept;
     explicit Point(const Vec& v) noexcept;
 
-    pointer data() noexcept;
-    const_pointer data() const noexcept;
-    size_type size() const noexcept;
-    reference operator[](size_type i) noexcept;
-    const_reference operator[](size_type i) const noexcept;
+    [[nodiscard]] pointer data() noexcept;
+    [[nodiscard]] const_pointer data() const noexcept;
+    [[nodiscard]] size_type size() const noexcept;
+    [[nodiscard]] reference operator[](size_type i) noexcept;
+    [[nodiscard]] const_reference operator[](size_type i) const noexcept;
 
-    iterator begin() noexcept;
-    iterator end() noexcept;
-    const_iterator begin() const noexcept;
-    const_iterator end() const noexcept;
+    [[nodiscard]] iterator begin() noexcept;
+    [[nodiscard]] iterator end() noexcept;
+    [[nodiscard]] const_iterator begin() const noexcept;
+    [[nodiscard]] const_iterator end() const noexcept;
 
-    std::array<value_type, N> raw() const noexcept;
+    [[nodiscard]] std::array<value_type, N> raw() const noexcept;
 
     Point& operator+=(const Point& rhs) noexcept;
     Point& operator-=(const Point& rhs) noexcept;
@@ -60,7 +60,8 @@ Point operator+(const Point& lhs, const Point& rhs) noexcept;
 Point operator-(const Point& lhs, const Point& rhs) noexcept;
 Point operator*(const Point& lhs, Point::const_reference rhs) noexcept;
 Point operator*(Point::const_reference lhs, const Point& rhs) noexcept;
-Point operator/(const Point& lhs, Point::const_reference rhs) __GM_NOEXCEPT_RELEASE__;
+Point operator/(const Point& lhs,
+                Point::const_reference rhs) __GM_NOEXCEPT_RELEASE__;
 
 Point operator+(const Point& lhs, const Vec& rhs) noexcept;
 Point operator+(const Vec& lhs, const Point& rhs) noexcept;
@@ -70,13 +71,15 @@ Point operator-(const Vec& lhs, const Point& rhs) noexcept;
 bool operator==(const Point& lhs, const Point& rhs) noexcept;
 bool operator!=(const Point& lhs, const Point& rhs) noexcept;
 
-double sqr(const Point& obj) noexcept;
-double dist(const Point& lhs, const Point& rhs) noexcept;
+[[nodiscard]] double sqr(const Point& obj) noexcept;
+[[nodiscard]] double dist(const Point& lhs, const Point& rhs) noexcept;
 
-bool isnan(const Point& obj) noexcept;
-bool isinf(const Point& obj) noexcept;
-bool isnear(const Point& lhs, const Point& rhs,
-            Tolerance tol = Tolerance::DOUBLE) noexcept;
+[[nodiscard]] bool isnan(const Point& obj) noexcept;
+[[nodiscard]] bool isinf(const Point& obj) noexcept;
+[[nodiscard]] bool isnear(const Point& lhs, const Point& rhs,
+                          Tolerance tol = default_tolerance) noexcept;
+[[nodiscard]] bool iszero(const Point& obj,
+                          Tolerance tol = default_tolerance) noexcept;
 
 std::ostream& operator<<(std::ostream& os, const Point& obj);
 

@@ -70,17 +70,20 @@ SurfPoint ConicalSurface::project(const Point& p) const
     auto [c, x, y, z] = ax_.get_view();
     auto w = (p - c) - z * dot(p - c, z);
     auto u = atan2v(dot(w, y), dot(w, x));
-    array<double, 2> v;
 
-    transform(cbegin(u), cend(u), begin(v), [&](const auto& i) {
-        return Line(ta_ * ::cos(i) * x + ta_ * ::sin(i) * y + z,
-                    r_ * ::cos(i) * x + r_ * ::sin(i) * y + c)
-            .project(p);
-    });
-
-    return dist(f({u[0], v[0]}), p) < dist(f({u[1], v[1]}), p)
-        ? SurfPoint {u[0], v[0]}
-        : SurfPoint {u[1], v[1]};
+    SurfPoint min {};
+    auto mdist = ::numeric_limits<double>::max();
+    for (auto& uu : u) {
+        auto vv = Line(ta_ * ::cos(uu) * x + ta_ * ::sin(uu) * y + z,
+                       r_ * ::cos(uu) * x + r_ * ::sin(uu) * y + c)
+                      .project(p);
+        SurfPoint cur {uu, vv};
+        if (auto cdist = dist(f(cur), p); cdist < mdist) {
+            mdist = cdist;
+            min = cur;
+        }
+    }
+    return min;
 }
 
 } // namespace gm

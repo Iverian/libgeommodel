@@ -11,15 +11,15 @@ public:
     Ellipse() noexcept;
     Ellipse(double rx, double ry, Axis ax) noexcept;
 
-    double rx() const noexcept;
-    double ry() const noexcept;
-    const Axis& ax() const noexcept;
+    [[nodiscard]] double rx() const noexcept;
+    [[nodiscard]] double ry() const noexcept;
+    [[nodiscard]] const Axis& ax() const noexcept;
 
-    Point f(double u) const noexcept override;
-    Vec df(double u) const noexcept override;
-    Vec df2(double u) const noexcept override;
-    double project(const Point& p) const override;
-    std::optional<double> project_greater(const Point& p, double min) const
+    [[nodiscard]] Point f(double u) const noexcept override;
+    [[nodiscard]] Vec df(double u) const noexcept override;
+    [[nodiscard]] Vec df2(double u) const noexcept override;
+    [[nodiscard]] double project(const Point& p) const override;
+    [[nodiscard]] std::optional<double> project_greater(const Point& p, double min) const
         noexcept override;
 
 protected:

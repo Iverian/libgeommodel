@@ -2,8 +2,8 @@
 #define GEOM_MODEL_INCLUDE_GM_VEC_H_
 
 #include "compare.h"
-#include "dot.h"
 #include "debug.h"
+#include "dot.h"
 
 #include <array>
 #include <ostream>
@@ -32,18 +32,18 @@ public:
 
     explicit Vec(const Point& p) noexcept;
 
-    pointer data() noexcept;
-    const_pointer data() const noexcept;
-    size_type size() const noexcept;
-    reference operator[](size_type i) noexcept;
-    const_reference operator[](size_type i) const noexcept;
+    [[nodiscard]] pointer data() noexcept;
+    [[nodiscard]] const_pointer data() const noexcept;
+    [[nodiscard]] size_type size() const noexcept;
+    [[nodiscard]] reference operator[](size_type i) noexcept;
+    [[nodiscard]] const_reference operator[](size_type i) const noexcept;
 
-    iterator begin() noexcept;
-    iterator end() noexcept;
-    const_iterator begin() const noexcept;
-    const_iterator end() const noexcept;
+    [[nodiscard]] iterator begin() noexcept;
+    [[nodiscard]] iterator end() noexcept;
+    [[nodiscard]] const_iterator begin() const noexcept;
+    [[nodiscard]] const_iterator end() const noexcept;
 
-    std::array<value_type, N> raw() const noexcept;
+    [[nodiscard]] std::array<value_type, N> raw() const noexcept;
 
     Vec& operator+=(const Vec& rhs) noexcept;
     Vec& operator-=(const Vec& rhs) noexcept;
@@ -60,24 +60,27 @@ Vec operator+(const Vec& lhs, const Vec& rhs) noexcept;
 Vec operator-(const Vec& lhs, const Vec& rhs) noexcept;
 Vec operator*(const Vec& lhs, Vec::const_reference rhs) noexcept;
 Vec operator*(Vec::const_reference lhs, const Vec& rhs) noexcept;
-Vec operator/(const Vec& lhs, Vec::const_reference rhs) __GM_NOEXCEPT_RELEASE__;
+Vec operator/(const Vec& lhs,
+              Vec::const_reference rhs) __GM_NOEXCEPT_RELEASE__;
 
 bool operator==(const Vec& lhs, const Vec& rhs) noexcept;
 bool operator!=(const Vec& lhs, const Vec& rhs) noexcept;
 
-Vec cross(const Vec& lhs, const Vec& rhs) noexcept;
-double sqr(const Vec& obj) noexcept;
-double norm(const Vec& obj) noexcept;
-double dist(const Vec& lhs, const Vec& rhs) noexcept;
-double cos(const Vec& lhs, const Vec& rhs) noexcept;
-double sin(const Vec& lhs, const Vec& rhs) noexcept;
-double angle(const Vec& lhs, const Vec& rhs) noexcept;
-Vec unit(const Vec& obj) __GM_NOEXCEPT_RELEASE__;
+[[nodiscard]] Vec cross(const Vec& lhs, const Vec& rhs) noexcept;
+[[nodiscard]] double sqr(const Vec& obj) noexcept;
+[[nodiscard]] double norm(const Vec& obj) noexcept;
+[[nodiscard]] double dist(const Vec& lhs, const Vec& rhs) noexcept;
+[[nodiscard]] double cos(const Vec& lhs, const Vec& rhs) noexcept;
+[[nodiscard]] double sin(const Vec& lhs, const Vec& rhs) noexcept;
+[[nodiscard]] double angle(const Vec& lhs, const Vec& rhs) noexcept;
+[[nodiscard]] Vec unit(const Vec& obj) __GM_NOEXCEPT_RELEASE__;
 
-bool isnan(const Vec& obj) noexcept;
-bool isinf(const Vec& obj) noexcept;
-bool isnear(const Vec& lhs, const Vec& rhs,
-            Tolerance tol = Tolerance::DOUBLE) noexcept;
+[[nodiscard]] bool isnan(const Vec& obj) noexcept;
+[[nodiscard]] bool isinf(const Vec& obj) noexcept;
+[[nodiscard]] bool isnear(const Vec& lhs, const Vec& rhs,
+                          Tolerance tol = default_tolerance) noexcept;
+[[nodiscard]] bool iszero(const Vec& obj,
+                          Tolerance tol = default_tolerance) noexcept;
 
 std::ostream& operator<<(std::ostream& os, const Vec& obj);
 

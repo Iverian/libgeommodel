@@ -13,15 +13,15 @@ public:
     Plane() noexcept;
     explicit Plane(Axis ax) noexcept;
 
-    const Axis& ax() const noexcept;
+    [[nodiscard]] const Axis& ax() const noexcept;
 
-    Point f(const SurfPoint& p) const noexcept override;
-    Vec dfu(const SurfPoint& p) const noexcept override;
-    Vec dfv(const SurfPoint& p) const noexcept override;
-    Vec dfuu(const SurfPoint& p) const noexcept override;
-    Vec dfvv(const SurfPoint& p) const noexcept override;
-    Vec dfuv(const SurfPoint& p) const noexcept override;
-    SurfPoint project(const Point& p) const override;
+    [[nodiscard]] Point f(const SurfPoint& p) const noexcept override;
+    [[nodiscard]] Vec dfu(const SurfPoint& p) const noexcept override;
+    [[nodiscard]] Vec dfv(const SurfPoint& p) const noexcept override;
+    [[nodiscard]] Vec dfuu(const SurfPoint& p) const noexcept override;
+    [[nodiscard]] Vec dfvv(const SurfPoint& p) const noexcept override;
+    [[nodiscard]] Vec dfuv(const SurfPoint& p) const noexcept override;
+    [[nodiscard]] SurfPoint project(const Point& p) const override;
 
 protected:
     std::ostream& print(std::ostream& os) const override;

@@ -11,11 +11,11 @@ public:
     Parabola() noexcept;
     Parabola(double f, Axis ax) noexcept;
 
-    Point f(double u) const noexcept override;
-    Vec df(double u) const noexcept override;
-    Vec df2(double u) const noexcept override;
-    double project(const Point& p) const override;
-    double approx_length(double begin, double end, size_t n) const override;
+    [[nodiscard]] Point f(double u) const noexcept override;
+    [[nodiscard]] Vec df(double u) const noexcept override;
+    [[nodiscard]] Vec df2(double u) const noexcept override;
+    [[nodiscard]] double project(const Point& p) const override;
+    [[nodiscard]] double approx_length(double begin, double end, size_t n) const override;
 
 protected:
     std::ostream& print(std::ostream& os) const override;

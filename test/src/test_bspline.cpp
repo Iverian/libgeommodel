@@ -57,33 +57,35 @@ TEST_F(TestBSpline, eval)
     for (auto& p : test_points) {
         auto a = f.dfu(p);
         auto b = f.AbstractSurface::dfu(p);
-        debug_fmt(cout, "a: {} b: {}", a, b);
+        // debug_fmt(cout, "a: {} b: {}", a, b);
         ASSERT_NEAR(dist(a, b), 0, eps2);
     }
     for (auto& p : test_points) {
         auto a = f.dfv(p);
         auto b = f.AbstractSurface::dfv(p);
-        debug_fmt(cout, "a: {} b: {}", a, b);
+        // debug_fmt(cout, "a: {} b: {}", a, b);
         ASSERT_NEAR(dist(a, b), 0, eps2);
     }
     for (auto& p : test_points) {
         auto a = f.dfuu(p);
         auto b = f.AbstractSurface::dfuu(p);
-        debug_fmt(cout, "a: {} b: {}", a, b);
+        // debug_fmt(cout, "a: {} b: {}", a, b);
         ASSERT_NEAR(dist(a, b), 0, eps2);
     }
     for (auto& p : test_points) {
         auto a = f.dfuv(p);
         auto b = f.AbstractSurface::dfuv(p);
-        debug_fmt(cout, "a: {} b: {}", a, b);
+        // debug_fmt(cout, "a: {} b: {}", a, b);
         ASSERT_NEAR(dist(a, b), 0, eps2);
     }
     for (auto& p : test_points) {
         auto a = f.dfvv(p);
         auto b = f.AbstractSurface::dfvv(p);
-        debug_fmt(cout, "a: {} b: {}", a, b);
+        // debug_fmt(cout, "a: {} b: {}", a, b);
         ASSERT_NEAR(dist(a, b), 0, eps2);
     }
+
+    SUCCEED();
 }
 
 #define PAD_(x) ((1 + 2 * pad) * (x) + pad)

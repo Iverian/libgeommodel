@@ -41,6 +41,10 @@ BSplineSurface::Impl::Impl(size_t du, size_t dv, const vector<double>& ku,
                            const vector<double>& kv,
                            const std::vector<std::vector<Point>>& p,
                            const std::vector<std::vector<double>>& w)
+    : order_({du + 1, dv + 1})
+    , knots_({ku, kv})
+    , cpoints_()
+    , cdb_()
 {
     init_cpoints(w, p);
 }
@@ -51,6 +55,10 @@ BSplineSurface::Impl::Impl(size_t du, size_t dv, const vector<size_t>& ku_mult,
                            const vector<double>& kv_vals,
                            const std::vector<std::vector<Point>>& p,
                            const std::vector<std::vector<double>>& w)
+    : order_({du + 1, dv + 1})
+    , knots_()
+    , cpoints_()
+    , cdb_()
 {
     for (size_t i = 0; i < ku_mult.size(); ++i)
         for (auto j = ku_mult[i]; j > 0; --j)
@@ -74,7 +82,7 @@ Point BSplineSurface::Impl::f(const SurfPoint& p) const noexcept
     }
 
     auto cdb_u = CoxDeBoor<CPoint>(order_[0], knots_[0], cp);
-    return Point(cdb_u.proxy(p.u).get(0).p());
+    return pget(cdb_u.proxy(p.u).get(0));
 }
 
 Vec BSplineSurface::Impl::dfu(const SurfPoint& p) const noexcept
@@ -157,7 +165,7 @@ ostream& BSplineSurface::Impl::print(ostream& os) const
 // TODO: реализовать
 SurfPoint BSplineSurface::Impl::project(const Point& p) const
 {
-    return SurfPoint();
+    throw std::runtime_error("not implemented");
 }
 
 const BSplineSurface::Impl::order_type& BSplineSurface::Impl::order() const
@@ -184,17 +192,19 @@ const BSplineSurface::Impl::CPointSize& BSplineSurface::Impl::size() const
     return size_;
 }
 
-BSplineSurface::Impl BSplineSurface::Impl::to_bezier() const
+BSplineSurface::Impl BSplineSurface::Impl::bezier_patches() const
 {
     Impl result;
     auto count = order_;
     auto prev = knots_[0];
 
     result.order_ = order_;
+
+    throw std::runtime_error("not implemented");
     return *this;
 }
 
-#define _(i, j) ((size_.n) * (i) + (j))
+#define _(i, j) ((size_.m) * (i) + (j))
 
 void BSplineSurface::Impl::init_cpoints(
     const std::vector<std::vector<CPoint>>& cp)

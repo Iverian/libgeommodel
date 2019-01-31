@@ -12,12 +12,6 @@ class BSplineSurface : public AbstractSurface {
 public:
     struct Impl;
 
-    ~BSplineSurface() override;
-    BSplineSurface(BSplineSurface&&) noexcept;
-    BSplineSurface& operator=(BSplineSurface&&) noexcept;
-    BSplineSurface(const BSplineSurface& other);
-    BSplineSurface& operator=(const BSplineSurface& other);
-
     BSplineSurface();
     BSplineSurface(size_t du, size_t dv, const std::vector<double>& ku,
                    const std::vector<double>& kv,
@@ -33,20 +27,20 @@ public:
                    const std::vector<std::vector<double>>& w
                    = std::vector<std::vector<double>>());
 
-    Point f(const SurfPoint& p) const noexcept override;
-    Vec dfu(const SurfPoint& p) const noexcept override;
-    Vec dfv(const SurfPoint& p) const noexcept override;
-    Vec dfuu(const SurfPoint& p) const noexcept override;
-    Vec dfuv(const SurfPoint& p) const noexcept override;
-    Vec dfvv(const SurfPoint& p) const noexcept override;
+    [[nodiscard]] Point f(const SurfPoint& p) const noexcept override;
+    [[nodiscard]] Vec dfu(const SurfPoint& p) const noexcept override;
+    [[nodiscard]] Vec dfv(const SurfPoint& p) const noexcept override;
+    [[nodiscard]] Vec dfuu(const SurfPoint& p) const noexcept override;
+    [[nodiscard]] Vec dfuv(const SurfPoint& p) const noexcept override;
+    [[nodiscard]] Vec dfvv(const SurfPoint& p) const noexcept override;
 
-    SurfPoint project(const Point& p) const override;
+    [[nodiscard]] SurfPoint project(const Point& p) const override;
 
 protected:
     std::ostream& print(std::ostream& os) const override;
 
 private:
-    std::unique_ptr<Impl> pimpl_;
+    std::shared_ptr<Impl> pimpl_;
 };
 
 } // namespace gm

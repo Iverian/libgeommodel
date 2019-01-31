@@ -71,21 +71,6 @@ SurfPoint BSplineSurface::project(const Point& p) const
     return pimpl_->project(p);
 }
 
-BSplineSurface::~BSplineSurface() = default;
-
-BSplineSurface::BSplineSurface(BSplineSurface&&) noexcept = default;
-
-BSplineSurface& BSplineSurface::operator=(BSplineSurface&&) noexcept = default;
-
-BSplineSurface::BSplineSurface(const BSplineSurface& other)
-    : pimpl_(make_unique<Impl>(*other.pimpl_)){};
-
-BSplineSurface& BSplineSurface::operator=(const BSplineSurface& other)
-{
-    *pimpl_ = *other.pimpl_;
-    return *this;
-};
-
 } // namespace gm
 
 // struct BSplineSurface::Impl {

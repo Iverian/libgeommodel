@@ -67,7 +67,7 @@ public:
     const cpoint_type& cpoints() const noexcept;
     const CPointSize& size() const noexcept;
 
-    Impl to_bezier() const;
+    Impl bezier_patches() const;
 
 private:
     void init_cpoints(const std::vector<std::vector<CPoint>>& cp);

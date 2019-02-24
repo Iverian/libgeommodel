@@ -6,8 +6,8 @@
 #include <util/debug.h>
 #include <util/math.h>
 
-#include <geom/bspline_curve_impl.h>
-#include <geom/curve_projector.h>
+#include <bspline/bspline_curve_impl.h>
+#include <bspline/curve_projector.h>
 
 #include <random>
 
@@ -31,15 +31,15 @@ protected:
     }
 
     BSplineCurve::Impl c;
-    vector<BezierPatch> bz;
+    vector<BSplineCurve::Impl::BezierPatch> bz;
 };
 
 TEST_F(TestBSplineImpl, test_bspline_patches)
 {
     for (auto& patch : bz) {
         auto impl = BSplineCurve::Impl(patch);
-        auto step = (patch.back - patch.front) / (N - 1);
-        auto u = patch.front;
+        auto step = (patch.pback() - patch.pfront()) / (N - 1);
+        auto u = patch.pfront();
 
         for (size_t i = 0; i < N; ++i) {
             EXPECT_EQ(impl.f(u), c.f(u));
@@ -64,13 +64,13 @@ TEST_F(TestBSplineImpl, test_distance_curve)
 
     for (auto& patch : bz) {
         auto g = DistanceCurve(patch, p);
-        auto step = (patch.back - patch.front) / (N - 1);
-        auto u = patch.front;
+        auto step = (patch.pback() - patch.pfront()) / (N - 1);
+        auto u = patch.pfront();
 
         for (size_t i = 0; i < N; ++i) {
-            EXPECT_NEAR(f(u), g.f(u), tol(Tolerance::DOUBLE));
-            EXPECT_NEAR(df(u), g.df(u), tol(Tolerance::DOUBLE));
-            EXPECT_NEAR(df2(u), g.df2(u), tol(Tolerance::DOUBLE));
+            EXPECT_NEAR(f(u), g.f(u), cmp::tol());
+            EXPECT_NEAR(df(u), g.df(u), cmp::tol());
+            EXPECT_NEAR(df2(u), g.df2(u), cmp::tol());
 
             u += step;
         }

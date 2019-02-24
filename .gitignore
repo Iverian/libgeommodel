@@ -32,4 +32,6 @@
 *.app
 
 build/
+scripts/
 .vscode/
+compile_commands.json

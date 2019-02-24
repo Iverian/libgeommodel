@@ -76,12 +76,15 @@ bool operator!=(const Point& lhs, const Point& rhs) noexcept;
 
 [[nodiscard]] bool isnan(const Point& obj) noexcept;
 [[nodiscard]] bool isinf(const Point& obj) noexcept;
-[[nodiscard]] bool isnear(const Point& lhs, const Point& rhs,
-                          Tolerance tol = default_tolerance) noexcept;
-[[nodiscard]] bool iszero(const Point& obj,
-                          Tolerance tol = default_tolerance) noexcept;
 
 std::ostream& operator<<(std::ostream& os, const Point& obj);
+
+namespace cmp {
+    [[nodiscard]] bool near(const Point& lhs, const Point& rhs,
+                            Tolerance tol = default_tolerance) noexcept;
+    [[nodiscard]] bool zero(const Point& obj,
+                            Tolerance tol = default_tolerance) noexcept;
+} // namespace cmp
 
 } // namespace gm
 

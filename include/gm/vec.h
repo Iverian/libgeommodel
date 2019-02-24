@@ -31,6 +31,7 @@ public:
     Vec(const std::initializer_list<value_type>& list) noexcept;
 
     explicit Vec(const Point& p) noexcept;
+    Vec(const Point& lhs, const Point& rhs) noexcept;
 
     [[nodiscard]] pointer data() noexcept;
     [[nodiscard]] const_pointer data() const noexcept;
@@ -77,12 +78,15 @@ bool operator!=(const Vec& lhs, const Vec& rhs) noexcept;
 
 [[nodiscard]] bool isnan(const Vec& obj) noexcept;
 [[nodiscard]] bool isinf(const Vec& obj) noexcept;
-[[nodiscard]] bool isnear(const Vec& lhs, const Vec& rhs,
-                          Tolerance tol = default_tolerance) noexcept;
-[[nodiscard]] bool iszero(const Vec& obj,
-                          Tolerance tol = default_tolerance) noexcept;
 
 std::ostream& operator<<(std::ostream& os, const Vec& obj);
+
+namespace cmp {
+    [[nodiscard]] bool near(const Vec& lhs, const Vec& rhs,
+                            Tolerance tol = default_tolerance) noexcept;
+    [[nodiscard]] bool zero(const Vec& obj,
+                            Tolerance tol = default_tolerance) noexcept;
+} // namespace cmp
 
 } // namespace gm
 

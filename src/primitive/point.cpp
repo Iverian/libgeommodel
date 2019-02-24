@@ -119,7 +119,7 @@ Point& Point::operator*=(const_reference rhs) noexcept
 
 Point& Point::operator/=(const_reference rhs) __GM_NOEXCEPT_RELEASE__
 {
-    check_ifd(!iszero(rhs), "Division by zero");
+    check_ifd(!cmp::zero(rhs), "Division by zero");
 
     data_[0] /= rhs;
     data_[1] /= rhs;
@@ -201,7 +201,7 @@ Point operator-(const Vec& lhs, const Point& rhs) noexcept
 
 bool operator==(const Point& lhs, const Point& rhs) noexcept
 {
-    return isnear(lhs, rhs, Tolerance::SINGLE);
+    return cmp::near(lhs, rhs);
 }
 
 bool operator!=(const Point& lhs, const Point& rhs) noexcept
@@ -229,20 +229,22 @@ bool isinf(const Point& obj) noexcept
     return ::isinf(obj[0]) || ::isinf(obj[1]) || ::isinf(obj[2]);
 }
 
-bool isnear(const Point& lhs, const Point& rhs, Tolerance tol) noexcept
-{
-    return iszero(dist(lhs, rhs), tol);
-}
-
-bool iszero(const Point& lhs, Tolerance tol) noexcept
-{
-    return iszero(::sqrt(sqr(lhs)), tol);
-}
-
 ostream& operator<<(ostream& os, const Point& obj)
 {
     fmt::print(os, "[{:.5g}, {:5.g}, {:.5g}]", obj[0], obj[1], obj[2]);
     return os;
 }
+
+namespace cmp {
+    bool near(const Point& lhs, const Point& rhs, Tolerance tol) noexcept
+    {
+        return zero(dist(lhs, rhs), tol);
+    }
+
+    bool zero(const Point& lhs, Tolerance tol) noexcept
+    {
+        return zero(::sqrt(sqr(lhs)), tol);
+    }
+} // namespace cmp
 
 } // namespace gm

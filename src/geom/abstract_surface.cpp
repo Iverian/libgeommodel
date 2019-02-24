@@ -25,7 +25,7 @@ Vec AbstractSurface::normal(const SurfPoint& p) const noexcept
     return cross(dfu(p), dfv(p));
 }
 
-Vec AbstractSurface::unit_normal(const SurfPoint& p) const noexcept
+Vec AbstractSurface::unit_normal(const SurfPoint& p) const __GM_NOEXCEPT_RELEASE__
 {
     return unit(normal(p));
 }

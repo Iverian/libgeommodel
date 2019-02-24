@@ -52,6 +52,11 @@ Vec AbstractCurve::normal(double u) const noexcept
     return (d2 - (w / v) * d) / ::sqr(v);
 }
 
+Vec AbstractCurve::unit_normal(double u) const __GM_NOEXCEPT_RELEASE__
+{
+    return unit(normal(u));
+}
+
 Point AbstractCurve::gproject(const Point& p) const noexcept
 {
     return f(project(p));
@@ -69,7 +74,7 @@ double AbstractCurve::approx_length(double begin, double end, size_t n) const
     vector<double> y(n);
     for (size_t i = 0; i < n; ++i)
         y[i] = norm(df(begin + i * step));
-    return ::trapz(y, step);
+    return ::trapz(::begin(y), ::end(y), step);
 }
 
 ostream& operator<<(ostream& os, const AbstractCurve& c)

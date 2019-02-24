@@ -44,6 +44,11 @@ Vec::Vec(const Point& p) noexcept
 {
 }
 
+Vec::Vec(const Point& lhs, const Point& rhs) noexcept
+    : Vec(rhs - lhs)
+{
+}
+
 Vec::pointer Vec::data() noexcept
 {
     return data_;
@@ -120,7 +125,7 @@ Vec& Vec::operator*=(const_reference rhs) noexcept
 
 Vec& Vec::operator/=(const_reference rhs) __GM_NOEXCEPT_RELEASE__
 {
-    check_ifd(!iszero(rhs), "Division by zero");
+    check_ifd(!cmp::zero(rhs), "Division by zero");
 
     data_[0] /= rhs;
     data_[1] /= rhs;
@@ -165,7 +170,7 @@ Vec operator/(const Vec& lhs, Vec::const_reference rhs) __GM_NOEXCEPT_RELEASE__
 
 bool operator==(const Vec& lhs, const Vec& rhs) noexcept
 {
-    return isnear(lhs, rhs, Tolerance::DOUBLE);
+    return cmp::near(lhs, rhs);
 }
 
 bool operator!=(const Vec& lhs, const Vec& rhs) noexcept
@@ -192,16 +197,6 @@ double norm(const Vec& obj) noexcept
 double dist(const Vec& lhs, const Vec& rhs) noexcept
 {
     return norm(rhs - lhs);
-}
-
-bool isnear(const Vec& lhs, const Vec& rhs, Tolerance tol) noexcept
-{
-    return iszero(dist(lhs, rhs), tol);
-}
-
-bool iszero(const Vec& lhs, Tolerance tol) noexcept
-{
-    return iszero(norm(lhs), tol);
 }
 
 bool isnan(const Vec& obj) noexcept
@@ -234,7 +229,7 @@ double angle(const Vec& a, const Vec& b) noexcept
 Vec unit(const Vec& obj) __GM_NOEXCEPT_RELEASE__
 {
     auto n = norm(obj);
-    check_ifd(!iszero(n), "Unit vector of zero");
+    check_ifd(!cmp::zero(n), "Unit vector of zero");
 
     return obj / norm(obj);
 }
@@ -244,5 +239,17 @@ ostream& operator<<(ostream& os, const Vec& obj)
     fmt::print(os, "[{:.5g}, {:.5g}, {:.5g}]", obj[0], obj[1], obj[2]);
     return os;
 }
+
+namespace cmp {
+    bool near(const Vec& lhs, const Vec& rhs, Tolerance tol) noexcept
+    {
+        return zero(dist(lhs, rhs), tol);
+    }
+
+    bool zero(const Vec& lhs, Tolerance tol) noexcept
+    {
+        return zero(norm(lhs), tol);
+    }
+} // namespace cmp
 
 } // namespace gm

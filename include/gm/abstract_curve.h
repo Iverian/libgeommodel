@@ -26,6 +26,7 @@ public:
 
     [[nodiscard]] Vec tangent(double u) const noexcept;
     [[nodiscard]] Vec normal(double u) const noexcept;
+    [[nodiscard]] Vec unit_normal(double u) const __GM_NOEXCEPT_RELEASE__;
     [[nodiscard]] double curvature(double u) const noexcept;
     [[nodiscard]] Point operator()(double u) const noexcept;
     [[nodiscard]] Point gproject(const Point& p) const noexcept;

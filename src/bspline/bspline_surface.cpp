@@ -1,6 +1,5 @@
+#include <bspline/bspline_surface_impl.h>
 #include <gm/bspline_surface.h>
-
-#include "bspline_surface_impl.h"
 
 using namespace std;
 

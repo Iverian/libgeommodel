@@ -9,7 +9,7 @@ namespace gm {
 
 class BSplineCurve : public AbstractCurve {
 public:
-    struct Impl;
+    class Impl;
 
     BSplineCurve(size_t degree, std::vector<double> knots,
                  std::vector<Point> points,

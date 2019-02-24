@@ -1,32 +1,24 @@
 #ifndef GEOM_MODEL_SRC_GEOM_BSPLINE_CURVE_IMPL_H_
 #define GEOM_MODEL_SRC_GEOM_BSPLINE_CURVE_IMPL_H_
 
+#include <bspline/basic_bspline_curve.h>
 #include <gm/bspline_curve.h>
-#include <primitive/wpoint.h>
 
 #include <memory>
 #include <optional>
 #include <ostream>
 #include <vector>
 
-#include "cox_de_boor.h"
-
 class BSplineCurveProjector;
 
 namespace gm {
-
 struct CurveProjector;
 
-struct BezierPatch {
-    explicit BezierPatch(size_t order = 0);
-    size_t order() const noexcept;
-
-    double front;
-    double back;
-    std::vector<CPoint> cp;
-};
-
-struct BSplineCurve::Impl {
+class BSplineCurve::Impl {
+public:
+    static constexpr size_t dim = 3;
+    using BezierPatch = ::BezierPatch<dim>;
+    using Super = ::BasicBsplineCurve<dim>;
 
     ~Impl();
     Impl(Impl&&) noexcept;
@@ -47,11 +39,6 @@ struct BSplineCurve::Impl {
     std::ostream& print(std::ostream& os) const;
 
     double project(const Point& p) const;
-    double ustep(double u) const;
-    std::optional<double> newton_iter(const Point& p, double init,
-                                      size_t max_iter) const;
-    bool init_between(const Point& p, double a, double b) const;
-    double bound_check(double u) const;
 
     double pfront() const noexcept;
     double pback() const noexcept;
@@ -59,14 +46,10 @@ struct BSplineCurve::Impl {
     std::vector<BezierPatch> bezier_patches() const;
 
 private:
-    void init_cpoints(const std::vector<Point>& p,
-                      const std::vector<double>& w);
-    void init_cdb();
+    void init_curve(size_t order, const std::vector<double>& k,
+                    const std::vector<Point>& p, const std::vector<double>& w);
 
-    size_t order_;
-    std::vector<double> knots_;
-    std::vector<CPoint> cpoints_;
-    CoxDeBoor<CPoint> cdb_;
+    Super c_;
     mutable std::unique_ptr<CurveProjector> proj_;
 };
 

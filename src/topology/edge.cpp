@@ -35,8 +35,8 @@ Edge::Edge(shared_ptr<AbstractCurve> curve, const Point& front,
     auto f = curve_->f(pfront_);
     auto b = curve_->f(pback_);
 
-    check_if(isnear(f, front, Tolerance::ZERO)
-                 && isnear(b, back, Tolerance::ZERO),
+    check_if(cmp::near(f, front, Tolerance::ZERO)
+                 && cmp::near(b, back, Tolerance::ZERO),
              "unable to construct edge with \"curve\": {0}, \"begin\": {1}, "
              "\"end\": {2}: projections \"begin_p\": {3}, \"end_p\": {4} do "
              "not match original points",
@@ -120,8 +120,8 @@ shared_ptr<AbstractCurve> Edge::curve() const noexcept
 
 bool operator==(const Edge& lhs, const Edge& rhs) noexcept
 {
-    return isnear(lhs.pfront_, rhs.pfront_) && isnear(lhs.pback_, rhs.pback_)
-        && (lhs.curve_ == rhs.curve_);
+    return cmp::near(lhs.pfront_, rhs.pfront_)
+        && cmp::near(lhs.pback_, rhs.pback_) && (lhs.curve_ == rhs.curve_);
 }
 
 bool operator!=(const Edge& lhs, const Edge& rhs) noexcept

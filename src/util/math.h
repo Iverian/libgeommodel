@@ -3,8 +3,8 @@
 
 #include <gm/surf_point.h>
 
-#include "std_defines.h"
 #include "debug.h"
+#include "std_defines.h"
 
 #include <array>
 #include <cmath>
@@ -50,13 +50,34 @@ T diff11(Function f, gm::SurfPoint t)
         / (4 * sqr(h));
 }
 
-template <class T, class U>
-T trapz(const std::vector<T>& vals, U step)
+template <class BidirIt,
+          class = std::enable_if_t<
+              std::is_floating_point_v<typename BidirIt::value_type>>>
+typename BidirIt::value_type trapz(BidirIt first, BidirIt last,
+                                   typename BidirIt::value_type step)
 {
-    T result = T();
-    for (auto it = std::cbegin(vals); it != std::prev(std::cend(vals)); ++it)
-        result += step * (*it + *std::next(it)) / 2;
+    typename BidirIt::value_type result {};
+
+    typename BidirIt::value_type prev, cur = *first;
+    for (auto i = std::next(first); i != last; ++i) {
+        prev = cur;
+        cur = *i;
+        result += step * (prev + cur) / 2;
+    }
+
     return result;
+}
+
+template <class Integer>
+Integer floor(double x)
+{
+    return Integer(std::floor(x));
+}
+
+template <class Integer>
+Integer ceil(double x)
+{
+    return Integer(std::ceil(x));
 }
 
 #endif // GEOM_MODEL_SRC_UTIL_MATH_H_

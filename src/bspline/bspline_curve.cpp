@@ -1,6 +1,5 @@
+#include <bspline/bspline_curve_impl.h>
 #include <gm/bspline_curve.h>
-
-#include "bspline_curve_impl.h"
 
 using namespace std;
 
@@ -36,9 +35,6 @@ Vec BSplineCurve::df2(double u) const noexcept
     return pimpl_->df2(u);
 }
 
-
-
-
 ostream& BSplineCurve::print(ostream& os) const
 {
     return pimpl_->print(os);
@@ -49,12 +45,13 @@ double BSplineCurve::project(const Point& p) const
     return pimpl_->project(p);
 }
 
-
-double BSplineCurve::pfront() const noexcept {
+double BSplineCurve::pfront() const noexcept
+{
     return pimpl_->pfront();
 }
 
-double BSplineCurve::pback() const noexcept {
+double BSplineCurve::pback() const noexcept
+{
     return pimpl_->pback();
 }
 

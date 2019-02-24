@@ -40,7 +40,7 @@
 
 #define debug_fmt(stream, fmt_string, ...)                                    \
     do {                                                                      \
-        fmt::print((stream), fmt_string, ##__VA_ARGS__);                      \
+        fmt::print((stream), fmt_string "\n", ##__VA_ARGS__);                 \
     } while (0)
 
 #define check_ifd(condition, fmt_string, ...)                                 \

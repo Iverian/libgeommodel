@@ -1,5 +1,4 @@
-#include "bspline_surface_impl.h"
-
+#include <bspline/bspline_surface_impl.h>
 #include <util/itertools.h>
 
 #include <fmt/ostream.h>
@@ -82,7 +81,7 @@ Point BSplineSurface::Impl::f(const SurfPoint& p) const noexcept
     }
 
     auto cdb_u = CoxDeBoor<CPoint>(order_[0], knots_[0], cp);
-    return pget(cdb_u.proxy(p.u).get(0));
+    return Point(cdb_u.proxy(p.u).get(0).p());
 }
 
 Vec BSplineSurface::Impl::dfu(const SurfPoint& p) const noexcept
@@ -95,7 +94,7 @@ Vec BSplineSurface::Impl::dfu(const SurfPoint& p) const noexcept
     }
 
     auto cdb_u = CoxDeBoor<CPoint>(order_[0], knots_[0], cp);
-    return Vec(CPoint::d1(cdb_u.proxy(p.u).range(2)).p());
+    return Vec(diff1(cdb_u.proxy(p.u).range(2)).p());
 }
 
 Vec BSplineSurface::Impl::dfv(const SurfPoint& p) const noexcept
@@ -104,7 +103,7 @@ Vec BSplineSurface::Impl::dfv(const SurfPoint& p) const noexcept
     vector<CPoint> cp(n);
 
     for (size_t i = 0; i < n; ++i) {
-        cp[i] = CPoint::d1(cdb_[i].proxy(p.v).range(2));
+        cp[i] = diff1(cdb_[i].proxy(p.v).range(2));
     }
 
     auto cdb_u = CoxDeBoor<CPoint>(order_[0], knots_[0], cp);
@@ -121,7 +120,7 @@ Vec BSplineSurface::Impl::dfuu(const SurfPoint& p) const noexcept
     }
 
     auto cdb_u = CoxDeBoor<CPoint>(order_[0], knots_[0], cp);
-    return Vec(CPoint::d2(cdb_u.proxy(p.u).range(3)).p());
+    return Vec(diff2(cdb_u.proxy(p.u).range(3)).p());
 }
 
 Vec BSplineSurface::Impl::dfvv(const SurfPoint& p) const noexcept
@@ -130,7 +129,7 @@ Vec BSplineSurface::Impl::dfvv(const SurfPoint& p) const noexcept
     vector<CPoint> cp(n);
 
     for (size_t i = 0; i < n; ++i) {
-        cp[i] = CPoint::d2(cdb_[i].proxy(p.v).range(3));
+        cp[i] = diff2(cdb_[i].proxy(p.v).range(3));
     }
 
     auto cdb_u = CoxDeBoor<CPoint>(order_[0], knots_[0], cp);
@@ -143,11 +142,11 @@ Vec BSplineSurface::Impl::dfuv(const SurfPoint& p) const noexcept
     vector<CPoint> cp(n);
 
     for (size_t i = 0; i < n; ++i) {
-        cp[i] = CPoint::d1(cdb_[i].proxy(p.v).range(2));
+        cp[i] = diff1(cdb_[i].proxy(p.v).range(2));
     }
 
     auto cdb_u = CoxDeBoor<CPoint>(order_[0], knots_[0], cp);
-    return Vec(CPoint::d1(cdb_u.proxy(p.u).range(2)).p());
+    return Vec(diff1(cdb_u.proxy(p.u).range(2)).p());
 }
 
 ostream& BSplineSurface::Impl::print(ostream& os) const
@@ -194,12 +193,6 @@ const BSplineSurface::Impl::CPointSize& BSplineSurface::Impl::size() const
 
 BSplineSurface::Impl BSplineSurface::Impl::bezier_patches() const
 {
-    Impl result;
-    auto count = order_;
-    auto prev = knots_[0];
-
-    result.order_ = order_;
-
     throw std::runtime_error("not implemented");
     return *this;
 }

@@ -58,9 +58,9 @@ double Parabola::project(const Point& p) const
     auto Q = -dot(w, y) / (2 * f_);
     auto D = ::pow(P / 3, 3) - ::sqr(Q / 2);
 
-    if (iszero(D)) {
+    if (cmp::zero(D)) {
         auto x = ::pow(-Q / 2, 1. / 3);
-        if (iszero(x)) {
+        if (cmp::zero(x)) {
             roots.emplace_back(0);
         } else {
             roots.emplace_back(x);

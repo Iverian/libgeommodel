@@ -40,7 +40,7 @@ double det(const Mat& x) noexcept
 
 ::optional<Mat> inverse(const Mat& x) noexcept
 {
-    if (auto d = det(x); !iszero(d)) {
+    if (auto d = det(x); !cmp::zero(d)) {
         Mat result;
         result(0, 0) = x(1, 1) * x(2, 2) - x(1, 2) * x(2, 1);
         result(0, 1) = x(0, 2) * x(2, 1) - x(0, 1) * x(2, 2);

@@ -1,16 +1,15 @@
 #ifndef GEOM_MODEL_SRC_GEOM_BSPLINE_SURFACE_IMPL_H_
 #define GEOM_MODEL_SRC_GEOM_BSPLINE_SURFACE_IMPL_H_
 
+#include <bspline/cox_de_boor.h>
+#include <bspline/wpoint.h>
 #include <gm/bspline_surface.h>
 #include <gm/point.h>
 #include <gm/surf_point.h>
 #include <gm/vec.h>
-#include <primitive/wpoint.h>
 
 #include <array>
 #include <vector>
-
-#include "cox_de_boor.h"
 
 namespace gm {
 

@@ -3,10 +3,11 @@
 
 #include "abstract_surface.h"
 #include "axis.h"
+#include "exports.h"
 
 namespace gm {
 
-class CylindricalSurface : public AbstractSurface {
+class GM_EXPORT CylindricalSurface : public AbstractSurface {
 public:
     CylindricalSurface() noexcept;
     CylindricalSurface(double r, Axis ax) noexcept;

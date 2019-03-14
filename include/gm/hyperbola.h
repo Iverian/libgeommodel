@@ -3,10 +3,11 @@
 
 #include "abstract_curve.h"
 #include "axis.h"
+#include "exports.h"
 
 namespace gm {
 
-class Hyperbola : public AbstractCurve {
+class GM_EXPORT Hyperbola : public AbstractCurve {
 public:
     Hyperbola() noexcept;
     Hyperbola(double rx, double ry, Axis ax) noexcept;

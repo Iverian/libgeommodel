@@ -1,6 +1,7 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_MAT_H_
 #define GEOM_MODEL_INCLUDE_GM_MAT_H_
 
+#include "exports.h"
 #include "point.h"
 #include "vec.h"
 
@@ -10,7 +11,7 @@
 
 namespace gm {
 
-class Mat {
+class GM_EXPORT Mat {
     friend class Axis;
 
 public:
@@ -53,11 +54,11 @@ private:
     data_type data_;
 };
 
-double det(const Mat& x) noexcept;
-std::optional<Mat> inverse(const Mat& x) noexcept;
-Vec dot(const Mat& a, const Vec& v);
-Point dot(const Mat& a, const Point& p);
-std::ostream& operator<<(std::ostream& os, const Mat& mat);
+GM_EXPORT double det(const Mat& x) noexcept;
+GM_EXPORT std::optional<Mat> inverse(const Mat& x) noexcept;
+GM_EXPORT Vec dot(const Mat& a, const Vec& v);
+GM_EXPORT Point dot(const Mat& a, const Point& p);
+GM_EXPORT std::ostream& operator<<(std::ostream& os, const Mat& mat);
 
 } // namespace gm
 

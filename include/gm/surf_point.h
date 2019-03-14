@@ -1,12 +1,14 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_SURF_POINT_H_
 #define GEOM_MODEL_INCLUDE_GM_SURF_POINT_H_
 
+#include "exports.h"
+
 #include <algorithm>
 #include <iostream>
 
 namespace gm {
 
-struct SurfPoint {
+struct GM_EXPORT SurfPoint {
     constexpr SurfPoint(double pu, double pv)
         : u {pu}
         , v {pv}
@@ -102,8 +104,8 @@ struct SurfPoint {
     double v;
 };
 
-std::ostream& operator<<(std::ostream& os, const SurfPoint& p);
-SurfPoint abs(const SurfPoint& p);
+GM_EXPORT std::ostream& operator<<(std::ostream& os, const SurfPoint& p);
+GM_EXPORT SurfPoint abs(const SurfPoint& p);
 
 constexpr SurfPoint operator*(double x, const SurfPoint& p)
 {

@@ -2,6 +2,7 @@
 #define GEOM_MODEL_INCLUDE_GM_EDGE_H_
 
 #include "abstract_curve.h"
+#include "exports.h"
 
 #include <functional>
 #include <iostream>
@@ -9,7 +10,7 @@
 
 namespace gm {
 
-class Edge : public AbstractCurve {
+class GM_EXPORT Edge : public AbstractCurve {
 public:
     Edge();
     Edge(std::shared_ptr<AbstractCurve> curve, const Point& front,

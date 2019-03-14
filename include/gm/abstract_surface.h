@@ -2,6 +2,7 @@
 #define GEOM_MODEL_INCLUDE_GM_ABSTRACT_SURFACE_H_
 
 #include "debug.h"
+#include "exports.h"
 #include "point.h"
 #include "surf_point.h"
 #include "vec.h"
@@ -14,7 +15,8 @@
 namespace gm {
 class Plane;
 
-class AbstractSurface : public std::enable_shared_from_this<AbstractSurface> {
+class GM_EXPORT AbstractSurface
+    : public std::enable_shared_from_this<AbstractSurface> {
 public:
     virtual ~AbstractSurface();
     [[nodiscard]] virtual Point f(const SurfPoint& p) const noexcept = 0;
@@ -36,8 +38,8 @@ public:
     [[nodiscard]] std::function<Vec(double)> u_fixed(double v) const;
     [[nodiscard]] std::function<Vec(double)> v_fixed(double u) const;
 
-    friend std::ostream& operator<<(std::ostream& os,
-                                    const AbstractSurface& s);
+    GM_EXPORT friend std::ostream& operator<<(std::ostream& os,
+                                              const AbstractSurface& s);
 
 protected:
     virtual std::ostream& print(std::ostream& os) const = 0;

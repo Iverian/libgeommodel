@@ -10,9 +10,9 @@
 
 namespace gm {
 
-class Point;
+class GM_EXPORT Point;
 
-class Vec {
+class GM_EXPORT Vec {
 public:
     static constexpr size_t N = 3;
     using value_type = double;
@@ -55,37 +55,40 @@ private:
     value_type data_[N];
 };
 
-[[nodiscard]] Vec operator-(const Vec& obj) noexcept;
+[[nodiscard]] GM_EXPORT Vec operator-(const Vec& obj) noexcept;
 
-[[nodiscard]] Vec operator+(const Vec& lhs, const Vec& rhs) noexcept;
-[[nodiscard]] Vec operator-(const Vec& lhs, const Vec& rhs) noexcept;
-[[nodiscard]] Vec operator*(const Vec& lhs, Vec::const_reference rhs) noexcept;
-[[nodiscard]] Vec operator*(Vec::const_reference lhs, const Vec& rhs) noexcept;
-[[nodiscard]] Vec operator/(const Vec& lhs,
-                            Vec::const_reference rhs) __GM_NOEXCEPT_RELEASE__;
+[[nodiscard]] GM_EXPORT Vec operator+(const Vec& lhs, const Vec& rhs) noexcept;
+[[nodiscard]] GM_EXPORT Vec operator-(const Vec& lhs, const Vec& rhs) noexcept;
+[[nodiscard]] GM_EXPORT Vec operator*(const Vec& lhs,
+                                      Vec::const_reference rhs) noexcept;
+[[nodiscard]] GM_EXPORT Vec operator*(Vec::const_reference lhs,
+                                      const Vec& rhs) noexcept;
+[[nodiscard]] GM_EXPORT Vec operator/(const Vec& lhs, Vec::const_reference rhs)
+    __GM_NOEXCEPT_RELEASE__;
 
-bool operator==(const Vec& lhs, const Vec& rhs) noexcept;
-bool operator!=(const Vec& lhs, const Vec& rhs) noexcept;
+GM_EXPORT bool operator==(const Vec& lhs, const Vec& rhs) noexcept;
+GM_EXPORT bool operator!=(const Vec& lhs, const Vec& rhs) noexcept;
 
-[[nodiscard]] Vec cross(const Vec& lhs, const Vec& rhs) noexcept;
-[[nodiscard]] double sqr(const Vec& obj) noexcept;
-[[nodiscard]] double norm(const Vec& obj) noexcept;
-[[nodiscard]] double dist(const Vec& lhs, const Vec& rhs) noexcept;
-[[nodiscard]] double cos(const Vec& lhs, const Vec& rhs) noexcept;
-[[nodiscard]] double sin(const Vec& lhs, const Vec& rhs) noexcept;
-[[nodiscard]] double angle(const Vec& lhs, const Vec& rhs) noexcept;
-[[nodiscard]] Vec unit(const Vec& obj) __GM_NOEXCEPT_RELEASE__;
+[[nodiscard]] GM_EXPORT Vec cross(const Vec& lhs, const Vec& rhs) noexcept;
+[[nodiscard]] GM_EXPORT double sqr(const Vec& obj) noexcept;
+[[nodiscard]] GM_EXPORT double norm(const Vec& obj) noexcept;
+[[nodiscard]] GM_EXPORT double dist(const Vec& lhs, const Vec& rhs) noexcept;
+[[nodiscard]] GM_EXPORT double cos(const Vec& lhs, const Vec& rhs) noexcept;
+[[nodiscard]] GM_EXPORT double sin(const Vec& lhs, const Vec& rhs) noexcept;
+[[nodiscard]] GM_EXPORT double angle(const Vec& lhs, const Vec& rhs) noexcept;
+[[nodiscard]] GM_EXPORT Vec unit(const Vec& obj) __GM_NOEXCEPT_RELEASE__;
 
-[[nodiscard]] bool isnan(const Vec& obj) noexcept;
-[[nodiscard]] bool isinf(const Vec& obj) noexcept;
+[[nodiscard]] GM_EXPORT bool isnan(const Vec& obj) noexcept;
+[[nodiscard]] GM_EXPORT bool isinf(const Vec& obj) noexcept;
 
 std::ostream& operator<<(std::ostream& os, const Vec& obj);
 
 namespace cmp {
-    [[nodiscard]] bool near(const Vec& lhs, const Vec& rhs,
-                            Tolerance tol = default_tolerance) noexcept;
-    [[nodiscard]] bool zero(const Vec& obj,
-                            Tolerance tol = default_tolerance) noexcept;
+    [[nodiscard]] GM_EXPORT bool near(const Vec& lhs, const Vec& rhs,
+                                      Tolerance tol
+                                      = default_tolerance) noexcept;
+    [[nodiscard]] GM_EXPORT bool
+    zero(const Vec& obj, Tolerance tol = default_tolerance) noexcept;
 } // namespace cmp
 
 } // namespace gm

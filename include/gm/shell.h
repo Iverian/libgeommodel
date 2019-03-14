@@ -2,12 +2,13 @@
 #define GEOM_MODEL_INCLUDE_GM_SHELL_H_
 
 #include "axis.h"
+#include "exports.h"
 #include "face.h"
 #include "oriented_edge.h"
 
 namespace gm {
 
-class Shell {
+class GM_EXPORT Shell {
 public:
     Shell();
     Shell(const Axis& ax, const std::vector<Face>& faces);
@@ -25,7 +26,7 @@ private:
     std::vector<Face> faces_;
 };
 
-std::ostream& operator<<(std::ostream& os, const Shell& x);
+GM_EXPORT std::ostream& operator<<(std::ostream& os, const Shell& x);
 
 } // namespace gm
 

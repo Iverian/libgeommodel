@@ -1,6 +1,7 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_ABSTRACT_CURVE_H_
 #define GEOM_MODEL_INCLUDE_GM_ABSTRACT_CURVE_H_
 
+#include "exports.h"
 #include "point.h"
 #include "vec.h"
 
@@ -11,7 +12,8 @@
 
 namespace gm {
 
-class AbstractCurve : public std::enable_shared_from_this<AbstractCurve> {
+class GM_EXPORT AbstractCurve
+    : public std::enable_shared_from_this<AbstractCurve> {
 public:
     virtual ~AbstractCurve();
     [[nodiscard]] virtual Point f(double u) const noexcept = 0;
@@ -31,7 +33,8 @@ public:
     [[nodiscard]] Point operator()(double u) const noexcept;
     [[nodiscard]] Point gproject(const Point& p) const noexcept;
 
-    friend std::ostream& operator<<(std::ostream& os, const AbstractCurve& c);
+    GM_EXPORT friend std::ostream& operator<<(std::ostream& os,
+                                              const AbstractCurve& c);
 
 protected:
     virtual std::ostream& print(std::ostream& os) const = 0;

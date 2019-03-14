@@ -4,15 +4,16 @@
 #include "compare.h"
 #include "debug.h"
 #include "dot.h"
+#include "exports.h"
 
 #include <array>
 #include <ostream>
 
 namespace gm {
 
-class Vec;
+class GM_EXPORT Vec;
 
-class Point {
+class GM_EXPORT Point {
 public:
     static constexpr size_t N = 3;
     using value_type = double;
@@ -54,38 +55,48 @@ private:
     value_type data_[N];
 };
 
-[[nodiscard]] Point operator-(const Point& obj) noexcept;
+[[nodiscard]] GM_EXPORT Point operator-(const Point& obj) noexcept;
 
-[[nodiscard]] Point operator+(const Point& lhs, const Point& rhs) noexcept;
-[[nodiscard]] Point operator-(const Point& lhs, const Point& rhs) noexcept;
-[[nodiscard]] Point operator*(const Point& lhs,
-                              Point::const_reference rhs) noexcept;
-[[nodiscard]] Point operator*(Point::const_reference lhs,
-                              const Point& rhs) noexcept;
-[[nodiscard]] Point operator/(const Point& lhs, Point::const_reference rhs)
-    __GM_NOEXCEPT_RELEASE__;
+[[nodiscard]] GM_EXPORT Point operator+(const Point& lhs,
+                                        const Point& rhs) noexcept;
+[[nodiscard]] GM_EXPORT Point operator-(const Point& lhs,
+                                        const Point& rhs) noexcept;
+[[nodiscard]] GM_EXPORT Point operator*(const Point& lhs,
+                                        Point::const_reference rhs) noexcept;
+[[nodiscard]] GM_EXPORT Point operator*(Point::const_reference lhs,
+                                        const Point& rhs) noexcept;
+[[nodiscard]] GM_EXPORT Point operator/(
+    const Point& lhs, Point::const_reference rhs) __GM_NOEXCEPT_RELEASE__;
 
-[[nodiscard]] Point operator+(const Point& lhs, const Vec& rhs) noexcept;
-[[nodiscard]] Point operator+(const Vec& lhs, const Point& rhs) noexcept;
-[[nodiscard]] Point operator-(const Point& lhs, const Vec& rhs) noexcept;
-[[nodiscard]] Point operator-(const Vec& lhs, const Point& rhs) noexcept;
+[[nodiscard]] GM_EXPORT Point operator+(const Point& lhs,
+                                        const Vec& rhs) noexcept;
+[[nodiscard]] GM_EXPORT Point operator+(const Vec& lhs,
+                                        const Point& rhs) noexcept;
+[[nodiscard]] GM_EXPORT Point operator-(const Point& lhs,
+                                        const Vec& rhs) noexcept;
+[[nodiscard]] GM_EXPORT Point operator-(const Vec& lhs,
+                                        const Point& rhs) noexcept;
 
-[[nodiscard]] bool operator==(const Point& lhs, const Point& rhs) noexcept;
-[[nodiscard]] bool operator!=(const Point& lhs, const Point& rhs) noexcept;
+[[nodiscard]] GM_EXPORT bool operator==(const Point& lhs,
+                                        const Point& rhs) noexcept;
+[[nodiscard]] GM_EXPORT bool operator!=(const Point& lhs,
+                                        const Point& rhs) noexcept;
 
-[[nodiscard]] double sqr(const Point& obj) noexcept;
-[[nodiscard]] double dist(const Point& lhs, const Point& rhs) noexcept;
+[[nodiscard]] GM_EXPORT double sqr(const Point& obj) noexcept;
+[[nodiscard]] GM_EXPORT double dist(const Point& lhs,
+                                    const Point& rhs) noexcept;
 
-[[nodiscard]] bool isnan(const Point& obj) noexcept;
-[[nodiscard]] bool isinf(const Point& obj) noexcept;
+[[nodiscard]] GM_EXPORT bool isnan(const Point& obj) noexcept;
+[[nodiscard]] GM_EXPORT bool isinf(const Point& obj) noexcept;
 
-std::ostream& operator<<(std::ostream& os, const Point& obj);
+GM_EXPORT std::ostream& operator<<(std::ostream& os, const Point& obj);
 
 namespace cmp {
-    [[nodiscard]] bool near(const Point& lhs, const Point& rhs,
-                            Tolerance tol = default_tolerance) noexcept;
-    [[nodiscard]] bool zero(const Point& obj,
-                            Tolerance tol = default_tolerance) noexcept;
+    [[nodiscard]] GM_EXPORT bool near(const Point& lhs, const Point& rhs,
+                                      Tolerance tol
+                                      = default_tolerance) noexcept;
+    [[nodiscard]] GM_EXPORT bool
+    zero(const Point& obj, Tolerance tol = default_tolerance) noexcept;
 } // namespace cmp
 
 } // namespace gm

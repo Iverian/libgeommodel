@@ -3,10 +3,11 @@
 
 #include "abstract_surface.h"
 #include "axis.h"
+#include "exports.h"
 
 namespace gm {
 
-class ConicalSurface : public AbstractSurface {
+class GM_EXPORT ConicalSurface : public AbstractSurface {
 public:
     ConicalSurface() noexcept;
     ConicalSurface(double r, double a, Axis ax) noexcept;

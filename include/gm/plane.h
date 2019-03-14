@@ -3,12 +3,13 @@
 
 #include "abstract_surface.h"
 #include "axis.h"
+#include "exports.h"
 
 #include <memory>
 
 namespace gm {
 
-class Plane : public AbstractSurface {
+class GM_EXPORT Plane : public AbstractSurface {
 public:
     Plane() noexcept;
     explicit Plane(Axis ax) noexcept;

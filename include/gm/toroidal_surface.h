@@ -3,12 +3,13 @@
 
 #include "abstract_surface.h"
 #include "axis.h"
+#include "exports.h"
 
 #include <memory>
 
 namespace gm {
 
-class ToroidalSurface : public AbstractSurface {
+class GM_EXPORT ToroidalSurface : public AbstractSurface {
 public:
     ToroidalSurface() noexcept;
     ToroidalSurface(double r0, double r1, Axis ax) noexcept;

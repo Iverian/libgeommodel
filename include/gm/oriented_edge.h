@@ -2,10 +2,11 @@
 #define GEOM_MODEL_INCLUDE_GM_ORIENTED_EDGE_H_
 
 #include "edge.h"
+#include "exports.h"
 
 namespace gm {
 
-class OrientedEdge {
+class GM_EXPORT OrientedEdge {
 public:
     OrientedEdge(const Edge& edge, bool orientation);
     OrientedEdge(Edge&& edge, bool orientation) noexcept;

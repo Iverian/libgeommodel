@@ -3,10 +3,11 @@
 
 #include "abstract_curve.h"
 #include "axis.h"
+#include "exports.h"
 
 namespace gm {
 
-class Parabola : public AbstractCurve {
+class GM_EXPORT Parabola : public AbstractCurve {
 public:
     Parabola() noexcept;
     Parabola(double f, Axis ax) noexcept;

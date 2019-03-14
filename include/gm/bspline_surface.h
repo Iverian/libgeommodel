@@ -2,13 +2,14 @@
 #define GEOM_MODEL_INCLUDE_GM_BSPLINE_SURFACE_H_
 
 #include "abstract_surface.h"
+#include "exports.h"
 
 #include <memory>
 #include <vector>
 
 namespace gm {
 
-class BSplineSurface : public AbstractSurface {
+class GM_EXPORT BSplineSurface : public AbstractSurface {
 public:
     class Impl;
 

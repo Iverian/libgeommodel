@@ -2,12 +2,13 @@
 #define GEOM_MODEL_INCLUDE_GM_BSPLINE_CURVE_H_
 
 #include "abstract_curve.h"
+#include "exports.h"
 
 #include <vector>
 
 namespace gm {
 
-class BSplineCurve : public AbstractCurve {
+class GM_EXPORT BSplineCurve : public AbstractCurve {
 public:
     class Impl;
 

@@ -3,10 +3,11 @@
 
 #include "abstract_curve.h"
 #include "axis.h"
+#include "exports.h"
 
 namespace gm {
 
-class Ellipse : public AbstractCurve {
+class GM_EXPORT Ellipse : public AbstractCurve {
 public:
     Ellipse() noexcept;
     Ellipse(double rx, double ry, Axis ax) noexcept;

@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
 project(libgeommodel VERSION 2.0.0 LANGUAGES CXX)
 
+option(ENABLE_TESTS "Enable unit tests" YES)
+
 if(EXTRA_CXX_FLAGS)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_FLAGS}")
   message(STATUS "Added extra c++ compiler flags ${EXTRA_CXX_FLAGS}")
@@ -37,7 +39,7 @@ target_sources(geommodel
 target_include_directories(geommodel
   PUBLIC
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_INCLUDEDIR}>"
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src;${CMAKE_CURRENT_SOURCE_DIR}/include>"
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR};${CMAKE_CURRENT_SOURCE_DIR}/src;${CMAKE_CURRENT_SOURCE_DIR}/include>"
 )
 target_compile_features(geommodel
   PUBLIC
@@ -56,8 +58,23 @@ set_target_properties(geommodel
     DEBUG_POSTFIX d
     EXPORT_NAME GeomModel
     CXX_EXTENSIONS NO
-    WINDOWS_EXPORT_ALL_SYMBOLS YES
+    WINDOWS_EXPORT_ALL_SYMBOLS ${ENABLE_TESTS}
 )
+
+include(GenerateExportHeader)
+generate_export_header(geommodel
+  BASE_NAME GM
+  EXPORT_FILE_NAME exports.h
+  NO_DEPRECATED_MACRO_NAME GM_OMIT_DEPRECATED
+  INCLUDE_GUARD_NAME GEOMMODEL_INCLUDE_GM_EXPORTS_H_
+  DEFINE_NO_DEPRECATED
+)
+if (ENABLE_TESTS)
+  target_compile_definitions(geommodel
+    PUBLIC
+      $<BUILD_INTERFACE:GM_STATIC_DEFINE>
+  )
+endif()
 #
 
 # Install package
@@ -122,5 +139,7 @@ export(PACKAGE GeomModel)
 #
 
 # Add tests
-add_subdirectory(tests)
+if (ENABLE_TESTS)
+  add_subdirectory(tests)
+endif()
 #

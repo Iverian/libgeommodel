@@ -1,6 +1,7 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_AXIS_H_
 #define GEOM_MODEL_INCLUDE_GM_AXIS_H_
 
+#include "exports.h"
 #include "point.h"
 #include "vec.h"
 
@@ -10,7 +11,7 @@
 
 namespace gm {
 
-class Axis {
+class GM_EXPORT Axis {
     static constexpr size_t N = 3;
 
 public:

@@ -3,10 +3,11 @@
 
 #include "axis.h"
 #include "ellipse.h"
+#include "exports.h"
 
 namespace gm {
 
-class Circle : public Ellipse {
+class GM_EXPORT Circle : public Ellipse {
 public:
     Circle() noexcept;
     Circle(double r, Axis ax) noexcept;

@@ -2,12 +2,13 @@
 #define GEOM_MODEL_INCLUDE_GM_LINE_H_
 
 #include "abstract_curve.h"
+#include "exports.h"
 #include "point.h"
 #include "vec.h"
 
 namespace gm {
 
-class Line : public AbstractCurve {
+class GM_EXPORT Line : public AbstractCurve {
 public:
     Line() noexcept;
     Line(Vec dir, Point c) noexcept;

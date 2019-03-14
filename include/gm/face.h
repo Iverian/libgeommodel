@@ -2,6 +2,7 @@
 #define GEOM_MODEL_INCLUDE_GM_FACE_H_
 
 #include "abstract_surface.h"
+#include "exports.h"
 #include "oriented_edge.h"
 
 #include <memory>
@@ -11,7 +12,7 @@ namespace gm {
 
 using FaceBound = std::vector<OrientedEdge>;
 
-class Face {
+class GM_EXPORT Face {
 public:
     Face(std::shared_ptr<AbstractSurface> surface = nullptr,
          bool same_sense = true);
@@ -29,7 +30,7 @@ private:
     std::shared_ptr<Impl> pimpl_;
 };
 
-std::ostream& operator<<(std::ostream& os, const Face& f);
+GM_EXPORT std::ostream& operator<<(std::ostream& os, const Face& f);
 
 } // namespace gm
 

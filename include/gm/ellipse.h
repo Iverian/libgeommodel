@@ -19,7 +19,8 @@ public:
     [[nodiscard]] Vec df(double u) const noexcept override;
     [[nodiscard]] Vec df2(double u) const noexcept override;
     [[nodiscard]] double project(const Point& p) const override;
-    [[nodiscard]] std::optional<double> project_greater(const Point& p, double min) const
+    [[nodiscard]] std::optional<double> project_greater(const Point& p,
+                                                        double min) const
         noexcept override;
 
 protected:

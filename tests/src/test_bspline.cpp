@@ -130,6 +130,7 @@ TEST_F(TestBSpline, curve_proj_2)
 
         auto qx = Vec(q, x);
         debug_fmt(cout, "r: {} qx: {}", r, qx);
+        ASSERT_LE(dist(q, x), dist(p, x));
         ASSERT_NEAR(cos(qx, d), 0., cmp::tol());
     }
 }
@@ -152,8 +153,6 @@ TEST_F(TestBSpline, surface_proj_1)
         ASSERT_TRUE(cmp::zero(d_pq, Tolerance::SINGLE));
     }
 }
-
-#undef PAD_
 
 TEST_F(TestBSpline, surface_proj_2)
 {

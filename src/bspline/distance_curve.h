@@ -22,14 +22,12 @@ public:
     double tocparg(double arg, bool dir = false) const noexcept;
 
     double f(double u) const noexcept;
-    double df(double u) const noexcept;
-    double df2(double u) const noexcept;
 
     std::pair<double, double> min_init() const noexcept;
     bool is_candidate(double d) const noexcept;
     std::vector<SurfPoint> point_hull(double d) const;
     bool eliminate_segment(double d) noexcept;
-    std::optional<size_t> peak_point() const noexcept;
+    bool peak_point() const noexcept;
 
 private:
     Super c_;

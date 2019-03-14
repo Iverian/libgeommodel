@@ -6,11 +6,6 @@
 
 namespace gm {
 
-struct SurfPoint;
-
-std::ostream& operator<<(std::ostream& os, const SurfPoint& p);
-SurfPoint abs(const SurfPoint& p);
-
 struct SurfPoint {
     constexpr SurfPoint(double pu, double pv)
         : u {pu}
@@ -106,6 +101,9 @@ struct SurfPoint {
     double u;
     double v;
 };
+
+std::ostream& operator<<(std::ostream& os, const SurfPoint& p);
+SurfPoint abs(const SurfPoint& p);
 
 constexpr SurfPoint operator*(double x, const SurfPoint& p)
 {

@@ -55,14 +55,14 @@ private:
     value_type data_[N];
 };
 
-Vec operator-(const Vec& obj) noexcept;
+[[nodiscard]] Vec operator-(const Vec& obj) noexcept;
 
-Vec operator+(const Vec& lhs, const Vec& rhs) noexcept;
-Vec operator-(const Vec& lhs, const Vec& rhs) noexcept;
-Vec operator*(const Vec& lhs, Vec::const_reference rhs) noexcept;
-Vec operator*(Vec::const_reference lhs, const Vec& rhs) noexcept;
-Vec operator/(const Vec& lhs,
-              Vec::const_reference rhs) __GM_NOEXCEPT_RELEASE__;
+[[nodiscard]] Vec operator+(const Vec& lhs, const Vec& rhs) noexcept;
+[[nodiscard]] Vec operator-(const Vec& lhs, const Vec& rhs) noexcept;
+[[nodiscard]] Vec operator*(const Vec& lhs, Vec::const_reference rhs) noexcept;
+[[nodiscard]] Vec operator*(Vec::const_reference lhs, const Vec& rhs) noexcept;
+[[nodiscard]] Vec operator/(const Vec& lhs,
+                            Vec::const_reference rhs) __GM_NOEXCEPT_RELEASE__;
 
 bool operator==(const Vec& lhs, const Vec& rhs) noexcept;
 bool operator!=(const Vec& lhs, const Vec& rhs) noexcept;

@@ -19,7 +19,8 @@ public:
     [[nodiscard]] Vec df(double u) const noexcept override;
     [[nodiscard]] Vec df2(double u) const noexcept override;
     [[nodiscard]] double project(const Point& x) const override;
-    [[nodiscard]] double approx_length(double begin, double end, size_t n) const override;
+    [[nodiscard]] double approx_length(double begin, double end,
+                                       size_t n) const override;
 
 protected:
     std::ostream& print(std::ostream& os) const override;

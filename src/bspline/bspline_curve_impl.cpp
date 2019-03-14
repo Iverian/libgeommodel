@@ -105,7 +105,7 @@ ostream& BSplineCurve::Impl::print(ostream& os) const
 double BSplineCurve::Impl::project(const Point& p) const
 {
     if (!proj_) {
-        proj_.reset(new CurveProjector(c_));
+        proj_.reset(new CurveProjector(*this));
     }
 
     return proj_->call(p);

@@ -78,6 +78,6 @@ struct hash<gm::Mat> {
 private:
     hash<double> hasher_;
 };
-}
+} // namespace std
 
 #endif // GEOM_MODEL_INCLUDE_GM_MAT_H_

@@ -10,7 +10,7 @@ namespace gm {
 
 class BSplineSurface : public AbstractSurface {
 public:
-    struct Impl;
+    class Impl;
 
     BSplineSurface();
     BSplineSurface(size_t du, size_t dv, const std::vector<double>& ku,

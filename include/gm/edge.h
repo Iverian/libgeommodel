@@ -63,6 +63,6 @@ private:
     hash<shared_ptr<gm::AbstractCurve>> chasher_;
     hash<double> dhasher_;
 };
-}
+} // namespace std
 
 #endif // GEOM_MODEL_INCLUDE_GM_EDGE_H_

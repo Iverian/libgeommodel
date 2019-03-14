@@ -54,22 +54,24 @@ private:
     value_type data_[N];
 };
 
-Point operator-(const Point& obj) noexcept;
+[[nodiscard]] Point operator-(const Point& obj) noexcept;
 
-Point operator+(const Point& lhs, const Point& rhs) noexcept;
-Point operator-(const Point& lhs, const Point& rhs) noexcept;
-Point operator*(const Point& lhs, Point::const_reference rhs) noexcept;
-Point operator*(Point::const_reference lhs, const Point& rhs) noexcept;
-Point operator/(const Point& lhs,
-                Point::const_reference rhs) __GM_NOEXCEPT_RELEASE__;
+[[nodiscard]] Point operator+(const Point& lhs, const Point& rhs) noexcept;
+[[nodiscard]] Point operator-(const Point& lhs, const Point& rhs) noexcept;
+[[nodiscard]] Point operator*(const Point& lhs,
+                              Point::const_reference rhs) noexcept;
+[[nodiscard]] Point operator*(Point::const_reference lhs,
+                              const Point& rhs) noexcept;
+[[nodiscard]] Point operator/(const Point& lhs, Point::const_reference rhs)
+    __GM_NOEXCEPT_RELEASE__;
 
-Point operator+(const Point& lhs, const Vec& rhs) noexcept;
-Point operator+(const Vec& lhs, const Point& rhs) noexcept;
-Point operator-(const Point& lhs, const Vec& rhs) noexcept;
-Point operator-(const Vec& lhs, const Point& rhs) noexcept;
+[[nodiscard]] Point operator+(const Point& lhs, const Vec& rhs) noexcept;
+[[nodiscard]] Point operator+(const Vec& lhs, const Point& rhs) noexcept;
+[[nodiscard]] Point operator-(const Point& lhs, const Vec& rhs) noexcept;
+[[nodiscard]] Point operator-(const Vec& lhs, const Point& rhs) noexcept;
 
-bool operator==(const Point& lhs, const Point& rhs) noexcept;
-bool operator!=(const Point& lhs, const Point& rhs) noexcept;
+[[nodiscard]] bool operator==(const Point& lhs, const Point& rhs) noexcept;
+[[nodiscard]] bool operator!=(const Point& lhs, const Point& rhs) noexcept;
 
 [[nodiscard]] double sqr(const Point& obj) noexcept;
 [[nodiscard]] double dist(const Point& lhs, const Point& rhs) noexcept;
@@ -100,6 +102,6 @@ struct hash<gm::Point> {
 private:
     hash<gm::Point::value_type> hasher_;
 };
-}
+} // namespace std
 
 #endif // GEOM_MODEL_INCLUDE_GM_POINT_H_

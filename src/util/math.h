@@ -10,6 +10,10 @@
 #include <cmath>
 #include <vector>
 
+#include <type_traits>
+
+double binom(size_t n, size_t k) __GM_NOEXCEPT_RELEASE__;
+
 double pad(double t, double f, double b, double pad = 1e-9);
 std::array<double, 2> atan2v(double y, double x);
 

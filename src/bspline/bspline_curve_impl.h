@@ -9,10 +9,8 @@
 #include <ostream>
 #include <vector>
 
-class BSplineCurveProjector;
-
 namespace gm {
-struct CurveProjector;
+class CurveProjector;
 
 class BSplineCurve::Impl {
 public:

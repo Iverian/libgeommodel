@@ -1,59 +1,69 @@
-#ifndef GEOM_MODEL_BSPLINE_WPOINT_H_
-#define GEOM_MODEL_BSPLINE_WPOINT_H_
+#ifndef GEOM_MODEL_SRC_BSPLINE_WPOINT_H_
+#define GEOM_MODEL_SRC_BSPLINE_WPOINT_H_
 
-#include <bspline/array_operators.h>
-#include <gm/point.h>
+// #include <bspline/array_operators.h>
 #include <util/debug.h>
 #include <util/itertools.h>
 
 #include <array>
 #include <ostream>
+#include <type_traits>
 #include <vector>
 
 namespace gm {
 
 template <class T, size_t N>
-class WPoint : std::array<T, N + 1> {
-    using Super = std::array<T, N + 1>;
+class WPoint {
+    using Data = std::array<T, N + 1>;
+
+    Data d_;
 
 public:
-    using typename Super::const_pointer;
-    using typename Super::const_reference;
-    using typename Super::difference_type;
-    using typename Super::pointer;
-    using typename Super::reference;
-    using typename Super::size_type;
-    using typename Super::value_type;
+    using size_type = typename Data::size_type;
+    using value_type = typename Data::value_type;
+    using reference = typename Data::reference;
+    using const_reference = typename Data::const_reference;
+    using pointer = typename Data::pointer;
+    using const_pointer = typename Data::const_pointer;
+    using iterator = typename Data::iterator;
+    using const_iterator = typename Data::const_iterator;
+    // using typename Super::const_pointer;
+    // using typename Super::const_reference;
+    // using typename Super::difference_type;
+    // using typename Super::pointer;
+    // using typename Super::reference;
+    // using typename Super::size_type;
+    // using typename Super::value_type;
 
-    using Super::operator[];
-    using Super::begin;
-    using Super::end;
-    using Super::size;
+    // using Super::operator[];
+    // using Super::begin;
+    // using Super::end;
+    // using Super::size;
 
     using Proj = std::array<T, N>;
 
     WPoint()
-        : Super()
+        : d_()
     {
     }
 
-    WPoint(const Super& value)
-        : Super(value)
+    WPoint(const Data& value)
+        : d_(value)
     {
     }
 
-    WPoint(Super&& value)
-        : Super(value)
+    WPoint(Data&& value)
+        : d_(value)
     {
     }
 
     WPoint(const Proj& p, value_type w)
-        : Super()
+        : d_()
     {
         for (size_type i = 0; i < N; ++i) {
-            (*this)[i] = p[i] * w;
+            d_[i] = p[i] * w;
         }
-        (*this)[N] = w;
+        d_[N] = w;
     }
 
     WPoint(const WPoint&) = default;
@@ -61,13 +71,67 @@ public:
     WPoint& operator=(const WPoint&) = default;
     WPoint& operator=(WPoint&&) noexcept = default;
 
+    reference operator[](size_type i) noexcept
+    {
+        return d_[i];
+    }
+
+    const_reference operator[](size_type i) const noexcept
+    {
+        return d_[i];
+    }
+
+    iterator begin() noexcept
+    {
+        return d_.begin();
+    }
+
+    iterator end() noexcept
+    {
+        return d_.end();
+    }
+
+    const_iterator begin() const noexcept
+    {
+        return d_.begin();
+    }
+
+    const_iterator end() const noexcept
+    {
+        return d_.end();
+    }
+
+    constexpr size_type size() const noexcept
+    {
+        return N + 1;
+    }
+
     Proj wp() const noexcept
     {
         Proj result;
         for (size_type i = 0; i < N; ++i) {
-            result[i] = (*this)[i];
+            result[i] = d_[i];
         }
         return result;
+    }
+
+    WPoint<T, N>& wdiv(const_reference v) __GM_NOEXCEPT_RELEASE__
+    {
+        check_ifd(!gm::cmp::zero(v), "Division by zero");
+        for (size_type i = 0; i < N; ++i) {
+            d_[i] /= v;
+        }
+
+        return *this;
+    }
+
+    WPoint<T, N>& wmul(const_reference v) noexcept
+    {
+        for (size_type i = 0; i < N; ++i) {
+            d_[i] *= v;
+        }
+
+        return *this;
     }
 
     Proj p() const __GM_NOEXCEPT_RELEASE__
@@ -77,7 +141,7 @@ public:
 
         Proj result;
         for (size_type i = 0; i < N; ++i) {
-            result[i] = (*this)[i] / ww;
+            result[i] = d_[i] / ww;
         }
         return result;
     }
@@ -87,15 +151,10 @@ public:
         return (*this)[N];
     }
 
-    constexpr size_type size() const noexcept
-    {
-        return N;
-    }
-
     WPoint& operator+=(const WPoint& rhs) noexcept
     {
         for (size_type i = 0; i < N + 1; ++i) {
-            (*this)[i] += rhs[i];
+            d_[i] += rhs[i];
         }
         return *this;
     }
@@ -103,44 +162,46 @@ public:
     WPoint& operator-=(const WPoint& rhs) noexcept
     {
         for (size_type i = 0; i < N + 1; ++i) {
-            (*this)[i] -= rhs[i];
+            d_[i] -= rhs[i];
         }
         return *this;
     }
 
-    WPoint& operator*=(value_type rhs) noexcept
+    WPoint& operator*=(const_reference rhs) noexcept
     {
         for (size_type i = 0; i < N + 1; ++i) {
-            (*this)[i] *= rhs;
+            d_[i] *= rhs;
         }
         return *this;
     }
 
-    WPoint& operator/=(value_type rhs) __GM_NOEXCEPT_RELEASE__
+    WPoint& operator/=(const_reference rhs) __GM_NOEXCEPT_RELEASE__
     {
         check_ifd(!gm::cmp::zero(rhs), "Division by zero");
 
         for (size_type i = 0; i < N + 1; ++i) {
-            (*this)[i] /= rhs;
+            d_[i] /= rhs;
         }
         return *this;
     }
 };
 
-using CPoint = WPoint<double, 3>;
-using DPoint = WPoint<double, 1>;
-
-Point pget(const CPoint& p) __GM_NOEXCEPT_RELEASE__;
-double pget(const DPoint& p) __GM_NOEXCEPT_RELEASE__;
-
 template <class T, size_t N>
-DPoint wdot(const WPoint<T, N>& lhs, const WPoint<T, N>& rhs) noexcept
+WPoint<T, 1> wdot(const WPoint<T, N>& lhs, const WPoint<T, N>& rhs) noexcept
 {
     T wp {};
     for (size_t i = 0; i < N; ++i) {
         wp += lhs[i] * rhs[i];
     }
-    return DPoint({wp, lhs[N] * rhs[N]});
+    return WPoint<T, 1>({wp, lhs[N] * rhs[N]});
+}
+
+template <class T, size_t N>
+std::ostream& operator<<(std::ostream& os, const WPoint<T, N>& obj)
+{
+    fmt::print(os, "{{ \"wp\": {}, \"w\": {} }}",
+               RangePrint(obj.begin(), std::prev(obj.end())), obj[N]);
+    return os;
 }
 
 template <class T, size_t N>
@@ -228,32 +289,6 @@ WPoint<T, N> operator*(typename WPoint<T, N>::const_reference lhs,
     auto result = rhs;
     return (result *= lhs);
 }
-
-template <class T, size_t N>
-std::ostream& operator<<(std::ostream& os, const WPoint<T, N>& obj)
-{
-    fmt::print(os, "{{ \"wp\": {}, \"w\": {} }}",
-               RangePrint(obj.begin(), std::prev(obj.end())), obj[N]);
-    return os;
-}
-
-template <class T, size_t N>
-[[nodiscard]] WPoint<T, N> diff1(const std::vector<WPoint<T, N>>& p) noexcept
-{
-    auto pp = p[1].wp() / p[0].w() - p[1].w() * p[0].wp() / sqr(p[0].w());
-    return WPoint<T, N>(pp, 1);
-}
-
-template <class T, size_t N>
-[[nodiscard]] WPoint<T, N> diff2(const std::vector<WPoint<T, N>>& p) noexcept
-{
-    auto pp = (p[1].wp() * (-2 * p[1].w() / p[0].w())
-               + p[0].wp() * (2 * p[1].w() / sqr(p[0].w())) + p[2].wp()
-               - p[0].wp() * (p[2].w() / p[0].w()))
-        / p[0].w();
-    return WPoint<T, N>(pp, 1);
-}
-
 } // namespace gm
 
-#endif // GEOM_MODEL_BSPLINE_WPOINT_H_
+#endif // GEOM_MODEL_SRC_BSPLINE_WPOINT_H_

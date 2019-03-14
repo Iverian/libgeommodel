@@ -57,10 +57,6 @@ TEST_F(TestBSplineImpl, test_distance_curve)
 {
     Point p(1, 1, 1);
     auto f = [this, &p](double u) { return sqr(c.f(u) - p); };
-    auto df = [this, &p](double u) { return 2 * dot(c.df(u), c.f(u) - p); };
-    auto df2 = [this, &p](double u) {
-        return 2 * dot(c.df2(u), c.f(u) - p) + 2 * sqr(c.df(u));
-    };
 
     for (auto& patch : bz) {
         auto g = DistanceCurve(patch, p);
@@ -69,8 +65,6 @@ TEST_F(TestBSplineImpl, test_distance_curve)
 
         for (size_t i = 0; i < N; ++i) {
             EXPECT_NEAR(f(u), g.f(u), cmp::tol());
-            EXPECT_NEAR(df(u), g.df(u), cmp::tol());
-            EXPECT_NEAR(df2(u), g.df2(u), cmp::tol());
 
             u += step;
         }

@@ -1,41 +1,33 @@
 #ifndef GEOM_MODEL_SRC_GEOM_BSPLINE_SURFACE_IMPL_H_
 #define GEOM_MODEL_SRC_GEOM_BSPLINE_SURFACE_IMPL_H_
 
-#include <bspline/cox_de_boor.h>
+#include <bspline/basic_bspline_surface.h>
 #include <bspline/wpoint.h>
 #include <gm/bspline_surface.h>
-#include <gm/point.h>
-#include <gm/surf_point.h>
-#include <gm/vec.h>
 
 #include <array>
+#include <memory>
 #include <vector>
 
 namespace gm {
 
-struct BSplineSurface::Impl {
-public:
-    using order_type = std::array<size_t, 2>;
-    using knot_type = std::array<std::vector<double>, 2>;
-    using cpoint_type = std::vector<CPoint>;
-    using cox_de_boor_type = std::vector<CoxDeBoor<CPoint>>;
+class SurfaceProjector;
 
-    struct CPointSize {
-        size_t n;
-        size_t m;
-    };
+class BSplineSurface::Impl {
+public:
+    static constexpr size_t dim = 3;
+    using BezierPatch = BezierSurfacePatch<dim>;
+    using Super = BasicBSplineSurface<dim>;
+    using OrderType = std::pair<size_t, size_t>;
+    using KnotsType = Super::KnotsType;
+    using CPointsType = Super::CPointsType;
 
     Impl();
-    Impl(const Impl&) = default;
-    Impl(Impl&&) noexcept = default;
-    Impl& operator=(const Impl&) = default;
-    Impl& operator=(Impl&&) noexcept = default;
-
-    Impl(const order_type& order, const knot_type& knots,
-         const cpoint_type& cpoints, const CPointSize& size);
-
-    Impl(const order_type& order, const knot_type& knots,
-         const std::vector<std::vector<CPoint>>& cpoints);
+    ~Impl();
+    Impl(Impl&&) noexcept;
+    Impl& operator=(Impl&&) noexcept;
+    Impl(const Impl&);
+    Impl& operator=(const Impl&);
 
     Impl(size_t du, size_t dv, const std::vector<double>& ku,
          const std::vector<double>& kv,
@@ -61,25 +53,24 @@ public:
     std::ostream& print(std::ostream& os) const;
     SurfPoint project(const Point& p) const;
 
-    const order_type& order() const noexcept;
-    const knot_type& knots() const noexcept;
-    const cpoint_type& cpoints() const noexcept;
-    const CPointSize& size() const noexcept;
-
-    Impl bezier_patches() const;
+    const OrderType& order() const noexcept;
+    const KnotsType& knots() const noexcept;
+    const CPointsType& cpoints() const noexcept;
 
 private:
-    void init_cpoints(const std::vector<std::vector<CPoint>>& cp);
-    void init_cpoints(const std::vector<std::vector<double>>& w,
-                      const std::vector<std::vector<Point>>& p);
-    void init_cdb();
+    void
+    init_surface(std::pair<size_t, size_t> order,
+                 const std::pair<std::vector<double>, std::vector<double>>& k,
+                 const std::vector<std::vector<Point>>& p,
+                 const std::vector<std::vector<double>>& w);
 
-    order_type order_;
-    knot_type knots_;
-    cpoint_type cpoints_;
-    CPointSize size_;
+    void init_surface(std::pair<size_t, size_t> order,
+                      std::pair<std::vector<double>, std::vector<double>>&& k,
+                      const std::vector<std::vector<Point>>& p,
+                      const std::vector<std::vector<double>>& w);
 
-    cox_de_boor_type cdb_;
+    Super c_;
+    mutable std::unique_ptr<SurfaceProjector> proj_;
 };
 
 } // namespace gm

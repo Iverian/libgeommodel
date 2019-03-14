@@ -12,9 +12,9 @@
 template <size_t N>
 struct BSplineCurveTraits {
     using CPoint = gm::WPoint<double, N>;
+    using CoxDeBoorType = gm::CoxDeBoor<double, N>;
     using KnotsType = std::vector<double>;
     using CPointsType = std::vector<CPoint>;
-    using CoxDeBoorType = CoxDeBoor<CPoint>;
 };
 
 template <size_t N>
@@ -85,20 +85,6 @@ public:
     using CPointsType = typename BSplineCurveTraits<N>::CPointsType;
     using CoxDeBoorType = typename BSplineCurveTraits<N>::CoxDeBoorType;
 
-    static CPointsType get_cpoints(const std::vector<typename CPoint::Proj>& p,
-                                   const std::vector<double>& w)
-    {
-        check_ifd(p.size() == w.size(), "Input vector sizes do not match");
-
-        auto s = p.size();
-        CPointsType result(p.size());
-        for (decltype(s) i = 0; i < s; ++i) {
-            result[i] = CPoint(p[i], w[i]);
-        }
-
-        return result;
-    }
-
     BasicBsplineCurve()
         : order_(0)
         , knots_()
@@ -142,17 +128,17 @@ public:
 
     typename CPoint::Proj f(double u) const noexcept
     {
-        return cdb_.proxy(u).get(0).p();
+        return cdb_.proxy(u).f().p();
     }
+
     typename CPoint::Proj df(double u) const noexcept
     {
-        auto p = cdb_.proxy(u).range(2);
-        return diff1(p).p();
+        return cdb_.proxy(u).df().p();
     }
+
     typename CPoint::Proj df2(double u) const noexcept
     {
-        auto p = cdb_.proxy(u).range(3);
-        return diff2(p).p();
+        return cdb_.proxy(u).df2().p();
     }
 
     double pfront() const noexcept

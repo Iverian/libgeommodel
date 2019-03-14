@@ -1,29 +1,32 @@
 #ifndef GEOM_MODEL_SRC_GEOM_COX_DE_BOOR_H_
 #define GEOM_MODEL_SRC_GEOM_COX_DE_BOOR_H_
 
+#include <bspline/wpoint.h>
 #include <gm/compare.h>
-#include <gm/point.h>
-
 #include <util/debug.h>
-#include <util/math.h>
 #include <util/vector_view.h>
 
 #include <array>
 #include <type_traits>
 #include <vector>
 
-template <class T>
-struct CoxDeBoor {
-    using value_type = typename std::decay<T>::type;
+namespace gm {
+
+template <class T, size_t N>
+class CoxDeBoor {
+public:
+    using scalar_type = std::decay_t<T>;
+    using value_type = WPoint<scalar_type, N>;
     using reference = value_type&;
     using const_reference = const value_type&;
 
-    friend struct Proxy;
+    friend class Proxy;
 
-    struct Proxy {
-        friend struct CoxDeBoor;
+    class Proxy {
+        friend class CoxDeBoor;
 
-        Proxy(const CoxDeBoor& parent, double t)
+    public:
+        Proxy(const CoxDeBoor& parent, scalar_type t)
             : parent_(&parent)
             , t_(t)
             , p_(parent_->interval(t_))
@@ -57,9 +60,39 @@ struct CoxDeBoor {
             return result;
         }
 
+        value_type f() const
+        {
+            return get(0);
+        }
+
+        value_type df() const
+        {
+            auto r = range(2);
+            auto p = r[1].wdiv(r[0].w()) - r[0].wmul(r[1].w() / sqr(r[0].w()));
+            // auto p = r[1].wp() / r[0].w()
+            //     - (r[1].w() / sqr(r[0].w())) * r[0].wp();
+
+            return value_type(p.wp(), 1);
+        }
+
+        value_type df2() const
+        {
+            auto r = range(3);
+            auto sw = sqr(r[0].w());
+            auto p = r[2].wdiv(r[0].w()) - r[1].wmul(2 * r[1].w() / sw)
+                + r[0].wmul((2 * r[1].w() / r[0].w() - r[2].w()) / sw);
+            // auto p = (r[1].wp() * (-2 * r[1].w() / r[0].w())
+            //           + r[0].wp() * (2 * r[1].w() / sqr(r[0].w())) +
+            //           r[2].wp()
+            //           - r[0].wp() * (r[2].w() / r[0].w()))
+            //     / r[0].w();
+
+            return value_type(p.wp(), 1);
+        }
+
     private:
         const CoxDeBoor* parent_;
-        double t_;
+        scalar_type t_;
         size_t p_;
     };
 
@@ -70,7 +103,7 @@ struct CoxDeBoor {
     {
     }
 
-    CoxDeBoor(size_t order, const std::vector<double>& knots,
+    CoxDeBoor(size_t order, const std::vector<scalar_type>& knots,
               const std::vector<value_type>& cpoints)
         : order_(order)
         , knots_(knots)
@@ -78,7 +111,7 @@ struct CoxDeBoor {
     {
     }
 
-    CoxDeBoor(size_t order, VectorView<double> knots,
+    CoxDeBoor(size_t order, VectorView<scalar_type> knots,
               VectorView<value_type> cpoints)
         : order_(std::move(order))
         , knots_(std::move(knots))
@@ -86,17 +119,16 @@ struct CoxDeBoor {
     {
     }
 
-    Proxy proxy(double t) const
+    Proxy proxy(scalar_type t) const
     {
-        check_if(gm::cmp::ge(t, knots_.front())
-                     && gm::cmp::le(t, knots_.back()),
+        check_if(cmp::ge(t, knots_.front()) && gm::cmp::le(t, knots_.back()),
                  "Argument t = {} out of range [{}; {}]", t, knots_.front(),
                  knots_.back());
 
         return Proxy(*this, t);
     }
 
-    size_t interval(double t) const
+    size_t interval(scalar_type t) const
     {
         auto p = order_ - 1;
         auto n = knots_.size() - order_ - 1;
@@ -108,7 +140,7 @@ struct CoxDeBoor {
         auto low = p;
         auto high = n + 1;
         auto mid = (low + high) / 2;
-        while (t < knots_[mid] || gm::cmp::ge(t, knots_[mid + 1])) {
+        while (t < knots_[mid] || cmp::ge(t, knots_[mid + 1])) {
             if (t < knots_[mid]) {
                 high = mid;
             } else {
@@ -126,13 +158,14 @@ struct CoxDeBoor {
         if (k == 0) {
             result = cpoints_.at(i);
         } else {
-            result = double(order_ - k) * (pget(i, k - 1) - pget(i - 1, k - 1))
+            result = scalar_type(order_ - k)
+                * (pget(i, k - 1) - pget(i - 1, k - 1))
                 / (knots_.at(i + order_ - 1) - knots_.at(i));
         }
         return result;
     }
 
-    value_type eval(double t, size_t p, std::vector<value_type>& cp) const
+    value_type eval(scalar_type t, size_t p, std::vector<value_type>& cp) const
     {
         auto n = cp.size();
         for (size_t i = 1; i < n; ++i) {
@@ -148,8 +181,10 @@ struct CoxDeBoor {
 
 private:
     size_t order_;
-    VectorView<double> knots_;
+    VectorView<scalar_type> knots_;
     VectorView<value_type> cpoints_;
 };
+
+} // namespace gm
 
 #endif // GEOM_MODEL_SRC_GEOM_COX_DE_BOOR_H_

@@ -9,22 +9,18 @@
 
 namespace gm {
 
-struct CurveProjector {
+class CurveProjector {
 public:
-    explicit CurveProjector(const BSplineCurve::Impl::Super& impl);
+    explicit CurveProjector(const BSplineCurve::Impl& impl);
     double call(const Point& p) const;
 
-    std::optional<double>
-    minimize(const BSplineCurve::Impl::Super::CPoint::Proj& p, double u0,
-             const double& pfront, const double& pback) const noexcept;
-    double bord_check(double u, const double& pfront,
-                      const double& pback) const noexcept;
-    double armijo_step(double u, double h, const Vec& w, const Vec& d,
-                       const BSplineCurve::Impl::Super::CPoint::Proj& p) const
+    std::optional<double> minimize(const Point& p, double u0, const double& a,
+                                   const double& b) const noexcept;
+    double bord_check(double u, const double& a, const double& b) const
         noexcept;
 
 private:
-    const BSplineCurve::Impl::Super* parent_;
+    const BSplineCurve::Impl* impl_;
     std::vector<BSplineCurve::Impl::BezierPatch> patches_;
 };
 

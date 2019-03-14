@@ -5,16 +5,16 @@ using namespace std;
 
 namespace gm {
 
-BSplineCurve::BSplineCurve(size_t degree, vector<double> knots,
-                           vector<Point> points, vector<double> weights)
+BSplineCurve::BSplineCurve(size_t degree, ::vector<double> knots,
+                           ::vector<Point> points, ::vector<double> weights)
     : pimpl_(make_unique<BSplineCurve::Impl>(degree, knots, points, weights))
 {
 }
 
 BSplineCurve::BSplineCurve(size_t degree,
-                           const vector<size_t>& knot_multiplies,
-                           const vector<double>& knot_list,
-                           vector<Point> points, vector<double> weights)
+                           const ::vector<size_t>& knot_multiplies,
+                           const ::vector<double>& knot_list,
+                           ::vector<Point> points, ::vector<double> weights)
     : pimpl_(make_unique<BSplineCurve::Impl>(degree, knot_multiplies,
                                              knot_list, points))
 {

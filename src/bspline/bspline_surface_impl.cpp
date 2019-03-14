@@ -1,4 +1,8 @@
 #include <bspline/bspline_surface_impl.h>
+#include <bspline/surface_projector.h>
+#include <bspline/wpoint.h>
+#include <gm/bspline_surface.h>
+#include <gm/point.h>
 #include <util/itertools.h>
 
 #include <fmt/ostream.h>
@@ -8,44 +12,37 @@ using namespace std;
 namespace gm {
 
 BSplineSurface::Impl::Impl()
-    : order_()
-    , knots_()
-    , cpoints_()
-    , cdb_()
+    : c_()
+    , proj_(nullptr)
 {
 }
 
-BSplineSurface::Impl::Impl(const order_type& order, const knot_type& knots,
-                           const cpoint_type& cpoints, const CPointSize& size)
-    : order_(order)
-    , knots_(knots)
-    , cpoints_(cpoints)
-    , size_(size)
-    , cdb_()
+BSplineSurface::Impl::~Impl() = default;
+BSplineSurface::Impl::Impl(Impl&&) noexcept = default;
+BSplineSurface::Impl& BSplineSurface::Impl::operator=(Impl&&) noexcept
+    = default;
+BSplineSurface::Impl::Impl(const Impl& rhs)
+    : c_(rhs.c_)
+    , proj_(rhs.proj_ ? make_unique<SurfaceProjector>(*rhs.proj_) : nullptr)
 {
-    init_cdb();
 }
-
-BSplineSurface::Impl::Impl(const order_type& order, const knot_type& knots,
-                           const std::vector<std::vector<CPoint>>& cpoints)
-    : order_(order)
-    , knots_(knots)
-    , cpoints_()
-    , cdb_()
+BSplineSurface::Impl& BSplineSurface::Impl::operator=(const Impl& rhs)
 {
-    init_cpoints(cpoints);
+    c_ = rhs.c_;
+    proj_ = rhs.proj_ ? make_unique<SurfaceProjector>(*rhs.proj_) : nullptr;
+
+    return *this;
 }
 
 BSplineSurface::Impl::Impl(size_t du, size_t dv, const vector<double>& ku,
                            const vector<double>& kv,
                            const std::vector<std::vector<Point>>& p,
                            const std::vector<std::vector<double>>& w)
-    : order_({du + 1, dv + 1})
-    , knots_({ku, kv})
-    , cpoints_()
-    , cdb_()
+    : c_()
+    , proj_(nullptr)
 {
-    init_cpoints(w, p);
+    KnotsType k {ku, kv};
+    init_surface({du + 1, dv + 1}, std::move(k), p, w);
 }
 
 BSplineSurface::Impl::Impl(size_t du, size_t dv, const vector<size_t>& ku_mult,
@@ -54,205 +51,132 @@ BSplineSurface::Impl::Impl(size_t du, size_t dv, const vector<size_t>& ku_mult,
                            const vector<double>& kv_vals,
                            const std::vector<std::vector<Point>>& p,
                            const std::vector<std::vector<double>>& w)
-    : order_({du + 1, dv + 1})
-    , knots_()
-    , cpoints_()
-    , cdb_()
+    : c_()
+    , proj_(nullptr)
 {
-    for (size_t i = 0; i < ku_mult.size(); ++i)
-        for (auto j = ku_mult[i]; j > 0; --j)
-            knots_[0].emplace_back(ku_vals[i]);
-    for (size_t i = 0; i < kv_mult.size(); ++i)
-        for (auto j = kv_mult[i]; j > 0; --j)
-            knots_[1].emplace_back(kv_vals[i]);
-    for (auto& i : knots_)
-        i.shrink_to_fit();
+    KnotsType k;
 
-    init_cpoints(w, p);
+    for (size_t i = 0; i < ku_mult.size(); ++i) {
+        for (auto j = ku_mult[i]; j > 0; --j) {
+            k.first.emplace_back(ku_vals[i]);
+        }
+    }
+    k.first.shrink_to_fit();
+    for (size_t i = 0; i < kv_mult.size(); ++i) {
+        for (auto j = kv_mult[i]; j > 0; --j) {
+            k.second.emplace_back(kv_vals[i]);
+        }
+    }
+    k.second.shrink_to_fit();
+
+    init_surface({du + 1, dv + 1}, std::move(k), p, w);
 }
 
 Point BSplineSurface::Impl::f(const SurfPoint& p) const noexcept
 {
-    auto n = size_.n;
-    vector<CPoint> cp(n);
-
-    for (size_t i = 0; i < n; ++i) {
-        cp[i] = cdb_[i].proxy(p.v).get(0);
-    }
-
-    auto cdb_u = CoxDeBoor<CPoint>(order_[0], knots_[0], cp);
-    return Point(cdb_u.proxy(p.u).get(0).p());
+    return Point(c_.f(p));
 }
 
 Vec BSplineSurface::Impl::dfu(const SurfPoint& p) const noexcept
 {
-    auto n = size_.n;
-    vector<CPoint> cp(n);
-
-    for (size_t i = 0; i < n; ++i) {
-        cp[i] = cdb_[i].proxy(p.v).get(0);
-    }
-
-    auto cdb_u = CoxDeBoor<CPoint>(order_[0], knots_[0], cp);
-    return Vec(diff1(cdb_u.proxy(p.u).range(2)).p());
+    return Vec(c_.dfu(p));
 }
 
 Vec BSplineSurface::Impl::dfv(const SurfPoint& p) const noexcept
 {
-    auto n = size_.n;
-    vector<CPoint> cp(n);
-
-    for (size_t i = 0; i < n; ++i) {
-        cp[i] = diff1(cdb_[i].proxy(p.v).range(2));
-    }
-
-    auto cdb_u = CoxDeBoor<CPoint>(order_[0], knots_[0], cp);
-    return Vec(cdb_u.proxy(p.u).get(0).p());
+    return Vec(c_.dfv(p));
 }
 
 Vec BSplineSurface::Impl::dfuu(const SurfPoint& p) const noexcept
 {
-    auto n = size_.n;
-    vector<CPoint> cp(n);
-
-    for (size_t i = 0; i < n; ++i) {
-        cp[i] = cdb_[i].proxy(p.v).get(0);
-    }
-
-    auto cdb_u = CoxDeBoor<CPoint>(order_[0], knots_[0], cp);
-    return Vec(diff2(cdb_u.proxy(p.u).range(3)).p());
+    return Vec(c_.dfuu(p));
 }
 
 Vec BSplineSurface::Impl::dfvv(const SurfPoint& p) const noexcept
 {
-    auto n = size_.n;
-    vector<CPoint> cp(n);
-
-    for (size_t i = 0; i < n; ++i) {
-        cp[i] = diff2(cdb_[i].proxy(p.v).range(3));
-    }
-
-    auto cdb_u = CoxDeBoor<CPoint>(order_[0], knots_[0], cp);
-    return Vec(cdb_u.proxy(p.u).get(0).p());
+    return Vec(c_.dfvv(p));
 }
 
 Vec BSplineSurface::Impl::dfuv(const SurfPoint& p) const noexcept
 {
-    auto n = size_.n;
-    vector<CPoint> cp(n);
-
-    for (size_t i = 0; i < n; ++i) {
-        cp[i] = diff1(cdb_[i].proxy(p.v).range(2));
-    }
-
-    auto cdb_u = CoxDeBoor<CPoint>(order_[0], knots_[0], cp);
-    return Vec(diff1(cdb_u.proxy(p.u).range(2)).p());
+    return Vec(c_.dfuv(p));
 }
 
 ostream& BSplineSurface::Impl::print(ostream& os) const
 {
+    auto s = c_.shape();
     fmt::print(os,
                "{{ \"type\": \"bspline\", \"du\": {}, \"dv\": {}, \"ku\": "
                "{}, \"kv\": {}, \"cpoints\": {}, \"shape\": [{}, {}] }}",
-               order_[0] - 1, order_[1] - 1,
-               RangePrint(begin(knots_[0]), end(knots_[0])),
-               RangePrint(begin(knots_[1]), end(knots_[1])),
-               RangePrint(begin(cpoints_), end(cpoints_)), size_.n, size_.m);
+               c_.order().first - 1, c_.order().second - 1,
+               RangePrint(begin(c_.knots().first), end(c_.knots().first)),
+               RangePrint(begin(c_.knots().first), end(c_.knots().second)),
+               RangePrint(begin(c_.cpoints()), end(c_.cpoints())), s.first,
+               s.second);
     return os;
 }
 
-// TODO: реализовать
 SurfPoint BSplineSurface::Impl::project(const Point& p) const
 {
-    throw std::runtime_error("not implemented");
+    if (!proj_) {
+        proj_.reset(new SurfaceProjector(*this));
+    }
+
+    return proj_->call(p);
 }
 
-const BSplineSurface::Impl::order_type& BSplineSurface::Impl::order() const
+const BSplineSurface::Impl::OrderType& BSplineSurface::Impl::order() const
     noexcept
 {
-    return order_;
+    return c_.order();
 }
 
-const BSplineSurface::Impl::knot_type& BSplineSurface::Impl::knots() const
+const BSplineSurface::Impl::KnotsType& BSplineSurface::Impl::knots() const
     noexcept
 {
-    return knots_;
+    return c_.knots();
 }
 
-const BSplineSurface::Impl::cpoint_type& BSplineSurface::Impl::cpoints() const
+const BSplineSurface::Impl::CPointsType& BSplineSurface::Impl::cpoints() const
     noexcept
 {
-    return cpoints_;
+    return c_.cpoints();
 }
 
-const BSplineSurface::Impl::CPointSize& BSplineSurface::Impl::size() const
-    noexcept
+#define _w(i, j) ((w.empty()) ? (1.) : (w[(i)][(j)]))
+
+void BSplineSurface::Impl::init_surface(
+    pair<size_t, size_t> order, const pair<vector<double>, vector<double>>& k,
+    const vector<vector<Point>>& p, const vector<vector<double>>& w)
 {
-    return size_;
-}
+    pair<size_t, size_t> cpdim {p.size(), p.front().size()};
 
-BSplineSurface::Impl BSplineSurface::Impl::bezier_patches() const
-{
-    throw std::runtime_error("not implemented");
-    return *this;
-}
-
-#define _(i, j) ((size_.m) * (i) + (j))
-
-void BSplineSurface::Impl::init_cpoints(
-    const std::vector<std::vector<CPoint>>& cp)
-{
-    size_.n = cp.size();
-    size_.m = cp[0].size();
-    cpoints_.resize(size_.n * size_.m);
-
-    for (size_t i = 0; i < size_.n; ++i) {
-        for (size_t j = 0; j < size_.m; ++j) {
-            cpoints_[_(i, j)] = cp[i][j];
+    CPointsType cp(cpdim.first * cpdim.second);
+    for (size_t i = 0; i < cpdim.first; ++i) {
+        for (size_t j = 0; j < cpdim.second; ++j) {
+            cp[j + cpdim.second * i] = Super::CPoint(p[i][j].raw(), _w(i, j));
         }
     }
 
-    init_cdb();
+    c_ = Super(order, cpdim, k, std::move(cp));
 }
 
-void BSplineSurface::Impl::init_cpoints(
-    const std::vector<std::vector<double>>& w,
-    const std::vector<std::vector<Point>>& p)
+void BSplineSurface::Impl::init_surface(
+    pair<size_t, size_t> order, pair<vector<double>, vector<double>>&& k,
+    const vector<vector<Point>>& p, const vector<vector<double>>& w)
 {
-    size_.n = p.size();
-    size_.m = p[0].size();
-    cpoints_.resize(size_.n * size_.m);
+    pair<size_t, size_t> cpdim {p.size(), p.front().size()};
 
-    if (w.empty()) {
-        for (size_t i = 0; i < size_.n; ++i) {
-            for (size_t j = 0; j < size_.m; ++j) {
-                cpoints_[_(i, j)] = CPoint(p[i][j].raw(), 1);
-            }
-        }
-    } else {
-        for (size_t i = 0; i < size_.n; ++i) {
-            for (size_t j = 0; j < size_.m; ++j) {
-                cpoints_[_(i, j)] = CPoint(p[i][j].raw(), w[i][j]);
-            }
+    CPointsType cp(cpdim.first * cpdim.second);
+    for (size_t i = 0; i < cpdim.first; ++i) {
+        for (size_t j = 0; j < cpdim.second; ++j) {
+            cp[j + cpdim.second * i] = Super::CPoint(p[i][j].raw(), _w(i, j));
         }
     }
 
-    init_cdb();
+    c_ = Super(order, cpdim, std::move(k), std::move(cp));
 }
 
-#undef _
-
-void BSplineSurface::Impl::init_cdb()
-{
-    cdb_.resize(size_.n);
-
-    VectorView<double> knots(knots_[1]);
-    auto data = cpoints_.data();
-    for (size_t i = 0; i < size_.n; ++i) {
-        cdb_[i] = CoxDeBoor<CPoint>(order_[1], knots,
-                                    VectorView<CPoint>(data, size_.m));
-        data += size_.m;
-    }
-}
+#undef _w
 
 } // namespace gm

@@ -7,7 +7,8 @@
 
 namespace gm {
 
-struct Shell {
+class Shell {
+public:
     Shell();
     Shell(const Axis& ax, const std::vector<Face>& faces);
 

@@ -1,10 +1,10 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_ABSTRACT_SURFACE_H_
 #define GEOM_MODEL_INCLUDE_GM_ABSTRACT_SURFACE_H_
 
+#include "debug.h"
 #include "point.h"
 #include "surf_point.h"
 #include "vec.h"
-#include "debug.h"
 
 #include <functional>
 #include <iostream>
@@ -28,7 +28,8 @@ public:
 
     [[nodiscard]] Point operator()(const SurfPoint& p) const noexcept;
     [[nodiscard]] Vec normal(const SurfPoint& p) const noexcept;
-    [[nodiscard]] Vec unit_normal(const SurfPoint& p) const __GM_NOEXCEPT_RELEASE__;
+    [[nodiscard]] Vec
+    unit_normal(const SurfPoint& p) const __GM_NOEXCEPT_RELEASE__;
     [[nodiscard]] Plane tangent(const SurfPoint& p) const noexcept;
     [[nodiscard]] Point gproject(const Point& p) const noexcept;
 

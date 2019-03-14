@@ -8,13 +8,13 @@
 
 using namespace std;
 
-double binom(size_t n, size_t k) __GM_NOEXCEPT_RELEASE__;
 ::vector<gm::SurfPoint> graham_scan(::vector<gm::SurfPoint>& points);
 double polar_angle(const gm::SurfPoint& lhs, const gm::SurfPoint& rhs);
 bool counter_clockwise(const gm::SurfPoint& a, const gm::SurfPoint& b,
                        const gm::SurfPoint& c);
 ::optional<double>
 zero_intersect(const ::pair<gm::SurfPoint, gm::SurfPoint>& line);
+double pget(gm::DistanceCurve::Super::CPoint cp) noexcept;
 
 namespace gm {
 
@@ -28,8 +28,8 @@ DistanceCurve::DistanceCurve(const BSplineCurve::Impl::BezierPatch& patch,
     : c_()
 {
     auto order = 2 * patch.order() - 1;
-    vector<double> knots(2 * order);
-    vector<Super::CPoint> cp(order);
+    Super::KnotsType knots(2 * order);
+    Super::CPointsType cp(order);
 
     auto pr = point.raw();
     auto deg = patch.order() - 1;
@@ -85,16 +85,6 @@ double DistanceCurve::tocparg(double arg, bool dir) const noexcept
 double DistanceCurve::f(double u) const noexcept
 {
     return c_.f(u)[0];
-}
-
-double DistanceCurve::df(double u) const noexcept
-{
-    return c_.df(u)[0];
-}
-
-double DistanceCurve::df2(double u) const noexcept
-{
-    return c_.df2(u)[0];
 }
 
 ::pair<double, double> DistanceCurve::min_init() const noexcept
@@ -182,10 +172,10 @@ bool DistanceCurve::eliminate_segment(double d) noexcept
     return result;
 }
 
-::optional<size_t> DistanceCurve::peak_point() const noexcept
+bool DistanceCurve::peak_point() const noexcept
 {
     bool flag = false;
-    ::optional<size_t> result = 0;
+    bool result = true;
     auto s = c_.cpoints().size();
     double prev, cur = pget(c_.cpoints().front());
 
@@ -195,7 +185,7 @@ bool DistanceCurve::eliminate_segment(double d) noexcept
 
         if (prev > cur) {
             if (flag) {
-                result = nullopt;
+                result = false;
                 break;
             } else {
                 result = i;
@@ -206,7 +196,7 @@ bool DistanceCurve::eliminate_segment(double d) noexcept
                 flag = true;
             }
         } else {
-            result = nullopt;
+            result = false;
             break;
         }
     }
@@ -215,19 +205,6 @@ bool DistanceCurve::eliminate_segment(double d) noexcept
 }
 
 } // namespace gm
-
-inline double binom(size_t n, size_t k) __GM_NOEXCEPT_RELEASE__
-{
-    check_ifd(k <= n, "Unable to compute C^n_k with n = {}, k = {}", n, k);
-
-    double result = 1;
-    if (k != 0 && k != n) {
-        for (size_t i = 0; i < k; ++i) {
-            result *= double(n - i) / (k - i);
-        }
-    }
-    return result;
-}
 
 #define next_to_top(stack) (*::prev(::end(stack), 2))
 #define top(stack) ((stack).back())
@@ -295,4 +272,9 @@ zero_intersect(const ::pair<gm::SurfPoint, gm::SurfPoint>& line)
     }
 
     return nullopt;
+}
+
+inline double pget(gm::DistanceCurve::Super::CPoint cp) noexcept
+{
+    return cp.p()[0];
 }

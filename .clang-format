@@ -1,7 +1,6 @@
 BasedOnStyle: WebKit
 IndentWidth: 4
 TabWidth: 4
-Language: Cpp
 Standard: Cpp11
 Cpp11BracedListStyle: true
 BinPackParameters: true

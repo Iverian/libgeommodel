@@ -1,30 +1,31 @@
 enable_testing()
+include(GoogleTest)
 find_package(GTest MODULE REQUIRED)
 
-file(GLOB TEST_SOURCES "src/test_*.cpp")
+file(GLOB_RECURSE
+  ALLTESTS_SOURCES
+  CONFIGURE_DEPENDS
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+)
 
-# Make all tests in sigle executable
-add_executable(all_tests "src/all_tests.cpp" ${TEST_SOURCES})
+add_executable(alltests)
 
-target_compile_definitions(all_tests PRIVATE
-                           _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
+target_sources(alltests
+  PRIVATE
+    ${ALLTESTS_SOURCES}
+)
+target_link_libraries(alltests
+  PRIVATE
+    geommodel
+    fmt::fmt
+    GTest::GTest
+    GTest::Main
+)
+set_target_properties(alltests
+  PROPERTIES
+    DEBUG_POSTFIX d
+    CXX_EXTENSIONS NO
+    RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}
+)
 
-set_target_properties(all_tests
-                      PROPERTIES CXX_STANDARD
-                                 17
-                                 CXX_STANDARD_REQUIRED
-                                 YES
-                                 CXX_EXTENSIONS
-                                 NO
-                                 RUNTIME_OUTPUT_DIRECTORY_DEBUG
-                                 ${ROOT_BINARY_DIRECTORY}
-                                 RUNTIME_OUTPUT_DIRECTORY_RELEASE
-                                 ${ROOT_BINARY_DIRECTORY})
-
-target_include_directories(all_tests PRIVATE "../src")
-
-target_link_libraries(all_tests
-                      PRIVATE ${PROJECT_TARGET_NAME} fmt::fmt GTest::GTest)
-
-add_test(all_tests all_tests)
-#
+gtest_discover_tests(alltests WORKING_DIRECTORY ${PROJECT_BINARY_DIR})

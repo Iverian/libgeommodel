@@ -24,8 +24,8 @@ file(GLOB_RECURSE
   GEOMMODEL_SOURCES
   CONFIGURE_DEPENDS
   "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
-  "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
-  "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp"
 )
 #
 
@@ -64,7 +64,7 @@ set_target_properties(geommodel
 include(GenerateExportHeader)
 generate_export_header(geommodel
   BASE_NAME GM
-  EXPORT_FILE_NAME exports.h
+  EXPORT_FILE_NAME exports.hpp
   NO_DEPRECATED_MACRO_NAME GM_OMIT_DEPRECATED
   INCLUDE_GUARD_NAME GEOMMODEL_INCLUDE_GM_EXPORTS_H_
   DEFINE_NO_DEPRECATED
@@ -105,7 +105,7 @@ if (WIN32)
   )
 endif()
 install(
-  FILES "${CMAKE_CURRENT_BINARY_DIR}/exports.h"
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/exports.hpp"
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/gm"
 )
 

@@ -1,6 +1,6 @@
 #define _USE_MATH_DEFINES
 
-#include <gtest/gtest.hpp>
+#include <gtest/gtest.h>
 
 #include <gm/curves.hpp>
 #include <gm/surfaces.hpp>
@@ -84,7 +84,8 @@ TEST(TestPrimitive, rotation)
     auto a = unit({1, 0, 0});
     auto b = unit({1, 1, 0});
     auto c = M_PI_2;
-    debug_fmt(cout, "r(a): {}, r(b): {}", ax.rotate_z(c, a), ax.rotate_z(c, b));
+    debug_fmt(cout, "r(a): {}, r(b): {}", ax.rotate_z(c, a),
+              ax.rotate_z(c, b));
 
     SUCCEED();
 }

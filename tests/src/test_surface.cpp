@@ -1,4 +1,4 @@
-#include <gtest/gtest.hpp>
+#include <gtest/gtest.h>
 
 #include <gm/compare.hpp>
 #include <gm/point.hpp>

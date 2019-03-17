@@ -1,9 +1,9 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_MAT_HPP_
 #define GEOM_MODEL_INCLUDE_GM_MAT_HPP_
 
-#include "exports.h"
-#include "point.h"
-#include "vec.h"
+#include "exports.hpp"
+#include "point.hpp"
+#include "vec.hpp"
 
 #include <memory>
 #include <optional>

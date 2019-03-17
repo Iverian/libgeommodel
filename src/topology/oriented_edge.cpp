@@ -1,6 +1,6 @@
 #include <gm/oriented_edge.hpp>
 
-#include <fmt/ostream.hpp>
+#include <fmt/ostream.h>
 
 #include <util/to_string.hpp>
 

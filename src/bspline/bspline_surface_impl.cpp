@@ -5,7 +5,7 @@
 #include <gm/point.hpp>
 #include <util/itertools.hpp>
 
-#include <fmt/ostream.hpp>
+#include <fmt/ostream.h>
 
 using namespace std;
 

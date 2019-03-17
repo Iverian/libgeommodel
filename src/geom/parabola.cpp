@@ -5,7 +5,7 @@
 
 #include <util/math.hpp>
 
-#include <fmt/ostream.hpp>
+#include <fmt/ostream.h>
 
 using namespace std;
 

@@ -1,9 +1,9 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_ELLIPSE_HPP_
 #define GEOM_MODEL_INCLUDE_GM_ELLIPSE_HPP_
 
-#include "abstract_curve.h"
-#include "axis.h"
-#include "exports.h"
+#include "abstract_curve.hpp"
+#include "axis.hpp"
+#include "exports.hpp"
 
 namespace gm {
 

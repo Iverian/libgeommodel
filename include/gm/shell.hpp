@@ -1,10 +1,10 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_SHELL_HPP_
 #define GEOM_MODEL_INCLUDE_GM_SHELL_HPP_
 
-#include "axis.h"
-#include "exports.h"
-#include "face.h"
-#include "oriented_edge.h"
+#include "axis.hpp"
+#include "exports.hpp"
+#include "face.hpp"
+#include "oriented_edge.hpp"
 
 namespace gm {
 

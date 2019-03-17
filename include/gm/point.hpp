@@ -1,10 +1,10 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_POINT_HPP_
 #define GEOM_MODEL_INCLUDE_GM_POINT_HPP_
 
-#include "compare.h"
-#include "debug.h"
-#include "dot.h"
-#include "exports.h"
+#include "compare.hpp"
+#include "debug.hpp"
+#include "dot.hpp"
+#include "exports.hpp"
 
 #include <array>
 #include <ostream>

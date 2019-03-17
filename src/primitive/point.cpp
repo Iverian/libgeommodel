@@ -1,7 +1,7 @@
 #include <gm/point.hpp>
 #include <gm/vec.hpp>
 
-#include <fmt/ostream.hpp>
+#include <fmt/ostream.h>
 #include <util/debug.hpp>
 #include <util/math.hpp>
 

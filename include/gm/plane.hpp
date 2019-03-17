@@ -1,9 +1,9 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_PLANE_HPP_
 #define GEOM_MODEL_INCLUDE_GM_PLANE_HPP_
 
-#include "abstract_surface.h"
-#include "axis.h"
-#include "exports.h"
+#include "abstract_surface.hpp"
+#include "axis.hpp"
+#include "exports.hpp"
 
 #include <memory>
 

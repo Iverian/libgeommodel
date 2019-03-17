@@ -1,9 +1,9 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_CIRCLE_HPP_
 #define GEOM_MODEL_INCLUDE_GM_CIRCLE_HPP_
 
-#include "axis.h"
-#include "ellipse.h"
-#include "exports.h"
+#include "axis.hpp"
+#include "ellipse.hpp"
+#include "exports.hpp"
 
 namespace gm {
 

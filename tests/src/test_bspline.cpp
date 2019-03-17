@@ -1,4 +1,4 @@
-#include <gtest/gtest.hpp>
+#include <gtest/gtest.h>
 
 #include <gm/bspline_curve.hpp>
 #include <gm/bspline_surface.hpp>

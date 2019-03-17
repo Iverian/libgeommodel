@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include <fmt/ostream.hpp>
+#include <fmt/ostream.h>
 
 using namespace std;
 

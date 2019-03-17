@@ -1,7 +1,7 @@
 #ifndef GEOM_MODEL_SRC_UTIL_VECTOR_VIEW_HPP_
 #define GEOM_MODEL_SRC_UTIL_VECTOR_VIEW_HPP_
 
-#include "debug.h"
+#include "debug.hpp"
 
 #include <vector>
 

@@ -1,7 +1,7 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_SURF_POINT_HPP_
 #define GEOM_MODEL_INCLUDE_GM_SURF_POINT_HPP_
 
-#include "exports.h"
+#include "exports.hpp"
 
 #include <algorithm>
 #include <iostream>

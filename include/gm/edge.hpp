@@ -1,8 +1,8 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_EDGE_HPP_
 #define GEOM_MODEL_INCLUDE_GM_EDGE_HPP_
 
-#include "abstract_curve.h"
-#include "exports.h"
+#include "abstract_curve.hpp"
+#include "exports.hpp"
 
 #include <functional>
 #include <iostream>

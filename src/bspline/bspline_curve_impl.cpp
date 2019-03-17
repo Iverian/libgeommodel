@@ -2,7 +2,7 @@
 #include <bspline/curve_projector.hpp>
 #include <util/itertools.hpp>
 
-#include <fmt/ostream.hpp>
+#include <fmt/ostream.h>
 
 using namespace std;
 
@@ -12,8 +12,8 @@ BSplineCurve::Impl::~Impl() = default;
 
 BSplineCurve::Impl::Impl(BSplineCurve::Impl&&) noexcept = default;
 
-BSplineCurve::Impl& BSplineCurve::Impl::
-operator=(BSplineCurve::Impl&&) noexcept
+BSplineCurve::Impl&
+BSplineCurve::Impl::operator=(BSplineCurve::Impl&&) noexcept
     = default;
 
 BSplineCurve::Impl::Impl(const BSplineCurve::Impl& rhs)
@@ -22,8 +22,8 @@ BSplineCurve::Impl::Impl(const BSplineCurve::Impl& rhs)
 {
 }
 
-BSplineCurve::Impl& BSplineCurve::Impl::
-operator=(const BSplineCurve::Impl& rhs)
+BSplineCurve::Impl&
+BSplineCurve::Impl::operator=(const BSplineCurve::Impl& rhs)
 {
     c_ = rhs.c_;
     proj_ = rhs.proj_ ? make_unique<CurveProjector>(*rhs.proj_) : nullptr;

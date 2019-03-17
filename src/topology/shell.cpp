@@ -9,7 +9,7 @@
 #include <unordered_set>
 #include <utility>
 
-#include <fmt/ostream.hpp>
+#include <fmt/ostream.h>
 
 using namespace std;
 

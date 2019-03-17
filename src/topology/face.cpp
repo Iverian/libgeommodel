@@ -2,7 +2,7 @@
 
 #include <util/util.hpp>
 
-#include <fmt/ostream.hpp>
+#include <fmt/ostream.h>
 
 using namespace std;
 
@@ -32,7 +32,7 @@ Face::Face(shared_ptr<AbstractSurface> surface, bool same_sense)
 Face::Face(shared_ptr<AbstractSurface> surface, bool same_sense,
            const FaceBound& outer_loop, const vector<FaceBound>& inner_loop)
     : pimpl_(
-          make_shared<Face::Impl>(surface, same_sense, outer_loop, inner_loop))
+        make_shared<Face::Impl>(surface, same_sense, outer_loop, inner_loop))
 {
 }
 

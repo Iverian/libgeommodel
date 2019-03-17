@@ -1,8 +1,8 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_BSPLINE_SURFACE_HPP_
 #define GEOM_MODEL_INCLUDE_GM_BSPLINE_SURFACE_HPP_
 
-#include "abstract_surface.h"
-#include "exports.h"
+#include "abstract_surface.hpp"
+#include "exports.hpp"
 
 #include <memory>
 #include <vector>

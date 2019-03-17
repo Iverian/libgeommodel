@@ -3,8 +3,8 @@
 
 #include <gm/surf_point.hpp>
 
-#include "debug.h"
-#include "std_defines.h"
+#include "debug.hpp"
+#include "std_defines.hpp"
 
 #include <array>
 #include <cmath>

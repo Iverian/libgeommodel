@@ -1,9 +1,9 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_FACE_HPP_
 #define GEOM_MODEL_INCLUDE_GM_FACE_HPP_
 
-#include "abstract_surface.h"
-#include "exports.h"
-#include "oriented_edge.h"
+#include "abstract_surface.hpp"
+#include "exports.hpp"
+#include "oriented_edge.hpp"
 
 #include <memory>
 #include <vector>

@@ -2,7 +2,7 @@
 
 #include <util/math.hpp>
 
-#include <fmt/ostream.hpp>
+#include <fmt/ostream.h>
 
 using namespace std;
 
@@ -66,8 +66,8 @@ SurfPoint CylindricalSurface::project(const Point& p) const
     auto [first, second] = atan2v(dot(w, y), dot(w, x));
 
     return (dist(f({first, v}), p) < dist(f({second, v}), p))
-        ? SurfPoint{first, v}
-        : SurfPoint{second, v};
+        ? SurfPoint {first, v}
+        : SurfPoint {second, v};
 }
 
 } // namespace gm

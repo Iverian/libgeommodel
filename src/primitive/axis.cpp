@@ -1,7 +1,7 @@
 #include <gm/axis.hpp>
 #include <gm/mat.hpp>
 
-#include <fmt/ostream.hpp>
+#include <fmt/ostream.h>
 
 using namespace std;
 
@@ -9,13 +9,13 @@ namespace gm {
 
 Axis::Axis() noexcept
     : c_(0, 0, 0)
-    , basis_{Vec(1, 0, 0), Vec(0, 1, 0), Vec(0, 0, 1)}
+    , basis_ {Vec(1, 0, 0), Vec(0, 1, 0), Vec(0, 0, 1)}
 {
 }
 
 Axis::Axis(const Point& c, const array<Vec, N>& basis) noexcept
     : c_(c)
-    , basis_{basis[0], basis[1], basis[2]}
+    , basis_ {basis[0], basis[1], basis[2]}
 {
     array<double, 2> coeff;
     for (size_t i = 1; i < 3; ++i) {
@@ -65,17 +65,17 @@ Vec Axis::rotate_x(double angle, const Vec& v) const noexcept
 
 Vec Axis::rotate_y(double angle, const Vec& v) const noexcept
 {
-    return dot(Mat::rotate(angle, basis_[1]) , v);
+    return dot(Mat::rotate(angle, basis_[1]), v);
 }
 
 Vec Axis::rotate_z(double angle, const Vec& v) const noexcept
 {
-    return dot(Mat::rotate(angle, basis_[2]) , v);
+    return dot(Mat::rotate(angle, basis_[2]), v);
 }
 
 Point Axis::rotate_x(double angle, const Point& p) const noexcept
 {
-    return dot(Mat::rotate(angle, basis_[0]) , p - c_) + c_;
+    return dot(Mat::rotate(angle, basis_[0]), p - c_) + c_;
 }
 
 Point Axis::rotate_y(double angle, const Point& p) const noexcept

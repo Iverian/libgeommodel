@@ -1,7 +1,7 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_COMPARE_HPP__
 #define GEOM_MODEL_INCLUDE_GM_COMPARE_HPP__
 
-#include "exports.h"
+#include "exports.hpp"
 
 namespace gm {
 

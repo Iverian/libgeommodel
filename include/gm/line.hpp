@@ -1,10 +1,10 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_LINE_HPP_
 #define GEOM_MODEL_INCLUDE_GM_LINE_HPP_
 
-#include "abstract_curve.h"
-#include "exports.h"
-#include "point.h"
-#include "vec.h"
+#include "abstract_curve.hpp"
+#include "exports.hpp"
+#include "point.hpp"
+#include "vec.hpp"
 
 namespace gm {
 

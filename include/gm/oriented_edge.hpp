@@ -1,8 +1,8 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_ORIENTED_EDGE_HPP_
 #define GEOM_MODEL_INCLUDE_GM_ORIENTED_EDGE_HPP_
 
-#include "edge.h"
-#include "exports.h"
+#include "edge.hpp"
+#include "exports.hpp"
 
 namespace gm {
 

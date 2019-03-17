@@ -1,9 +1,9 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_VEC_HPP_
 #define GEOM_MODEL_INCLUDE_GM_VEC_HPP_
 
-#include "compare.h"
-#include "debug.h"
-#include "dot.h"
+#include "compare.hpp"
+#include "debug.hpp"
+#include "dot.hpp"
 
 #include <array>
 #include <ostream>

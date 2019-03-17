@@ -3,7 +3,7 @@
 
 #include <util/math.hpp>
 
-#include <fmt/ostream.hpp>
+#include <fmt/ostream.h>
 
 using namespace std;
 
@@ -23,36 +23,38 @@ SphericalSurface::SphericalSurface(double r, Axis ax) noexcept
 
 Point SphericalSurface::f(const SurfPoint& p) const noexcept
 {
-    return ax_.pglobal(r_ * ::cos(p.v) * ::cos(p.u), r_ * ::cos(p.v) * ::sin(p.u),
-                       r_ * ::sin(p.v));
+    return ax_.pglobal(r_ * ::cos(p.v) * ::cos(p.u),
+                       r_ * ::cos(p.v) * ::sin(p.u), r_ * ::sin(p.v));
 }
 
 Vec SphericalSurface::dfu(const SurfPoint& p) const noexcept
 {
-    return ax_.vglobal(-r_ * ::cos(p.v) * ::sin(p.u), r_ * ::cos(p.v) * ::cos(p.u), 0);
+    return ax_.vglobal(-r_ * ::cos(p.v) * ::sin(p.u),
+                       r_ * ::cos(p.v) * ::cos(p.u), 0);
 }
 
 Vec SphericalSurface::dfv(const SurfPoint& p) const noexcept
 {
-    return ax_.vglobal(-r_ * ::sin(p.v) * ::cos(p.u), -r_ * ::sin(p.v) * ::sin(p.u),
-                       r_ * ::cos(p.v));
+    return ax_.vglobal(-r_ * ::sin(p.v) * ::cos(p.u),
+                       -r_ * ::sin(p.v) * ::sin(p.u), r_ * ::cos(p.v));
 }
 
 Vec SphericalSurface::dfuu(const SurfPoint& p) const noexcept
 {
-    return ax_.vglobal(-r_ * ::cos(p.v) * ::cos(p.u), -r_ * ::cos(p.v) * ::sin(p.u),
-                       0);
+    return ax_.vglobal(-r_ * ::cos(p.v) * ::cos(p.u),
+                       -r_ * ::cos(p.v) * ::sin(p.u), 0);
 }
 
 Vec SphericalSurface::dfuv(const SurfPoint& p) const noexcept
 {
-    return ax_.vglobal(r_ * ::sin(p.v) * ::sin(p.u), -r_ * ::sin(p.v) * ::cos(p.u), 0);
+    return ax_.vglobal(r_ * ::sin(p.v) * ::sin(p.u),
+                       -r_ * ::sin(p.v) * ::cos(p.u), 0);
 }
 
 Vec SphericalSurface::dfvv(const SurfPoint& p) const noexcept
 {
-    return ax_.vglobal(-r_ * ::cos(p.v) * ::cos(p.u), -r_ * ::cos(p.v) * ::sin(p.u),
-                       -r_ * ::sin(p.v));
+    return ax_.vglobal(-r_ * ::cos(p.v) * ::cos(p.u),
+                       -r_ * ::cos(p.v) * ::sin(p.u), -r_ * ::sin(p.v));
 }
 
 ostream& SphericalSurface::print(ostream& os) const
@@ -66,8 +68,8 @@ SurfPoint SphericalSurface::project(const Point& p) const
 {
     auto [c, x, y, z] = ax_.get_view();
     auto u = Circle(r_, ax_).project(p);
-    auto v
-        = Circle(r_, Axis::from_xy(x * ::cos(u) + y * ::sin(u), z, c)).project(p);
+    auto v = Circle(r_, Axis::from_xy(x * ::cos(u) + y * ::sin(u), z, c))
+                 .project(p);
     return {u, v};
 }
 

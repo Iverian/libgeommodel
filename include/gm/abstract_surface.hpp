@@ -1,11 +1,11 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_ABSTRACT_SURFACE_HPP_
 #define GEOM_MODEL_INCLUDE_GM_ABSTRACT_SURFACE_HPP_
 
-#include "debug.h"
-#include "exports.h"
-#include "point.h"
-#include "surf_point.h"
-#include "vec.h"
+#include "debug.hpp"
+#include "exports.hpp"
+#include "point.hpp"
+#include "surf_point.hpp"
+#include "vec.hpp"
 
 #include <functional>
 #include <iostream>

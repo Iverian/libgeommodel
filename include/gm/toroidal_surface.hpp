@@ -1,9 +1,9 @@
 #ifndef GEOM_MODEL_INCLUDE_TOROIDAL_SURFACE_H
 #define GEOM_MODEL_INCLUDE_TOROIDAL_SURFACE_H
 
-#include "abstract_surface.h"
-#include "axis.h"
-#include "exports.h"
+#include "abstract_surface.hpp"
+#include "axis.hpp"
+#include "exports.hpp"
 
 #include <memory>
 

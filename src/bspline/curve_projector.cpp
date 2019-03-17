@@ -1,8 +1,8 @@
-#include <bspline/curve_projector.h>
-#include <bspline/wpoint.h>
-#include <gm/dot.h>
-#include <util/debug.h>
-#include <util/math.h>
+#include <bspline/curve_projector.hpp>
+#include <bspline/wpoint.hpp>
+#include <gm/dot.hpp>
+#include <util/debug.hpp>
+#include <util/math.hpp>
 
 #include <algorithm>
 #include <array>

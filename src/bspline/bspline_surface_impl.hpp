@@ -1,9 +1,9 @@
 #ifndef GEOM_MODEL_SRC_GEOM_BSPLINE_SURFACE_IMPL_HPP_
 #define GEOM_MODEL_SRC_GEOM_BSPLINE_SURFACE_IMPL_HPP_
 
-#include <bspline/basic_bspline_surface.h>
-#include <bspline/wpoint.h>
-#include <gm/bspline_surface.h>
+#include <bspline/basic_bspline_surface.hpp>
+#include <bspline/wpoint.hpp>
+#include <gm/bspline_surface.hpp>
 
 #include <array>
 #include <memory>

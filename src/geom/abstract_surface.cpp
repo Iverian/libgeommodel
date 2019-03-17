@@ -1,11 +1,11 @@
-#include <gm/abstract_surface.h>
-#include <gm/compare.h>
-#include <gm/plane.h>
-#include <gm/point.h>
-#include <gm/surf_point.h>
-#include <gm/vec.h>
+#include <gm/abstract_surface.hpp>
+#include <gm/compare.hpp>
+#include <gm/plane.hpp>
+#include <gm/point.hpp>
+#include <gm/surf_point.hpp>
+#include <gm/vec.hpp>
 
-#include <util/math.h>
+#include <util/math.hpp>
 
 #include <algorithm>
 

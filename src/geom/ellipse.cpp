@@ -1,9 +1,9 @@
-#include <gm/axis.h>
-#include <gm/ellipse.h>
+#include <gm/axis.hpp>
+#include <gm/ellipse.hpp>
 
-#include <util/math.h>
+#include <util/math.hpp>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
 using namespace std;
 

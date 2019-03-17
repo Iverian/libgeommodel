@@ -1,9 +1,9 @@
-#include <gm/point.h>
-#include <gm/vec.h>
+#include <gm/point.hpp>
+#include <gm/vec.hpp>
 
-#include <fmt/ostream.h>
-#include <util/debug.h>
-#include <util/math.h>
+#include <fmt/ostream.hpp>
+#include <util/debug.hpp>
+#include <util/math.hpp>
 
 using namespace std;
 

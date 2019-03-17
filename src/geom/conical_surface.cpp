@@ -1,9 +1,9 @@
-#include <gm/conical_surface.h>
-#include <gm/line.h>
+#include <gm/conical_surface.hpp>
+#include <gm/line.hpp>
 
-#include <util/math.h>
+#include <util/math.hpp>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
 using namespace std;
 

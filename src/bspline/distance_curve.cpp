@@ -1,7 +1,7 @@
-#include <bspline/distance_curve.h>
-#include <bspline/wpoint.h>
-#include <util/cyclic_iterator.h>
-#include <util/math.h>
+#include <bspline/distance_curve.hpp>
+#include <bspline/wpoint.hpp>
+#include <util/cyclic_iterator.hpp>
+#include <util/math.hpp>
 
 #include <iterator>
 #include <optional>

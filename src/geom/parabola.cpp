@@ -1,11 +1,11 @@
 #define _USE_MATH_DEFINES
 
-#include <gm/compare.h>
-#include <gm/parabola.h>
+#include <gm/compare.hpp>
+#include <gm/parabola.hpp>
 
-#include <util/math.h>
+#include <util/math.hpp>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
 using namespace std;
 

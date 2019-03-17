@@ -1,7 +1,7 @@
-#include <gm/axis.h>
-#include <gm/mat.h>
+#include <gm/axis.hpp>
+#include <gm/mat.hpp>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
 using namespace std;
 

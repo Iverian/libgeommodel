@@ -1,6 +1,6 @@
-#include <gm/compare.h>
-#include <gm/mat.h>
-#include <util/math.h>
+#include <gm/compare.hpp>
+#include <gm/mat.hpp>
+#include <util/math.hpp>
 
 #include <cmath>
 

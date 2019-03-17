@@ -1,8 +1,8 @@
-#include <bspline/bspline_curve_impl.h>
-#include <bspline/curve_projector.h>
-#include <util/itertools.h>
+#include <bspline/bspline_curve_impl.hpp>
+#include <bspline/curve_projector.hpp>
+#include <util/itertools.hpp>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
 using namespace std;
 

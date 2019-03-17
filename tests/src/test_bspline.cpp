@@ -1,11 +1,11 @@
-#include <gtest/gtest.h>
+#include <gtest/gtest.hpp>
 
-#include <gm/bspline_curve.h>
-#include <gm/bspline_surface.h>
-#include <gm/compare.h>
-#include <gm/point.h>
-#include <util/debug.h>
-#include <util/math.h>
+#include <gm/bspline_curve.hpp>
+#include <gm/bspline_surface.hpp>
+#include <gm/compare.hpp>
+#include <gm/point.hpp>
+#include <util/debug.hpp>
+#include <util/math.hpp>
 
 #include <random>
 

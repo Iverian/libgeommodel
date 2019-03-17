@@ -1,9 +1,9 @@
 #ifndef GEOM_MODEL_SRC_GEOM_CURVE_PROJECTOR_HPP_
 #define GEOM_MODEL_SRC_GEOM_CURVE_PROJECTOR_HPP_
 
-#include <bspline/bspline_curve_impl.h>
-#include <bspline/distance_curve.h>
-#include <util/debug.h>
+#include <bspline/bspline_curve_impl.hpp>
+#include <bspline/distance_curve.hpp>
+#include <util/debug.hpp>
 
 #include <vector>
 

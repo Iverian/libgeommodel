@@ -1,11 +1,11 @@
 #ifndef GEOMMODEL_SRC_BASIC_BSPLINE_SURFACE_HPP_
 #define GEOMMODEL_SRC_BASIC_BSPLINE_SURFACE_HPP_
 
-#include <bspline/basic_bspline_curve.h>
-#include <bspline/cox_de_boor.h>
-#include <bspline/wpoint.h>
-#include <gm/compare.h>
-#include <gm/surf_point.h>
+#include <bspline/basic_bspline_curve.hpp>
+#include <bspline/cox_de_boor.hpp>
+#include <bspline/wpoint.hpp>
+#include <gm/compare.hpp>
+#include <gm/surf_point.hpp>
 
 #include <algorithm>
 #include <array>

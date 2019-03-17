@@ -1,8 +1,8 @@
 #ifndef GEOM_MODEL_SRC_UTIL_DEBUG_HPP_
 #define GEOM_MODEL_SRC_UTIL_DEBUG_HPP_
 
-#include <fmt/ostream.h>
-#include <gm/debug.h>
+#include <fmt/ostream.hpp>
+#include <gm/debug.hpp>
 
 #include <iostream>
 #include <stdexcept>

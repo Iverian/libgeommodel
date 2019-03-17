@@ -1,8 +1,8 @@
-#include <gm/oriented_edge.h>
+#include <gm/oriented_edge.hpp>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
-#include <util/to_string.h>
+#include <util/to_string.hpp>
 
 using namespace std;
 

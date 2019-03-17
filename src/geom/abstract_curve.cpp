@@ -1,12 +1,12 @@
-#include <gm/abstract_curve.h>
-#include <gm/compare.h>
+#include <gm/abstract_curve.hpp>
+#include <gm/compare.hpp>
 
 #include <iostream>
 #include <iterator>
 
-#include <util/math.h>
+#include <util/math.hpp>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
 using namespace std;
 

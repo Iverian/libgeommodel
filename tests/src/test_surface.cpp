@@ -1,10 +1,10 @@
-#include <gtest/gtest.h>
+#include <gtest/gtest.hpp>
 
-#include <gm/compare.h>
-#include <gm/point.h>
-#include <gm/surfaces.h>
-#include <util/debug.h>
-#include <util/math.h>
+#include <gm/compare.hpp>
+#include <gm/point.hpp>
+#include <gm/surfaces.hpp>
+#include <util/debug.hpp>
+#include <util/math.hpp>
 
 #include <random>
 

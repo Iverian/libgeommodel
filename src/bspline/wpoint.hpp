@@ -1,9 +1,9 @@
 #ifndef GEOM_MODEL_SRC_BSPLINE_WPOINT_HPP_
 #define GEOM_MODEL_SRC_BSPLINE_WPOINT_HPP_
 
-// #include <bspline/array_operators.h>
-#include <util/debug.h>
-#include <util/itertools.h>
+// #include <bspline/array_operators.hpp>
+#include <util/debug.hpp>
+#include <util/itertools.hpp>
 
 #include <array>
 #include <ostream>

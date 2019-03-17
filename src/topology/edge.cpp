@@ -1,16 +1,16 @@
-#include <gm/compare.h>
-#include <gm/edge.h>
-#include <gm/face.h>
+#include <gm/compare.hpp>
+#include <gm/edge.hpp>
+#include <gm/face.hpp>
 
-#include <util/debug.h>
-#include <util/math.h>
-#include <util/to_string.h>
-#include <util/util.h>
+#include <util/debug.hpp>
+#include <util/math.hpp>
+#include <util/to_string.hpp>
+#include <util/util.hpp>
 
 #include <algorithm>
 #include <stdexcept>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
 using namespace std;
 

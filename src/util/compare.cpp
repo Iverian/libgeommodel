@@ -1,5 +1,5 @@
 #include <cmath>
-#include <gm/compare.h>
+#include <gm/compare.hpp>
 
 using namespace std;
 

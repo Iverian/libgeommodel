@@ -1,6 +1,6 @@
-#include <gm/surf_point.h>
+#include <gm/surf_point.hpp>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
 using namespace std;
 

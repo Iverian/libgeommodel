@@ -1,9 +1,9 @@
 #ifndef GEOMMODEL_SRC_BASIC_BSPLINE_CURVE_HPP_
 #define GEOMMODEL_SRC_BASIC_BSPLINE_CURVE_HPP_
 
-#include <bspline/cox_de_boor.h>
-#include <bspline/wpoint.h>
-#include <gm/compare.h>
+#include <bspline/cox_de_boor.hpp>
+#include <bspline/wpoint.hpp>
+#include <gm/compare.hpp>
 
 #include <algorithm>
 #include <stdexcept>

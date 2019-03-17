@@ -1,9 +1,9 @@
 #ifndef GEOM_MODEL_SRC_BSPLINE_SURFACE_PROJECTOR_HPP_
 #define GEOM_MODEL_SRC_BSPLINE_SURFACE_PROJECTOR_HPP_
 
-#include <bspline/bspline_surface_impl.h>
-#include <gm/surf_point.h>
-#include <util/debug.h>
+#include <bspline/bspline_surface_impl.hpp>
+#include <gm/surf_point.hpp>
+#include <util/debug.hpp>
 
 #include <vector>
 

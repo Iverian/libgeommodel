@@ -1,8 +1,8 @@
-#include <bspline/distance_surface.h>
-#include <bspline/wpoint.h>
-#include <gm/surf_point.h>
+#include <bspline/distance_surface.hpp>
+#include <bspline/wpoint.hpp>
+#include <gm/surf_point.hpp>
 #include <stdexcept>
-#include <util/math.h>
+#include <util/math.hpp>
 
 #include <algorithm>
 #include <limits>

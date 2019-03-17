@@ -1,8 +1,8 @@
-#include <gm/cylindrical_surface.h>
+#include <gm/cylindrical_surface.hpp>
 
-#include <util/math.h>
+#include <util/math.hpp>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
 using namespace std;
 

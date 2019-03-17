@@ -1,10 +1,10 @@
 #ifndef GEOM_MODEL_SRC_GEOM_COX_DE_BOOR_HPP_
 #define GEOM_MODEL_SRC_GEOM_COX_DE_BOOR_HPP_
 
-#include <bspline/wpoint.h>
-#include <gm/compare.h>
-#include <util/debug.h>
-#include <util/vector_view.h>
+#include <bspline/wpoint.hpp>
+#include <gm/compare.hpp>
+#include <util/debug.hpp>
+#include <util/vector_view.hpp>
 
 #include <array>
 #include <type_traits>

@@ -1,11 +1,11 @@
-#include <bspline/bspline_surface_impl.h>
-#include <bspline/surface_projector.h>
-#include <bspline/wpoint.h>
-#include <gm/bspline_surface.h>
-#include <gm/point.h>
-#include <util/itertools.h>
+#include <bspline/bspline_surface_impl.hpp>
+#include <bspline/surface_projector.hpp>
+#include <bspline/wpoint.hpp>
+#include <gm/bspline_surface.hpp>
+#include <gm/point.hpp>
+#include <util/itertools.hpp>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
 using namespace std;
 

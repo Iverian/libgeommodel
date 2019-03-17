@@ -1,9 +1,9 @@
 #ifndef GEOM_MODEL_SRC_GEOM_DISTANCE_CURVE_HPP_
 #define GEOM_MODEL_SRC_GEOM_DISTANCE_CURVE_HPP_
 
-#include <bspline/basic_bspline_curve.h>
-#include <bspline/bspline_curve_impl.h>
-#include <gm/surf_point.h>
+#include <bspline/basic_bspline_curve.hpp>
+#include <bspline/bspline_curve_impl.hpp>
+#include <gm/surf_point.hpp>
 
 namespace gm {
 

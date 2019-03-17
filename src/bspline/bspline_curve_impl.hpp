@@ -1,8 +1,8 @@
 #ifndef GEOM_MODEL_SRC_GEOM_BSPLINE_CURVE_IMPL_HPP_
 #define GEOM_MODEL_SRC_GEOM_BSPLINE_CURVE_IMPL_HPP_
 
-#include <bspline/basic_bspline_curve.h>
-#include <gm/bspline_curve.h>
+#include <bspline/basic_bspline_curve.hpp>
+#include <gm/bspline_curve.hpp>
 
 #include <memory>
 #include <optional>

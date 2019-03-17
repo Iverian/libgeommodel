@@ -1,9 +1,9 @@
-#include <gm/line.h>
-#include <util/debug.h>
+#include <gm/line.hpp>
+#include <util/debug.hpp>
 
 #include <iostream>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
 using namespace std;
 

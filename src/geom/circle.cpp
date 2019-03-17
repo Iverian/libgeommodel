@@ -1,8 +1,8 @@
-#include <gm/circle.h>
+#include <gm/circle.hpp>
 
-#include <util/math.h>
+#include <util/math.hpp>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
 using namespace std;
 

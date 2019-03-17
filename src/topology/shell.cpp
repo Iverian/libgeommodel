@@ -1,15 +1,15 @@
-#include <gm/oriented_edge.h>
-#include <gm/shell.h>
+#include <gm/oriented_edge.hpp>
+#include <gm/shell.hpp>
 
-#include <util/itertools.h>
-#include <util/util.h>
+#include <util/itertools.hpp>
+#include <util/util.hpp>
 
 #include <algorithm>
 #include <optional>
 #include <unordered_set>
 #include <utility>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
 using namespace std;
 

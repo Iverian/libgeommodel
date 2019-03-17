@@ -1,6 +1,6 @@
-#include <gm/plane.h>
+#include <gm/plane.hpp>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
 using namespace std;
 

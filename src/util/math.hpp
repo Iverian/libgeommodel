@@ -1,7 +1,7 @@
 #ifndef GEOM_MODEL_SRC_UTIL_MATH_HPP_
 #define GEOM_MODEL_SRC_UTIL_MATH_HPP_
 
-#include <gm/surf_point.h>
+#include <gm/surf_point.hpp>
 
 #include "debug.h"
 #include "std_defines.h"

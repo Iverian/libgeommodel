@@ -1,6 +1,6 @@
-#include <gtest/gtest.h>
+#include <gtest/gtest.hpp>
 
-#include <gm/curves.h>
+#include <gm/curves.hpp>
 
 #include <stdexcept>
 

@@ -1,8 +1,8 @@
-#include <gm/face.h>
+#include <gm/face.hpp>
 
-#include <util/util.h>
+#include <util/util.hpp>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
 using namespace std;
 

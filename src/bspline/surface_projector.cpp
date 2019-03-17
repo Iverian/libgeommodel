@@ -1,5 +1,5 @@
-#include <bspline/surface_projector.h>
-#include <gm/point.h>
+#include <bspline/surface_projector.hpp>
+#include <gm/point.hpp>
 
 #include <optional>
 #include <stdexcept>

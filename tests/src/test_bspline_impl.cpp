@@ -1,13 +1,13 @@
-#include <gtest/gtest.h>
+#include <gtest/gtest.hpp>
 
-#include <gm/compare.h>
-#include <gm/point.h>
+#include <gm/compare.hpp>
+#include <gm/point.hpp>
 
-#include <util/debug.h>
-#include <util/math.h>
+#include <util/debug.hpp>
+#include <util/math.hpp>
 
-#include <bspline/bspline_curve_impl.h>
-#include <bspline/curve_projector.h>
+#include <bspline/bspline_curve_impl.hpp>
+#include <bspline/curve_projector.hpp>
 
 #include <random>
 

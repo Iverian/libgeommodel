@@ -1,10 +1,10 @@
-#include <gm/point.h>
-#include <gm/vec.h>
+#include <gm/point.hpp>
+#include <gm/vec.hpp>
 
-#include <gm/compare.h>
-#include <util/math.h>
+#include <gm/compare.hpp>
+#include <util/math.hpp>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
 using namespace std;
 

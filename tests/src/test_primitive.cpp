@@ -1,10 +1,10 @@
 #define _USE_MATH_DEFINES
 
-#include <gtest/gtest.h>
+#include <gtest/gtest.hpp>
 
-#include <gm/curves.h>
-#include <gm/surfaces.h>
-#include <util/debug.h>
+#include <gm/curves.hpp>
+#include <gm/surfaces.hpp>
+#include <util/debug.hpp>
 
 #include <cmath>
 

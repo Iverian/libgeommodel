@@ -1,5 +1,5 @@
-#include <bspline/bspline_curve_impl.h>
-#include <gm/bspline_curve.h>
+#include <bspline/bspline_curve_impl.hpp>
+#include <gm/bspline_curve.hpp>
 
 using namespace std;
 

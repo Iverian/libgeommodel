@@ -1,9 +1,9 @@
-#include <gm/circle.h>
-#include <gm/spherical_surface.h>
+#include <gm/circle.hpp>
+#include <gm/spherical_surface.hpp>
 
-#include <util/math.h>
+#include <util/math.hpp>
 
-#include <fmt/ostream.h>
+#include <fmt/ostream.hpp>
 
 using namespace std;
 

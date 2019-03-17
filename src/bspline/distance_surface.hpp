@@ -1,11 +1,11 @@
 #ifndef GEOM_MODEL_SRC_BSPLINE_DISTANCE_SURFACE_HPP_
 #define GEOM_MODEL_SRC_BSPLINE_DISTANCE_SURFACE_HPP_
 
-#include <bspline/basic_bspline_surface.h>
-#include <bspline/bspline_surface_impl.h>
-#include <gm/bspline_surface.h>
-#include <gm/point.h>
-#include <gm/surf_point.h>
+#include <bspline/basic_bspline_surface.hpp>
+#include <bspline/bspline_surface_impl.hpp>
+#include <gm/bspline_surface.hpp>
+#include <gm/point.hpp>
+#include <gm/surf_point.hpp>
 
 #include <utility>
 #include <vector>

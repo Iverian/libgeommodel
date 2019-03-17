@@ -12,8 +12,6 @@
 
 #include <fmt/ostream.h>
 
-using namespace std;
-
 namespace gm {
 
 Edge::Edge()
@@ -23,7 +21,7 @@ Edge::Edge()
 {
 }
 
-Edge::Edge(shared_ptr<AbstractCurve> curve, const Point& front,
+Edge::Edge(std::shared_ptr<AbstractCurve> curve, const Point& front,
            const Point& back)
     : pfront_()
     , pback_()
@@ -35,21 +33,23 @@ Edge::Edge(shared_ptr<AbstractCurve> curve, const Point& front,
     auto f = curve_->f(pfront_);
     auto b = curve_->f(pback_);
 
-    check_if(cmp::near(f, front, Tolerance::ZERO)
-                 && cmp::near(b, back, Tolerance::ZERO),
-             "unable to construct edge with \"curve\": {0}, \"begin\": {1}, "
-             "\"end\": {2}: projections \"begin_p\": {3}, \"end_p\": {4} do "
-             "not match original points",
-             *curve_, front, back, f, b);
+    check_if(
+        cmp::near(f, front, Tolerance::ZERO)
+            && cmp::near(b, back, Tolerance::ZERO),
+        "unable to construct edge with \"curve\": {0}, \"std::begin\": {1}, "
+        "\"std::end\": {2}: projections \"std::begin_p\": {3}, "
+        "\"std::end_p\": {4} do "
+        "not match original points",
+        *curve_, front, back, f, b);
 }
 
-Edge::Edge(shared_ptr<AbstractCurve> curve, double pfront, double pback)
+Edge::Edge(std::shared_ptr<AbstractCurve> curve, double pfront, double pback)
     : pfront_(pfront)
     , pback_(pback)
     , curve_(curve)
 {
     if (pback_ < pfront_) {
-        swap(pfront_, pback_);
+        std::swap(pfront_, pback_);
     }
 }
 
@@ -78,7 +78,7 @@ double Edge::project(const Point& p) const
     return param_rev(curve_->project(p));
 }
 
-optional<double> Edge::project_greater(const Point& p, double min) const
+std::optional<double> Edge::project_greater(const Point& p, double min) const
     noexcept
 {
     auto result = curve_->project_greater(p, param(min));
@@ -113,7 +113,7 @@ double Edge::pback() const noexcept
     return pback_;
 }
 
-shared_ptr<AbstractCurve> Edge::curve() const noexcept
+std::shared_ptr<AbstractCurve> Edge::curve() const noexcept
 {
     return curve_;
 }
@@ -129,7 +129,7 @@ bool operator!=(const Edge& lhs, const Edge& rhs) noexcept
     return !(lhs == rhs);
 }
 
-ostream& Edge::print(ostream& os) const
+std::ostream& Edge::print(std::ostream& os) const
 {
     fmt::print(os,
                "{{ \"curve\": {0}, \"front\": {1:.5g}, \"back\": {2:.5g} }}",

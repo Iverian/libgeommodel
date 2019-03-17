@@ -1,22 +1,23 @@
 #include <bspline/bspline_curve_impl.hpp>
 #include <gm/bspline_curve.hpp>
 
-using namespace std;
-
 namespace gm {
 
-BSplineCurve::BSplineCurve(size_t degree, ::vector<double> knots,
-                           ::vector<Point> points, ::vector<double> weights)
-    : pimpl_(make_unique<BSplineCurve::Impl>(degree, knots, points, weights))
+BSplineCurve::BSplineCurve(size_t degree, std::vector<double> knots,
+                           std::vector<Point> points,
+                           std::vector<double> weights)
+    : pimpl_(
+        std::make_unique<BSplineCurve::Impl>(degree, knots, points, weights))
 {
 }
 
 BSplineCurve::BSplineCurve(size_t degree,
-                           const ::vector<size_t>& knot_multiplies,
-                           const ::vector<double>& knot_list,
-                           ::vector<Point> points, ::vector<double> weights)
-    : pimpl_(make_unique<BSplineCurve::Impl>(degree, knot_multiplies,
-                                             knot_list, points))
+                           const std::vector<size_t>& knot_multiplies,
+                           const std::vector<double>& knot_list,
+                           std::vector<Point> points,
+                           std::vector<double> weights)
+    : pimpl_(std::make_unique<BSplineCurve::Impl>(degree, knot_multiplies,
+                                                  knot_list, points))
 {
 }
 
@@ -35,7 +36,7 @@ Vec BSplineCurve::df2(double u) const noexcept
     return pimpl_->df2(u);
 }
 
-ostream& BSplineCurve::print(ostream& os) const
+std::ostream& BSplineCurve::print(std::ostream& os) const
 {
     return pimpl_->print(os);
 }

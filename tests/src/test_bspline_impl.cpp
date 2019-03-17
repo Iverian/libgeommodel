@@ -11,7 +11,6 @@
 
 #include <random>
 
-using namespace std;
 using namespace gm;
 
 static constexpr size_t N = 10;
@@ -31,7 +30,7 @@ protected:
     }
 
     BSplineCurve::Impl c;
-    vector<BSplineCurve::Impl::BezierPatch> bz;
+    std::vector<BSplineCurve::Impl::BezierPatch> bz;
 };
 
 TEST_F(TestBSplineImpl, test_bspline_patches)

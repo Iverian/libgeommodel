@@ -7,8 +7,6 @@
 
 #include <fmt/ostream.h>
 
-using namespace std;
-
 namespace gm {
 
 Parabola::Parabola() noexcept
@@ -19,7 +17,7 @@ Parabola::Parabola() noexcept
 
 Parabola::Parabola(double f, Axis ax) noexcept
     : f_(fabs(f))
-    , ax_(move(ax))
+    , ax_(std::move(ax))
 {
 }
 
@@ -38,7 +36,7 @@ Vec Parabola::df2(double u) const noexcept
     return ax_.vglobal(2 * f_, 0, 0);
 }
 
-ostream& Parabola::print(ostream& os) const
+std::ostream& Parabola::print(std::ostream& os) const
 {
     fmt::print(os, "{{ \"type\": \"parabola\", \"f\": {0}, \"axis\": {1} }}",
                f_, ax_);
@@ -51,7 +49,7 @@ double Parabola::project(const Point& p) const
     auto [c, x, y, z] = ax_.get_view();
     auto w = p - c;
 
-    vector<double> roots;
+    std::vector<double> roots;
     roots.reserve(3);
 
     auto P = 2 - dot(w, x) / (2 * f_);
@@ -80,7 +78,7 @@ double Parabola::project(const Point& p) const
         }
     }
 
-    return *min_element(begin(roots), end(roots),
+    return *min_element(std::begin(roots), std::end(roots),
                         [this, &p](auto& lhs, auto& rhs) {
                             return dist(f(lhs), p) < dist(f(rhs), p);
                         });
@@ -94,7 +92,7 @@ inline double F(double x)
 double Parabola::approx_length(double begin, double end, size_t n) const
 {
     if (begin >= end) {
-        swap(begin, end);
+        std::swap(begin, end);
     }
     return 2 * f_ * (F(end) - F(begin));
 }

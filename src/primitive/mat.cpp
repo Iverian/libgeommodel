@@ -4,8 +4,6 @@
 
 #include <cmath>
 
-using namespace std;
-
 namespace gm {
 
 #define _(i, j) ((i) * (row_size) + (j))
@@ -38,7 +36,7 @@ double det(const Mat& x) noexcept
         + x(0, 2) * (x(1, 0) * x(2, 1) - x(1, 1) * x(2, 0));
 }
 
-::optional<Mat> inverse(const Mat& x) noexcept
+std::optional<Mat> inverse(const Mat& x) noexcept
 {
     if (auto d = det(x); !cmp::zero(d)) {
         Mat result;
@@ -54,7 +52,7 @@ double det(const Mat& x) noexcept
 
         return result / d;
     }
-    return nullopt;
+    return std::nullopt;
 }
 
 Vec dot(const Mat& a, const Vec& v)
@@ -75,7 +73,7 @@ Point dot(const Mat& a, const Point& p)
     return result;
 }
 
-ostream& operator<<(ostream& os, const Mat& mat)
+std::ostream& operator<<(std::ostream& os, const Mat& mat)
 {
     os << "[";
     for (size_t i = 0; i < mat.row_size; ++i) {

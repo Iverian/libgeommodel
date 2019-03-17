@@ -1,8 +1,6 @@
 #include <cmath>
 #include <gm/compare.hpp>
 
-using namespace std;
-
 namespace gm::cmp {
 double tol(Tolerance t) noexcept
 {

@@ -11,8 +11,6 @@
 
 #include <fmt/ostream.h>
 
-using namespace std;
-
 namespace gm {
 
 Shell::Shell()
@@ -21,13 +19,13 @@ Shell::Shell()
 {
 }
 
-Shell::Shell(const Axis& ax, const vector<Face>& face)
+Shell::Shell(const Axis& ax, const std::vector<Face>& face)
     : ax_(ax)
     , faces_(face)
 {
 }
 
-const vector<Face>& Shell::faces() const
+const std::vector<Face>& Shell::faces() const
 {
     return faces_;
 }
@@ -42,25 +40,25 @@ void Shell::set_ax(const Axis& ax)
     ax_ = ax;
 }
 
-void Shell::set_faces(const vector<Face>& faces)
+void Shell::set_faces(const std::vector<Face>& faces)
 {
     faces_ = faces;
 }
 
 void Shell::set_ax(Axis&& ax)
 {
-    ax_ = move(ax);
+    ax_ = std::move(ax);
 }
 
-void Shell::set_faces(vector<Face>&& faces)
+void Shell::set_faces(std::vector<Face>&& faces)
 {
-    faces_ = move(faces);
+    faces_ = std::move(faces);
 }
 
-ostream& operator<<(ostream& os, const Shell& x)
+std::ostream& operator<<(std::ostream& os, const Shell& x)
 {
     fmt::print(os, "{{ \"axis\": {0}, \"faces\": {1} }}", x.ax(),
-               RangePrint(begin(x.faces()), end(x.faces())));
+               RangePrint(std::begin(x.faces()), std::end(x.faces())));
     return os;
 }
 

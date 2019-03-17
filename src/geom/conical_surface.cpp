@@ -5,8 +5,6 @@
 
 #include <fmt/ostream.h>
 
-using namespace std;
-
 namespace gm {
 
 ConicalSurface::ConicalSurface() noexcept
@@ -19,7 +17,7 @@ ConicalSurface::ConicalSurface() noexcept
 ConicalSurface::ConicalSurface(double r, double a, Axis ax) noexcept
     : r_(r)
     , ta_(tan(a))
-    , ax_(move(ax))
+    , ax_(std::move(ax))
 {
 }
 
@@ -56,7 +54,7 @@ Vec ConicalSurface::dfvv(const SurfPoint& p) const noexcept
     return ax_.vglobal(0, 0, 0);
 }
 
-ostream& ConicalSurface::print(ostream& os) const
+std::ostream& ConicalSurface::print(std::ostream& os) const
 {
     fmt::print(os,
                "{{ \"type\": \"conical_surface\", \"r\": {0}, \"ta\": {1}, "
@@ -72,7 +70,7 @@ SurfPoint ConicalSurface::project(const Point& p) const
     auto u = atan2v(dot(w, y), dot(w, x));
 
     SurfPoint min {};
-    auto mdist = ::numeric_limits<double>::max();
+    auto mdist = std::numeric_limits<double>::max();
     for (auto& uu : u) {
         auto vv = Line(ta_ * ::cos(uu) * x + ta_ * ::sin(uu) * y + z,
                        r_ * ::cos(uu) * x + r_ * ::sin(uu) * y + c)

@@ -1,3 +1,4 @@
+#include "util.hpp"
 #include <bspline/distance_curve.hpp>
 #include <bspline/wpoint.hpp>
 #include <util/cyclic_iterator.hpp>
@@ -6,14 +7,6 @@
 #include <iterator>
 #include <optional>
 
-using namespace std;
-
-::vector<gm::SurfPoint> graham_scan(::vector<gm::SurfPoint>& points);
-double polar_angle(const gm::SurfPoint& lhs, const gm::SurfPoint& rhs);
-bool counter_clockwise(const gm::SurfPoint& a, const gm::SurfPoint& b,
-                       const gm::SurfPoint& c);
-::optional<double>
-zero_intersect(const ::pair<gm::SurfPoint, gm::SurfPoint>& line);
 double pget(gm::DistanceCurve::Super::CPoint cp) noexcept;
 
 namespace gm {
@@ -41,7 +34,7 @@ DistanceCurve::DistanceCurve(const BSplineCurve::Impl::BezierPatch& patch,
 
         auto& q = cp[i];
         auto first = (i < deg) ? size_t(0) : (i - deg);
-        auto last = ::min(deg, i) + 1;
+        auto last = std::min(deg, i) + 1;
         for (auto k = first; k < last; ++k) {
             auto a = patch.cpoints()[k] - pr;
             auto b = patch.cpoints()[i - k] - pr;
@@ -53,7 +46,7 @@ DistanceCurve::DistanceCurve(const BSplineCurve::Impl::BezierPatch& patch,
         q /= c;
     }
 
-    c_ = Super(order, move(knots), move(cp));
+    c_ = Super(order, std::move(knots), std::move(cp));
 }
 
 double DistanceCurve::pfront() const noexcept
@@ -87,7 +80,7 @@ double DistanceCurve::f(double u) const noexcept
     return c_.f(u)[0];
 }
 
-::pair<double, double> DistanceCurve::min_init() const noexcept
+std::pair<double, double> DistanceCurve::min_init() const noexcept
 {
     auto min = std::numeric_limits<double>::max();
     double umin = 0;
@@ -103,18 +96,18 @@ double DistanceCurve::f(double u) const noexcept
 
 bool DistanceCurve::is_candidate(double d) const noexcept
 {
-    return ::any_of(::begin(c_.cpoints()), ::end(c_.cpoints()),
-                    [&d](auto& wp) {
-                        auto p = pget(wp);
-                        return cmp::le(p, d);
-                    });
+    return std::any_of(std::begin(c_.cpoints()), std::end(c_.cpoints()),
+                       [&d](auto& wp) {
+                           auto p = pget(wp);
+                           return cmp::le(p, d);
+                       });
 }
 
 std::vector<SurfPoint> DistanceCurve::point_hull(double d) const
 {
     auto s = c_.cpoints().size();
 
-    ::vector<SurfPoint> values;
+    std::vector<SurfPoint> values;
     values.reserve(s);
 
     for (decltype(s) i = 0; i < s; ++i) {
@@ -124,7 +117,7 @@ std::vector<SurfPoint> DistanceCurve::point_hull(double d) const
         values.emplace_back(u, v);
     }
 
-    return ::graham_scan(values);
+    return graham_scan(values);
 }
 
 bool DistanceCurve::eliminate_segment(double d) noexcept
@@ -134,12 +127,12 @@ bool DistanceCurve::eliminate_segment(double d) noexcept
 
     auto convex_hull = point_hull(d);
 
-    vector<double> roots;
+    std::vector<double> roots;
     roots.reserve(max_roots);
 
-    auto it = CyclicIterator(::begin(convex_hull), ::end(convex_hull));
+    auto it = CyclicIterator(std::begin(convex_hull), std::end(convex_hull));
     do {
-        if (auto u = ::zero_intersect({*it, *::next(it)}); u) {
+        if (auto u = zero_intersect({*it, *std::next(it)}); u) {
             auto v = u.value();
             if (!cmp::near(v, c_.pfront()) && !cmp::near(v, c_.pback())
                 && (roots.empty() || !cmp::near(v, roots.back()))) {
@@ -147,11 +140,11 @@ bool DistanceCurve::eliminate_segment(double d) noexcept
             }
         }
     } while (++it, roots.size() != max_roots && it.iter() != it.first());
-    ::sort(::begin(roots), ::end(roots));
+    std::sort(std::begin(roots), std::end(roots));
 
     for (size_t i = roots.size() - 1; i != npos; --i) {
         if (auto v = tocparg(roots[i], bool(i % 2)); f(v) < d) {
-            auto it = ::begin(roots) + (i + 1);
+            auto it = std::begin(roots) + (i + 1);
             roots.erase(it);
         }
     }
@@ -205,74 +198,6 @@ bool DistanceCurve::peak_point() const noexcept
 }
 
 } // namespace gm
-
-#define next_to_top(stack) (*::prev(::end(stack), 2))
-#define top(stack) ((stack).back())
-
-::vector<gm::SurfPoint> graham_scan(::vector<gm::SurfPoint>& points)
-{
-    ::vector<gm::SurfPoint> result;
-    result.reserve(points.size());
-
-    {
-        auto min = ::min_element(
-            ::begin(points), ::end(points),
-            [](auto& lhs, auto& rhs) { return lhs.v < rhs.v; });
-        ::swap(*::begin(points), *min);
-    }
-    ::sort(::next(::begin(points)), ::end(points),
-           [& p = points[0]](auto& lhs, auto& rhs) {
-               return polar_angle(lhs, p) < polar_angle(rhs, p);
-           });
-    result.push_back(points[0]);
-    result.push_back(points[1]);
-
-    for (size_t i = 2; i < points.size(); ++i) {
-        auto& q = points[i];
-        while (result.size() > 1
-               && !counter_clockwise(next_to_top(result), top(result), q)) {
-            result.pop_back();
-        }
-        result.push_back(q);
-    }
-
-    result.shrink_to_fit();
-    return result;
-}
-
-#undef next_to_top
-#undef top
-
-double polar_angle(const gm::SurfPoint& lhs, const gm::SurfPoint& rhs)
-{
-    auto p = rhs - lhs;
-    return ::atan2(p.v, p.u);
-}
-
-bool counter_clockwise(const gm::SurfPoint& a, const gm::SurfPoint& b,
-                       const gm::SurfPoint& c)
-{
-    auto value = (b.u - a.u) * (c.v - a.v) - (b.v - a.v) * (c.u - a.u);
-    return value > 0;
-}
-
-::optional<double>
-zero_intersect(const ::pair<gm::SurfPoint, gm::SurfPoint>& line)
-{
-    auto& [a, b] = line;
-
-    if (gm::cmp::zero(a.v, gm::Tolerance::MAX)) {
-        return a.u;
-    }
-    if (gm::cmp::zero(b.v, gm::Tolerance::MAX)) {
-        return b.u;
-    }
-    if (::signbit(a.v) != ::signbit(b.v)) {
-        return (a.u * b.v - b.u * a.v) / (b.v - a.v);
-    }
-
-    return nullopt;
-}
 
 inline double pget(gm::DistanceCurve::Super::CPoint cp) noexcept
 {

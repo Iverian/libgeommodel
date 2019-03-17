@@ -1,6 +1,7 @@
 #include <bspline/curve_projector.hpp>
 #include <bspline/wpoint.hpp>
 #include <gm/dot.hpp>
+#include <gm/point.hpp>
 #include <util/debug.hpp>
 #include <util/math.hpp>
 
@@ -8,8 +9,6 @@
 #include <array>
 #include <iterator>
 #include <vector>
-
-using namespace std;
 
 namespace gm {
 
@@ -21,16 +20,16 @@ CurveProjector::CurveProjector(const BSplineCurve::Impl& impl)
 
 double CurveProjector::call(const Point& p) const
 {
-    ::optional<double> u = nullopt;
-    auto d = ::numeric_limits<double>::max();
+    std::optional<double> u = std::nullopt;
+    auto d = std::numeric_limits<double>::max();
 
-    for (auto i = ::begin(patches_); i != ::end(patches_) && !cmp::zero(d);
-         ++i) {
+    for (auto i = std::begin(patches_);
+         i != std::end(patches_) && !cmp::zero(d); ++i) {
         auto c = DistanceCurve(*i, p);
 
         while (true) {
             auto [umin, dmin] = c.min_init();
-            d = ::min(d, dmin);
+            d = std::min(d, dmin);
 
             if (c.is_candidate(d)) {
                 if (c.peak_point()) {
@@ -80,8 +79,8 @@ std::optional<double> CurveProjector::minimize(const Point& p, double u0,
         u += h;
     }
 
-    debug_fmt(cout, "i = max_iter u = nullopt");
-    return nullopt;
+    debug_fmt(std::cout, "i = max_iter u = std::nullopt");
+    return std::nullopt;
 }
 
 double CurveProjector::bord_check(double u, const double& a,

@@ -4,35 +4,35 @@
 
 #include <fmt/ostream.h>
 
-using namespace std;
-
 namespace gm {
 
 struct Face::Impl {
-    Impl(shared_ptr<AbstractSurface> surface, bool same_sense);
-    Impl(shared_ptr<AbstractSurface> surface, bool same_sense,
-         const FaceBound& outer_loop, const vector<FaceBound>& inner_loop);
+    Impl(std::shared_ptr<AbstractSurface> surface, bool same_sense);
+    Impl(std::shared_ptr<AbstractSurface> surface, bool same_sense,
+         const FaceBound& outer_loop,
+         const std::vector<FaceBound>& inner_loop);
 
     bool same_sense() const;
-    const vector<FaceBound>& boundaries() const;
+    const std::vector<FaceBound>& boundaries() const;
     const FaceBound& outer() const;
     const AbstractSurface& surface() const;
 
 private:
     bool same_sense_;
-    vector<FaceBound> boundaries_;
-    shared_ptr<AbstractSurface> surface_;
+    std::vector<FaceBound> boundaries_;
+    std::shared_ptr<AbstractSurface> surface_;
 };
 
-Face::Face(shared_ptr<AbstractSurface> surface, bool same_sense)
-    : pimpl_(make_shared<Face::Impl>(surface, same_sense))
+Face::Face(std::shared_ptr<AbstractSurface> surface, bool same_sense)
+    : pimpl_(std::make_shared<Face::Impl>(surface, same_sense))
 {
 }
 
-Face::Face(shared_ptr<AbstractSurface> surface, bool same_sense,
-           const FaceBound& outer_loop, const vector<FaceBound>& inner_loop)
-    : pimpl_(
-        make_shared<Face::Impl>(surface, same_sense, outer_loop, inner_loop))
+Face::Face(std::shared_ptr<AbstractSurface> surface, bool same_sense,
+           const FaceBound& outer_loop,
+           const std::vector<FaceBound>& inner_loop)
+    : pimpl_(std::make_shared<Face::Impl>(surface, same_sense, outer_loop,
+                                          inner_loop))
 {
 }
 
@@ -46,7 +46,7 @@ const FaceBound& Face::outer() const
     return pimpl_->outer();
 }
 
-const vector<FaceBound>& Face::boundaries() const
+const std::vector<FaceBound>& Face::boundaries() const
 {
     return pimpl_->boundaries();
 }
@@ -56,7 +56,7 @@ const AbstractSurface& Face::surface() const
     return pimpl_->surface();
 }
 
-ostream& operator<<(ostream& os, const Face& f)
+std::ostream& operator<<(std::ostream& os, const Face& f)
 {
     fmt::print(
         os, "{{ \"surface\": {0}, \"boundaries\": {1}, \"same_sense\": {2} }}",
@@ -64,16 +64,16 @@ ostream& operator<<(ostream& os, const Face& f)
     return os;
 }
 
-Face::Impl::Impl(shared_ptr<AbstractSurface> surface, bool same_sense)
+Face::Impl::Impl(std::shared_ptr<AbstractSurface> surface, bool same_sense)
     : same_sense_(same_sense)
     , boundaries_()
     , surface_(move(surface))
 {
 }
 
-Face::Impl::Impl(shared_ptr<AbstractSurface> surface, bool same_sense,
+Face::Impl::Impl(std::shared_ptr<AbstractSurface> surface, bool same_sense,
                  const FaceBound& outer_loop,
-                 const vector<FaceBound>& inner_loop)
+                 const std::vector<FaceBound>& inner_loop)
     : same_sense_(same_sense)
     , boundaries_()
     , surface_(move(surface))
@@ -85,7 +85,7 @@ Face::Impl::Impl(shared_ptr<AbstractSurface> surface, bool same_sense,
     }
 }
 
-const vector<FaceBound>& Face::Impl::boundaries() const
+const std::vector<FaceBound>& Face::Impl::boundaries() const
 {
     return boundaries_;
 }

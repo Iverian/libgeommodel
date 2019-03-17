@@ -3,8 +3,6 @@
 
 #include <fmt/ostream.h>
 
-using namespace std;
-
 namespace gm {
 
 Axis::Axis() noexcept
@@ -13,11 +11,11 @@ Axis::Axis() noexcept
 {
 }
 
-Axis::Axis(const Point& c, const array<Vec, N>& basis) noexcept
+Axis::Axis(const Point& c, const std::array<Vec, N>& basis) noexcept
     : c_(c)
     , basis_ {basis[0], basis[1], basis[2]}
 {
-    array<double, 2> coeff;
+    std::array<double, 2> coeff;
     for (size_t i = 1; i < 3; ++i) {
         coeff[i - 1] = -dot(basis_[i - 1], basis_[i]) / sqr(basis_[i - 1]);
         for (size_t j = 0; j < i; ++j) {
@@ -55,7 +53,7 @@ const Point& Axis::c() const noexcept
 
 Axis::View Axis::get_view() const noexcept
 {
-    return make_tuple(c_, basis_[0], basis_[1], basis_[2]);
+    return std::make_tuple(c_, basis_[0], basis_[1], basis_[2]);
 }
 
 Vec Axis::rotate_x(double angle, const Vec& v) const noexcept
@@ -140,7 +138,7 @@ bool operator!=(const Axis& lhs, const Axis& rhs) noexcept
     return !(lhs == rhs);
 }
 
-ostream& operator<<(ostream& os, const Axis& ax)
+std::ostream& operator<<(std::ostream& os, const Axis& ax)
 {
     fmt::print(os, "{{ \"x\": {0}, \"y\": {1}, \"z\": {2}, \"c\": {3} }}",
                ax[0], ax[1], ax[2], ax.c());

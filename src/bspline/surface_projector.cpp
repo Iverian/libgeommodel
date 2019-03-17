@@ -4,8 +4,6 @@
 #include <optional>
 #include <stdexcept>
 
-using namespace std;
-
 namespace gm {
 
 SurfaceProjector::SurfaceProjector(const BSplineSurface::Impl& impl)
@@ -40,7 +38,7 @@ SurfaceProjector::minimize(const Point& p, SurfPoint r, const SurfPoint& a,
         r += h;
     }
 
-    return nullopt;
+    return std::nullopt;
 }
 
 SurfPoint SurfaceProjector::next_step(SurfPoint r, const Vec& w, const Vec& fu,

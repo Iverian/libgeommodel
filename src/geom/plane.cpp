@@ -2,8 +2,6 @@
 
 #include <fmt/ostream.h>
 
-using namespace std;
-
 namespace gm {
 
 Plane::Plane() noexcept
@@ -12,7 +10,7 @@ Plane::Plane() noexcept
 }
 
 Plane::Plane(Axis ax) noexcept
-    : ax_(move(ax))
+    : ax_(std::move(ax))
 {
 }
 
@@ -51,7 +49,7 @@ Vec Plane::dfvv(const SurfPoint& p) const noexcept
     return ax_.vglobal(0, 0, 0);
 }
 
-ostream& Plane::print(ostream& os) const
+std::ostream& Plane::print(std::ostream& os) const
 {
     fmt::print(os, "{{ \"type\": \"plane\", \"axis\": {0} }}", ax_);
     return os;

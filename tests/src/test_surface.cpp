@@ -8,7 +8,6 @@
 
 #include <random>
 
-using namespace std;
 using namespace gm;
 
 TEST(TestSurface, plane_projection)

@@ -10,8 +10,6 @@
 
 #define pget(cp) ((cp).p()[0])
 
-using namespace std;
-
 namespace gm {
 
 DistanceSurface::DistanceSurface()
@@ -23,11 +21,12 @@ DistanceSurface::DistanceSurface(
     const BSplineSurface::Impl::BezierPatch& patch, const Point& p)
     : c_()
 {
-    auto order
-        = make_pair(2 * patch.order().first - 1, 2 * patch.order().second - 1);
-    auto deg = make_pair(patch.order().first - 1, patch.order().second - 1);
-    auto knots = make_pair(vector<double>(2 * order.first),
-                           vector<double>(2 * order.second));
+    auto order = std::make_pair(2 * patch.order().first - 1,
+                                2 * patch.order().second - 1);
+    auto deg
+        = std::make_pair(patch.order().first - 1, patch.order().second - 1);
+    auto knots = make_pair(std::vector<double>(2 * order.first),
+                           std::vector<double>(2 * order.second));
     Super::CPointsType cp(order.first * order.second);
     auto r = p.raw();
 
@@ -42,12 +41,12 @@ DistanceSurface::DistanceSurface(
         knots.first[order.first + i] = patch.pback().u;
 
         auto i_first = (i < deg.first) ? size_t(0) : (i - deg.first);
-        auto i_last = ::min(deg.first, i) + 1;
+        auto i_last = std::min(deg.first, i) + 1;
         for (j = 0; j < order.second; ++j) {
             auto& t = cp[j + order.second * i];
 
             auto j_first = (j < deg.second) ? size_t(0) : (j - deg.second);
-            auto j_last = ::min(deg.second, j) + 1;
+            auto j_last = std::min(deg.second, j) + 1;
 
             for (auto p = i_first; p < i_last; ++p) {
                 for (auto q = j_first; q < j_last; ++q) {
@@ -129,11 +128,11 @@ std::pair<SurfPoint, double> DistanceSurface::min_init() const noexcept
 }
 bool DistanceSurface::is_candidate(double d) const noexcept
 {
-    return ::any_of(::begin(c_.cpoints()), ::end(c_.cpoints()),
-                    [&d](auto& wp) {
-                        auto p = pget(wp);
-                        return cmp::le(p, d);
-                    });
+    return std::any_of(std::begin(c_.cpoints()), std::end(c_.cpoints()),
+                       [&d](auto& wp) {
+                           auto p = pget(wp);
+                           return cmp::le(p, d);
+                       });
 }
 
 std::vector<Point> DistanceSurface::point_hull(double d) noexcept

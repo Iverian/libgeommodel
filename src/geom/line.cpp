@@ -5,8 +5,6 @@
 
 #include <fmt/ostream.h>
 
-using namespace std;
-
 namespace gm {
 
 Line::Line() noexcept
@@ -16,8 +14,8 @@ Line::Line() noexcept
 }
 
 Line::Line(Vec dir, Point c) noexcept
-    : dir_(move(dir))
-    , c_(move(c))
+    : dir_(std::move(dir))
+    , c_(std::move(c))
 {
 }
 
@@ -56,7 +54,7 @@ double Line::approx_length(double begin, double end, size_t n) const
     return norm(dir_) * fabs(end - begin);
 }
 
-ostream& Line::print(ostream& os) const
+std::ostream& Line::print(std::ostream& os) const
 {
 
     fmt::print(os, "{{ \"type\": \"line\", \"dir\": {0}, \"center\": {1} }}",

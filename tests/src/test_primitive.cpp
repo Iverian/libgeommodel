@@ -8,7 +8,6 @@
 
 #include <cmath>
 
-using namespace std;
 using namespace gm;
 
 TEST(TestPrimitive, vec_operations)
@@ -84,7 +83,7 @@ TEST(TestPrimitive, rotation)
     auto a = unit({1, 0, 0});
     auto b = unit({1, 1, 0});
     auto c = M_PI_2;
-    debug_fmt(cout, "r(a): {}, r(b): {}", ax.rotate_z(c, a),
+    debug_fmt(std::cout, "r(a): {}, r(b): {}", ax.rotate_z(c, a),
               ax.rotate_z(c, b));
 
     SUCCEED();

@@ -5,8 +5,6 @@
 
 #include <fmt/ostream.h>
 
-using namespace std;
-
 namespace gm {
 
 SphericalSurface::SphericalSurface() noexcept
@@ -17,7 +15,7 @@ SphericalSurface::SphericalSurface() noexcept
 
 SphericalSurface::SphericalSurface(double r, Axis ax) noexcept
     : r_(r)
-    , ax_(move(ax))
+    , ax_(std::move(ax))
 {
 }
 
@@ -57,7 +55,7 @@ Vec SphericalSurface::dfvv(const SurfPoint& p) const noexcept
                        -r_ * ::cos(p.v) * ::sin(p.u), -r_ * ::sin(p.v));
 }
 
-ostream& SphericalSurface::print(ostream& os) const
+std::ostream& SphericalSurface::print(std::ostream& os) const
 {
     fmt::print(os, "{{ \"type\": \"spherical\", \"r\": {0}, \"axis\": {1} }}",
                r_, ax_);

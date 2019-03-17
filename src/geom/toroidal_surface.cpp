@@ -5,8 +5,6 @@
 
 #include <fmt/ostream.h>
 
-using namespace std;
-
 namespace gm {
 
 ToroidalSurface::ToroidalSurface() noexcept
@@ -19,7 +17,7 @@ ToroidalSurface::ToroidalSurface() noexcept
 ToroidalSurface::ToroidalSurface(double r0, double r1, Axis ax) noexcept
     : r0_(r0)
     , r1_(r1)
-    , ax_(move(ax))
+    , ax_(std::move(ax))
 {
 }
 
@@ -59,7 +57,7 @@ Vec ToroidalSurface::dfvv(const SurfPoint& p) const noexcept
                       ::sin(p.v));
 }
 
-ostream& ToroidalSurface::print(ostream& os) const
+std::ostream& ToroidalSurface::print(std::ostream& os) const
 {
     fmt::print(
         os,

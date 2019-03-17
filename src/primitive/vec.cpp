@@ -6,8 +6,6 @@
 
 #include <fmt/ostream.h>
 
-using namespace std;
-
 namespace gm {
 
 Vec::Vec() noexcept
@@ -20,21 +18,21 @@ Vec::Vec(value_type x, value_type y, value_type z) noexcept
 {
 }
 
-Vec::Vec(value_type magnitude, const array<value_type, N>& dir) noexcept
+Vec::Vec(value_type magnitude, const std::array<value_type, N>& dir) noexcept
     : data_ {magnitude * dir[0], magnitude * dir[1], magnitude * dir[2]}
 {
 }
 
-Vec::Vec(const array<value_type, N>& coord) noexcept
+Vec::Vec(const std::array<value_type, N>& coord) noexcept
     : data_ {coord[0], coord[1], coord[2]}
 {
 }
 
-Vec::Vec(const initializer_list<value_type>& list) noexcept
+Vec::Vec(const std::initializer_list<value_type>& list) noexcept
     : Vec()
 {
     size_type i = 0;
-    for (auto j = ::begin(list); i < N && j != ::end(list); ++j) {
+    for (auto j = std::begin(list); i < N && j != std::end(list); ++j) {
         data_[i++] = *j;
     }
 }
@@ -76,25 +74,25 @@ Vec::const_reference Vec::operator[](size_type i) const noexcept
 
 Vec::iterator Vec::begin() noexcept
 {
-    return ::begin(data_);
+    return std::begin(data_);
 }
 
 Vec::iterator Vec::end() noexcept
 {
-    return ::end(data_);
+    return std::end(data_);
 }
 
 Vec::const_iterator Vec::begin() const noexcept
 {
-    return ::begin(data_);
+    return std::begin(data_);
 }
 
 Vec::const_iterator Vec::end() const noexcept
 {
-    return ::end(data_);
+    return std::end(data_);
 }
 
-array<Vec::value_type, Vec::N> Vec::raw() const noexcept
+std::array<Vec::value_type, Vec::N> Vec::raw() const noexcept
 {
     return {data_[0], data_[1], data_[2]};
 }
@@ -234,7 +232,7 @@ Vec unit(const Vec& obj) __GM_NOEXCEPT_RELEASE__
     return obj / norm(obj);
 }
 
-ostream& operator<<(ostream& os, const Vec& obj)
+std::ostream& operator<<(std::ostream& os, const Vec& obj)
 {
     fmt::print(os, "[{:.5g}, {:.5g}, {:.5g}]", obj[0], obj[1], obj[2]);
     return os;

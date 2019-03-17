@@ -9,8 +9,6 @@
 
 #include <algorithm>
 
-using namespace std;
-
 namespace gm {
 
 AbstractSurface::~AbstractSurface() = default;
@@ -25,7 +23,8 @@ Vec AbstractSurface::normal(const SurfPoint& p) const noexcept
     return cross(dfu(p), dfv(p));
 }
 
-Vec AbstractSurface::unit_normal(const SurfPoint& p) const __GM_NOEXCEPT_RELEASE__
+Vec AbstractSurface::unit_normal(const SurfPoint& p) const
+    __GM_NOEXCEPT_RELEASE__
 {
     return unit(normal(p));
 }
@@ -65,17 +64,17 @@ Vec AbstractSurface::dfuv(const SurfPoint& p) const noexcept
     return ::diff11<Vec>([this](SurfPoint t) { return Vec(f(t)); }, p);
 }
 
-function<Vec(double)> AbstractSurface::u_fixed(double v) const
+std::function<Vec(double)> AbstractSurface::u_fixed(double v) const
 {
     return [v, this](double u) { return Vec(f({u, v})); };
 }
 
-function<Vec(double)> AbstractSurface::v_fixed(double u) const
+std::function<Vec(double)> AbstractSurface::v_fixed(double u) const
 {
     return [u, this](double v) { return Vec(f({u, v})); };
 }
 
-ostream& operator<<(ostream& os, const AbstractSurface& s)
+std::ostream& operator<<(std::ostream& os, const AbstractSurface& s)
 {
     return s.print(os);
 }

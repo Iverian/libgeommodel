@@ -2,12 +2,9 @@
 #include <bspline/surface_projector.hpp>
 #include <bspline/wpoint.hpp>
 #include <gm/bspline_surface.hpp>
-#include <gm/point.hpp>
 #include <util/itertools.hpp>
 
 #include <fmt/ostream.h>
-
-using namespace std;
 
 namespace gm {
 
@@ -23,19 +20,21 @@ BSplineSurface::Impl& BSplineSurface::Impl::operator=(Impl&&) noexcept
     = default;
 BSplineSurface::Impl::Impl(const Impl& rhs)
     : c_(rhs.c_)
-    , proj_(rhs.proj_ ? make_unique<SurfaceProjector>(*rhs.proj_) : nullptr)
+    , proj_(rhs.proj_ ? std::make_unique<SurfaceProjector>(*rhs.proj_)
+                      : nullptr)
 {
 }
 BSplineSurface::Impl& BSplineSurface::Impl::operator=(const Impl& rhs)
 {
     c_ = rhs.c_;
-    proj_ = rhs.proj_ ? make_unique<SurfaceProjector>(*rhs.proj_) : nullptr;
+    proj_
+        = rhs.proj_ ? std::make_unique<SurfaceProjector>(*rhs.proj_) : nullptr;
 
     return *this;
 }
 
-BSplineSurface::Impl::Impl(size_t du, size_t dv, const vector<double>& ku,
-                           const vector<double>& kv,
+BSplineSurface::Impl::Impl(size_t du, size_t dv, const std::vector<double>& ku,
+                           const std::vector<double>& kv,
                            const std::vector<std::vector<Point>>& p,
                            const std::vector<std::vector<double>>& w)
     : c_()
@@ -45,10 +44,11 @@ BSplineSurface::Impl::Impl(size_t du, size_t dv, const vector<double>& ku,
     init_surface({du + 1, dv + 1}, std::move(k), p, w);
 }
 
-BSplineSurface::Impl::Impl(size_t du, size_t dv, const vector<size_t>& ku_mult,
-                           const vector<double>& ku_vals,
-                           const vector<size_t>& kv_mult,
-                           const vector<double>& kv_vals,
+BSplineSurface::Impl::Impl(size_t du, size_t dv,
+                           const std::vector<size_t>& ku_mult,
+                           const std::vector<double>& ku_vals,
+                           const std::vector<size_t>& kv_mult,
+                           const std::vector<double>& kv_vals,
                            const std::vector<std::vector<Point>>& p,
                            const std::vector<std::vector<double>>& w)
     : c_()
@@ -102,17 +102,18 @@ Vec BSplineSurface::Impl::dfuv(const SurfPoint& p) const noexcept
     return Vec(c_.dfuv(p));
 }
 
-ostream& BSplineSurface::Impl::print(ostream& os) const
+std::ostream& BSplineSurface::Impl::print(std::ostream& os) const
 {
     auto s = c_.shape();
-    fmt::print(os,
-               "{{ \"type\": \"bspline\", \"du\": {}, \"dv\": {}, \"ku\": "
-               "{}, \"kv\": {}, \"cpoints\": {}, \"shape\": [{}, {}] }}",
-               c_.order().first - 1, c_.order().second - 1,
-               RangePrint(begin(c_.knots().first), end(c_.knots().first)),
-               RangePrint(begin(c_.knots().first), end(c_.knots().second)),
-               RangePrint(begin(c_.cpoints()), end(c_.cpoints())), s.first,
-               s.second);
+    fmt::print(
+        os,
+        "{{ \"type\": \"bspline\", \"du\": {}, \"dv\": {}, \"ku\": "
+        "{}, \"kv\": {}, \"cpoints\": {}, \"shape\": [{}, {}] }}",
+        c_.order().first - 1, c_.order().second - 1,
+        RangePrint(std::begin(c_.knots().first), std::end(c_.knots().first)),
+        RangePrint(std::begin(c_.knots().first), std::end(c_.knots().second)),
+        RangePrint(std::begin(c_.cpoints()), std::end(c_.cpoints())), s.first,
+        s.second);
     return os;
 }
 
@@ -146,10 +147,12 @@ const BSplineSurface::Impl::CPointsType& BSplineSurface::Impl::cpoints() const
 #define _w(i, j) ((w.empty()) ? (1.) : (w[(i)][(j)]))
 
 void BSplineSurface::Impl::init_surface(
-    pair<size_t, size_t> order, const pair<vector<double>, vector<double>>& k,
-    const vector<vector<Point>>& p, const vector<vector<double>>& w)
+    std::pair<size_t, size_t> order,
+    const std::pair<std::vector<double>, std::vector<double>>& k,
+    const std::vector<std::vector<Point>>& p,
+    const std::vector<std::vector<double>>& w)
 {
-    pair<size_t, size_t> cpdim {p.size(), p.front().size()};
+    std::pair<size_t, size_t> cpdim {p.size(), p.front().size()};
 
     CPointsType cp(cpdim.first * cpdim.second);
     for (size_t i = 0; i < cpdim.first; ++i) {
@@ -162,10 +165,12 @@ void BSplineSurface::Impl::init_surface(
 }
 
 void BSplineSurface::Impl::init_surface(
-    pair<size_t, size_t> order, pair<vector<double>, vector<double>>&& k,
-    const vector<vector<Point>>& p, const vector<vector<double>>& w)
+    std::pair<size_t, size_t> order,
+    std::pair<std::vector<double>, std::vector<double>>&& k,
+    const std::vector<std::vector<Point>>& p,
+    const std::vector<std::vector<double>>& w)
 {
-    pair<size_t, size_t> cpdim {p.size(), p.front().size()};
+    std::pair<size_t, size_t> cpdim {p.size(), p.front().size()};
 
     CPointsType cp(cpdim.first * cpdim.second);
     for (size_t i = 0; i < cpdim.first; ++i) {

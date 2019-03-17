@@ -4,8 +4,6 @@
 
 #include <util/to_string.hpp>
 
-using namespace std;
-
 namespace gm {
 
 OrientedEdge::OrientedEdge(const Edge& edge, bool orientation)
@@ -30,7 +28,7 @@ bool OrientedEdge::OrientedEdge::orientation() const noexcept
     return orient_;
 }
 
-ostream& operator<<(ostream& os, const OrientedEdge& oedge)
+std::ostream& operator<<(std::ostream& os, const OrientedEdge& oedge)
 {
     fmt::print(os, "{{ \"edge\": {0}, \"orientation\": {1} }}", oedge.edge_,
                oedge.orient_);

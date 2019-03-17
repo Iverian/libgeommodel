@@ -5,8 +5,6 @@
 #include <util/debug.hpp>
 #include <util/math.hpp>
 
-using namespace std;
-
 namespace gm {
 
 Point::Point() noexcept
@@ -19,16 +17,16 @@ Point::Point(value_type x, value_type y, value_type z) noexcept
 {
 }
 
-Point::Point(const array<value_type, N>& coord) noexcept
+Point::Point(const std::array<value_type, N>& coord) noexcept
     : data_ {coord[0], coord[1], coord[2]}
 {
 }
 
-Point::Point(const initializer_list<value_type>& list) noexcept
+Point::Point(const std::initializer_list<value_type>& list) noexcept
     : Point()
 {
     size_type i = 0;
-    for (auto j = ::begin(list); i < N && j != ::end(list); ++i, ++j) {
+    for (auto j = std::begin(list); i < N && j != std::end(list); ++i, ++j) {
         data_[i] = *j;
     }
 }
@@ -70,25 +68,25 @@ Point::const_reference Point::operator[](size_type i) const noexcept
 
 Point::iterator Point::begin() noexcept
 {
-    return ::begin(data_);
+    return std::begin(data_);
 }
 
 Point::iterator Point::end() noexcept
 {
-    return ::end(data_);
+    return std::end(data_);
 }
 
 Point::const_iterator Point::begin() const noexcept
 {
-    return ::begin(data_);
+    return std::begin(data_);
 }
 
 Point::const_iterator Point::end() const noexcept
 {
-    return ::end(data_);
+    return std::end(data_);
 }
 
-array<Point::value_type, Point::N> Point::raw() const noexcept
+std::array<Point::value_type, Point::N> Point::raw() const noexcept
 {
     return {data_[0], data_[1], data_[2]};
 }
@@ -229,7 +227,7 @@ bool isinf(const Point& obj) noexcept
     return ::isinf(obj[0]) || ::isinf(obj[1]) || ::isinf(obj[2]);
 }
 
-ostream& operator<<(ostream& os, const Point& obj)
+std::ostream& operator<<(std::ostream& os, const Point& obj)
 {
     fmt::print(os, "[{:.5g}, {:5.g}, {:.5g}]", obj[0], obj[1], obj[2]);
     return os;

@@ -4,7 +4,6 @@
 #include <sstream>
 #include <string>
 
-using namespace std;
 
 // std::string to_string(int x) { return std::status_str(x); }
 // std::string to_string(unsigned int x) { return std::status_str(x); }
@@ -18,10 +17,10 @@ using namespace std;
 // std::string status_str(const char* x) { return std::string(x); }
 // std::string status_str(const std::string& x) { return x; }
 
-string to_string(bool x);
+std::string to_string(bool x);
 
 template <typename T>
-string to_string(const T& t)
+std::string to_string(const T& t)
 {
     std::stringstream ss;
     ss << t;

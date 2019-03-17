@@ -1,32 +1,31 @@
 #include <bspline/bspline_surface_impl.hpp>
 #include <gm/bspline_surface.hpp>
 
-using namespace std;
 
 namespace gm {
 
 BSplineSurface::BSplineSurface()
-    : pimpl_(make_unique<Impl>())
+    : pimpl_(std::make_unique<Impl>())
 {
 }
 
-BSplineSurface::BSplineSurface(size_t du, size_t dv, const vector<double>& ku,
-                               const vector<double>& kv,
-                               const vector<vector<Point>>& p,
-                               const vector<vector<double>>& w)
-    : pimpl_(make_unique<Impl>(du, dv, ku, kv, p, w))
+BSplineSurface::BSplineSurface(size_t du, size_t dv, const std::vector<double>& ku,
+                               const std::vector<double>& kv,
+                               const std::vector<std::vector<Point>>& p,
+                               const std::vector<std::vector<double>>& w)
+    : pimpl_(std::make_unique<Impl>(du, dv, ku, kv, p, w))
 {
 }
 
 BSplineSurface::BSplineSurface(size_t du, size_t dv,
-                               const vector<size_t>& ku_mult,
-                               const vector<double>& ku_vals,
-                               const vector<size_t>& kv_mult,
-                               const vector<double>& kv_vals,
-                               const vector<vector<Point>>& p,
-                               const vector<vector<double>>& w)
+                               const std::vector<size_t>& ku_mult,
+                               const std::vector<double>& ku_vals,
+                               const std::vector<size_t>& kv_mult,
+                               const std::vector<double>& kv_vals,
+                               const std::vector<std::vector<Point>>& p,
+                               const std::vector<std::vector<double>>& w)
     : pimpl_(
-          make_unique<Impl>(du, dv, ku_mult, ku_vals, kv_mult, kv_vals, p, w))
+          std::make_unique<Impl>(du, dv, ku_mult, ku_vals, kv_mult, kv_vals, p, w))
 {
 }
 
@@ -60,7 +59,7 @@ Vec BSplineSurface::dfvv(const SurfPoint& p) const noexcept
     return pimpl_->dfvv(p);
 }
 
-ostream& BSplineSurface::print(ostream& os) const
+std::ostream& BSplineSurface::print(std::ostream& os) const
 {
     return pimpl_->print(os);
 }
@@ -73,14 +72,14 @@ SurfPoint BSplineSurface::project(const Point& p) const
 } // namespace gm
 
 // struct BSplineSurface::Impl {
-//     Impl(size_t du, size_t dv, const vector<double>& ku,
-//          const vector<double>& kv, const vector<vector<Point>>& p,
-//          const vector<vector<double>>& w = vector<vector<double>>());
+//     Impl(size_t du, size_t dv, const std::vector<double>& ku,
+//          const std::vector<double>& kv, const std::vector<std::vector<Point>>& p,
+//          const std::vector<std::vector<double>>& w = std::vector<std::vector<double>>());
 
-//     Impl(size_t du, size_t dv, const vector<size_t>& ku_mult,
-//          const vector<double>& ku_vals, const vector<size_t>& kv_mult,
-//          const vector<double>& kv_vals, const vector<vector<Point>>& p,
-//          const vector<vector<double>>& w = vector<vector<double>>());
+//     Impl(size_t du, size_t dv, const std::vector<size_t>& ku_mult,
+//          const std::vector<double>& ku_vals, const std::vector<size_t>& kv_mult,
+//          const std::vector<double>& kv_vals, const std::vector<std::vector<Point>>& p,
+//          const std::vector<std::vector<double>>& w = std::vector<std::vector<double>>());
 
 //     Point f(const SurfPoint& p) const;
 //     Vec dfu(const SurfPoint& p) const;
@@ -89,7 +88,7 @@ SurfPoint BSplineSurface::project(const Point& p) const
 //     Vec dfvv(const SurfPoint& p) const;
 //     Vec dfuv(const SurfPoint& p) const;
 
-//     ostream& print(ostream& os) const;
+//     std::ostream& print(std::ostream& os) const;
 
 //     SurfPoint project(const Point& p, const BSplineSurface& c) const;
 
@@ -122,19 +121,19 @@ SurfPoint BSplineSurface::project(const Point& p) const
 //     // SurfPoint bound_check(const SurfPoint& q) const;
 
 // private:
-//     void init_cpoints(const vector<vector<Point>>& p,
-//                       const vector<vector<double>>& w);
+//     void init_cpoints(const std::vector<std::vector<Point>>& p,
+//                       const std::vector<std::vector<double>>& w);
 
 //     array<size_t, 2> order_;
-//     array<vector<double>, 2> knots_;
-//     vector<vector<CPoint>> cpoints_;
-//     vector<CoxDeBoor<CPoint>> cdb_;
+//     array<std::vector<double>, 2> knots_;
+//     std::vector<std::vector<CPoint>> cpoints_;
+//     std::vector<CoxDeBoor<CPoint>> cdb_;
 // };
 
-// BSplineSurface::Impl::Impl(size_t du, size_t dv, const vector<double>& ku,
-//                            const vector<double>& kv,
-//                            const vector<vector<Point>>& p,
-//                            const vector<vector<double>>& w)
+// BSplineSurface::Impl::Impl(size_t du, size_t dv, const std::vector<double>& ku,
+//                            const std::vector<double>& kv,
+//                            const std::vector<std::vector<Point>>& p,
+//                            const std::vector<std::vector<double>>& w)
 //     : order_{du + 1, dv + 1}
 //     , knots_{ku, kv}
 //     , cpoints_()
@@ -143,13 +142,13 @@ SurfPoint BSplineSurface::project(const Point& p) const
 //     init_cpoints(p, w);
 // }
 
-// BSplineSurface::Impl::Impl(size_t du, size_t dv, const vector<size_t>&
+// BSplineSurface::Impl::Impl(size_t du, size_t dv, const std::vector<size_t>&
 // ku_mult,
-//                            const vector<double>& ku_vals,
-//                            const vector<size_t>& kv_mult,
-//                            const vector<double>& kv_vals,
-//                            const vector<vector<Point>>& p,
-//                            const vector<vector<double>>& w)
+//                            const std::vector<double>& ku_vals,
+//                            const std::vector<size_t>& kv_mult,
+//                            const std::vector<double>& kv_vals,
+//                            const std::vector<std::vector<Point>>& p,
+//                            const std::vector<std::vector<double>>& w)
 //     : order_{du + 1, dv + 1}
 //     , knots_()
 //     , cpoints_()
@@ -170,7 +169,7 @@ SurfPoint BSplineSurface::project(const Point& p) const
 // Point BSplineSurface::Impl::f(const SurfPoint& p) const
 // {
 //     auto n = cpoints_.size();
-//     vector<CPoint> cp(n);
+//     std::vector<CPoint> cp(n);
 
 //     for (size_t i = 0; i < n; ++i) {
 //         cp[i] = cdb_[i].proxy(p.v).get(0);
@@ -183,7 +182,7 @@ SurfPoint BSplineSurface::project(const Point& p) const
 // Vec BSplineSurface::Impl::dfu(const SurfPoint& p) const
 // {
 //     auto n = cpoints_.size();
-//     vector<CPoint> cp(n);
+//     std::vector<CPoint> cp(n);
 
 //     for (size_t i = 0; i < n; ++i) {
 //         cp[i] = cdb_[i].proxy(p.v).get(0);
@@ -196,7 +195,7 @@ SurfPoint BSplineSurface::project(const Point& p) const
 // Vec BSplineSurface::Impl::dfv(const SurfPoint& p) const
 // {
 //     auto n = cpoints_.size();
-//     vector<CPoint> cp(n);
+//     std::vector<CPoint> cp(n);
 
 //     for (size_t i = 0; i < n; ++i) {
 //         cp[i] = CPoint::d1(cdb_[i].proxy(p.v).range(2));
@@ -209,7 +208,7 @@ SurfPoint BSplineSurface::project(const Point& p) const
 // Vec BSplineSurface::Impl::dfuu(const SurfPoint& p) const
 // {
 //     auto n = cpoints_.size();
-//     vector<CPoint> cp(n);
+//     std::vector<CPoint> cp(n);
 
 //     for (size_t i = 0; i < n; ++i) {
 //         cp[i] = cdb_[i].proxy(p.v).get(0);
@@ -222,7 +221,7 @@ SurfPoint BSplineSurface::project(const Point& p) const
 // Vec BSplineSurface::Impl::dfvv(const SurfPoint& p) const
 // {
 //     auto n = cpoints_.size();
-//     vector<CPoint> cp(n);
+//     std::vector<CPoint> cp(n);
 
 //     for (size_t i = 0; i < n; ++i) {
 //         cp[i] = CPoint::d2(cdb_[i].proxy(p.v).range(3));
@@ -235,7 +234,7 @@ SurfPoint BSplineSurface::project(const Point& p) const
 // Vec BSplineSurface::Impl::dfuv(const SurfPoint& p) const
 // {
 //     auto n = cpoints_.size();
-//     vector<CPoint> cp(n);
+//     std::vector<CPoint> cp(n);
 
 //     for (size_t i = 0; i < n; ++i) {
 //         cp[i] = CPoint::d1(cdb_[i].proxy(p.v).range(2));
@@ -245,7 +244,7 @@ SurfPoint BSplineSurface::project(const Point& p) const
 //     return Vec(CPoint::d1(cdb_u.proxy(p.u).range(2)).p());
 // }
 
-// ostream& BSplineSurface::Impl::print(ostream& os) const
+// std::ostream& BSplineSurface::Impl::print(std::ostream& os) const
 // {
 //     fmt::print(os,
 //                "{{ \"type\": \"bspline\", \"du\": {0}, \"dv\": {1}, \"ku\":
@@ -262,8 +261,8 @@ SurfPoint BSplineSurface::project(const Point& p) const
 //     return SurfPoint();
 // }
 
-// void BSplineSurface::Impl::init_cpoints(const vector<vector<Point>>& p,
-//                                         const vector<vector<double>>& w)
+// void BSplineSurface::Impl::init_cpoints(const std::vector<std::vector<Point>>& p,
+//                                         const std::vector<std::vector<double>>& w)
 // {
 //     auto n = p.size();
 //     auto m = p[0].size();

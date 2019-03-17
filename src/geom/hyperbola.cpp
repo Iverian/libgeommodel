@@ -4,8 +4,6 @@
 
 #include <fmt/ostream.h>
 
-using namespace std;
-
 namespace gm {
 
 Hyperbola::Hyperbola() noexcept
@@ -18,7 +16,7 @@ Hyperbola::Hyperbola() noexcept
 Hyperbola::Hyperbola(double rx, double ry, Axis ax) noexcept
     : rx_(rx)
     , ry_(ry)
-    , ax_(move(ax))
+    , ax_(std::move(ax))
 {
 }
 
@@ -37,7 +35,7 @@ Vec Hyperbola::df2(double u) const noexcept
     return ax_.vglobal(rx_ * cosh(u), ry_ * sinh(u), 0);
 }
 
-ostream& Hyperbola::print(ostream& os) const
+std::ostream& Hyperbola::print(std::ostream& os) const
 {
     fmt::print(os,
                "{{ \"type\": \"hyperbola\", \"rx\": {0}, \"ry\": {1}, "

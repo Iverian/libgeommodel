@@ -8,8 +8,6 @@
 
 #include <fmt/ostream.h>
 
-using namespace std;
-
 namespace gm {
 
 AbstractCurve::~AbstractCurve() = default;
@@ -24,12 +22,12 @@ Vec AbstractCurve::df2(double u) const noexcept
     return ::diff2<Vec>([this](double t) { return Vec(f(t)); }, u);
 }
 
-optional<double> AbstractCurve::project_greater(const Point& x,
-                                                double min) const noexcept
+std::optional<double> AbstractCurve::project_greater(const Point& x,
+                                                     double min) const noexcept
 {
-    optional<double> result = project(x);
+    std::optional<double> result = project(x);
     if (result.value() < min) {
-        result = nullopt;
+        result = std::nullopt;
     }
     return result;
 };
@@ -48,8 +46,8 @@ Vec AbstractCurve::normal(double u) const noexcept
 {
     auto d = df(u), d2 = df2(u);
     auto v = norm(d);
-    auto w = ::diff<double>([this](double u) { return norm(df(u)); }, u);
-    return (d2 - (w / v) * d) / ::sqr(v);
+    auto w = diff<double>([this](double u) { return norm(df(u)); }, u);
+    return (d2 - (w / v) * d) / sqr(v);
 }
 
 Vec AbstractCurve::unit_normal(double u) const __GM_NOEXCEPT_RELEASE__
@@ -71,13 +69,13 @@ double AbstractCurve::curvature(double u) const noexcept
 double AbstractCurve::approx_length(double begin, double end, size_t n) const
 {
     auto step = (end - begin) / n;
-    vector<double> y(n);
+    std::vector<double> y(n);
     for (size_t i = 0; i < n; ++i)
         y[i] = norm(df(begin + i * step));
-    return ::trapz(::begin(y), ::end(y), step);
+    return trapz(std::begin(y), std::end(y), step);
 }
 
-ostream& operator<<(ostream& os, const AbstractCurve& c)
+std::ostream& operator<<(std::ostream& os, const AbstractCurve& c)
 {
     return c.print(os);
 }

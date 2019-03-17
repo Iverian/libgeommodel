@@ -5,8 +5,6 @@
 
 #include <fmt/ostream.h>
 
-using namespace std;
-
 namespace gm {
 
 Ellipse::Ellipse() noexcept
@@ -19,7 +17,7 @@ Ellipse::Ellipse() noexcept
 Ellipse::Ellipse(double rx, double ry, Axis ax) noexcept
     : rx_(rx)
     , ry_(ry)
-    , ax_(move(ax))
+    , ax_(std::move(ax))
 {
 }
 
@@ -62,8 +60,8 @@ double Ellipse::project(const Point& p) const
     return dist(f(first), p) < dist(f(second), p) ? first : second;
 }
 
-::optional<double> Ellipse::project_greater(const Point& x, double min) const
-    noexcept
+std::optional<double> Ellipse::project_greater(const Point& x,
+                                               double min) const noexcept
 {
     auto result = project(x);
     while (result < min) {
@@ -72,7 +70,7 @@ double Ellipse::project(const Point& p) const
     return result;
 }
 
-ostream& Ellipse::print(ostream& os) const
+std::ostream& Ellipse::print(std::ostream& os) const
 {
     fmt::print(
         os,

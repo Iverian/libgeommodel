@@ -4,8 +4,6 @@
 
 #include <fmt/ostream.h>
 
-using namespace std;
-
 namespace gm {
 
 CylindricalSurface::CylindricalSurface() noexcept
@@ -16,7 +14,7 @@ CylindricalSurface::CylindricalSurface() noexcept
 
 CylindricalSurface::CylindricalSurface(double r, Axis ax) noexcept
     : r_(r)
-    , ax_(move(ax))
+    , ax_(std::move(ax))
 {
 }
 
@@ -50,7 +48,7 @@ Vec CylindricalSurface::dfvv(const SurfPoint& p) const noexcept
     return ax_.vglobal(0, 0, 0);
 }
 
-ostream& CylindricalSurface::print(ostream& os) const
+std::ostream& CylindricalSurface::print(std::ostream& os) const
 {
     fmt::print(os,
                "{{ \"type\": \"cylindrical\", \"r\": {0}, \"axis\": {1} }}",

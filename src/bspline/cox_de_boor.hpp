@@ -1,6 +1,7 @@
 #ifndef GEOM_MODEL_SRC_GEOM_COX_DE_BOOR_HPP_
 #define GEOM_MODEL_SRC_GEOM_COX_DE_BOOR_HPP_
 
+#include <bspline/util.hpp>
 #include <bspline/wpoint.hpp>
 #include <gm/compare.hpp>
 #include <util/debug.hpp>
@@ -29,7 +30,7 @@ public:
         Proxy(const CoxDeBoor& parent, scalar_type t)
             : parent_(&parent)
             , t_(t)
-            , p_(parent_->interval(t_))
+            , p_(find_span(t, parent_->order_, parent_->knots_))
         {
         }
 
@@ -128,29 +129,29 @@ public:
         return Proxy(*this, t);
     }
 
-    size_t interval(scalar_type t) const
-    {
-        auto p = order_ - 1;
-        auto n = knots_.size() - order_ - 1;
+    // size_t interval(scalar_type t) const
+    // {
+    //     auto p = order_ - 1;
+    //     auto n = knots_.size() - order_ - 1;
 
-        if (gm::cmp::near(t, knots_[n + 1])) {
-            return n;
-        }
+    //     if (gm::cmp::near(t, knots_[n + 1])) {
+    //         return n;
+    //     }
 
-        auto low = p;
-        auto high = n + 1;
-        auto mid = (low + high) / 2;
-        while (t < knots_[mid] || cmp::ge(t, knots_[mid + 1])) {
-            if (t < knots_[mid]) {
-                high = mid;
-            } else {
-                low = mid;
-            }
-            mid = (low + high) / 2;
-        }
+    //     auto low = p;
+    //     auto high = n + 1;
+    //     auto mid = (low + high) / 2;
+    //     while (t < knots_[mid] || cmp::ge(t, knots_[mid + 1])) {
+    //         if (t < knots_[mid]) {
+    //             high = mid;
+    //         } else {
+    //             low = mid;
+    //         }
+    //         mid = (low + high) / 2;
+    //     }
 
-        return mid;
-    }
+    //     return mid;
+    // }
 
     value_type pget(size_t i, size_t k) const
     {

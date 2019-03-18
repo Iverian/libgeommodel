@@ -1,12 +1,16 @@
+#include "C:\Users\trololo\Documents\Projects\libgeommodel\include\gm\compare.hpp"
 #include <bspline/distance_surface.hpp>
+#include <bspline/util.hpp>
 #include <bspline/wpoint.hpp>
 #include <gm/surf_point.hpp>
 #include <stdexcept>
+#include <util/cyclic_iterator.hpp>
 #include <util/math.hpp>
 
 #include <algorithm>
 #include <limits>
 #include <utility>
+#include <xutility>
 
 #define pget(cp) ((cp).p()[0])
 
@@ -85,6 +89,14 @@ SurfPoint DistanceSurface::itarg(const std::pair<size_t, size_t>& i) const
     return {u, v};
 }
 
+SurfPoint DistanceSurface::itarg(size_t i) const noexcept
+{
+    auto& s = c_.shape();
+    auto p = i / s.second;
+    auto q = i % s.second;
+    return itarg({p, q});
+}
+
 SurfPoint DistanceSurface::argti(SurfPoint arg) const noexcept
 {
     auto u = (c_.order().first - 1) * (arg.u - pfront().u)
@@ -135,16 +147,46 @@ bool DistanceSurface::is_candidate(double d) const noexcept
                        });
 }
 
-std::vector<Point> DistanceSurface::point_hull(double d) noexcept
+std::pair<std::vector<gm::SurfPoint>, std::vector<gm::SurfPoint>>
+DistanceSurface::point_hull(double d) const noexcept
 {
-    throw std::runtime_error("not implemented");
-    return {};
+    std::pair<std::vector<gm::SurfPoint>, std::vector<gm::SurfPoint>> result;
+    auto s = c_.cpoints().size();
+    result.first.reserve(s);
+    result.second.reserve(s);
+    for (size_t i = 0; i < s; ++i) {
+        auto t = itarg(i);
+        auto f = pget(c_.cpoints()[i]) - d;
+        result.first.emplace_back(t.u, f);
+        result.second.emplace_back(t.v, f);
+    }
+
+    return {graham_scan(result.first), graham_scan(result.second)};
 }
+
 bool DistanceSurface::eliminate_segment(double d) noexcept
 {
-    throw std::runtime_error("not implemented");
-    return false;
+    auto [cu, cv] = point_hull(d);
+    auto ru = single_eliminate(cu, c_.pfront().u, c_.pback().u);
+    auto rv = single_eliminate(cv, c_.pfront().v, c_.pback().v);
+
+    auto result = !ru.empty() && !rv.empty();
+    if (result) {
+        c_.refine_knots({ru, rv});
+        auto p = c_.bezier_patches();
+        size_t i = 1, j = 1;
+        if (ru.size() == 1 && cmp::le(cu.front().u, ru.front())) {
+            i = 0;
+        }
+        if (rv.size() == 1 && cmp::le(cv.front().u, rv.front())) {
+            j = 0;
+        }
+        c_ = p[i * (rv.size() + 1) + j];
+    }
+
+    return result;
 }
+
 bool DistanceSurface::is_flat_enough() const noexcept
 {
     throw std::runtime_error("not implemented");

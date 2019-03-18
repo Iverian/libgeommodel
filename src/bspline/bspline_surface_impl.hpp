@@ -57,6 +57,8 @@ public:
     const KnotsType& knots() const noexcept;
     const CPointsType& cpoints() const noexcept;
 
+    std::vector<BezierPatch> bezier_patches() const noexcept;
+
 private:
     void
     init_surface(std::pair<size_t, size_t> order,

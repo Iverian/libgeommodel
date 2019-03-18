@@ -2,6 +2,7 @@
 #define GEOMMODEL_SRC_BASIC_BSPLINE_CURVE_HPP_
 
 #include <bspline/cox_de_boor.hpp>
+#include <bspline/util.hpp>
 #include <bspline/wpoint.hpp>
 #include <gm/compare.hpp>
 
@@ -163,9 +164,13 @@ public:
         return cpoints_;
     }
 
-    BasicBsplineCurve refine_knots(const KnotsType& to_insert)
+    BasicBsplineCurve& refine_knots(const KnotsType& to_insert)
     {
         static constexpr auto npos = size_t(-1);
+
+        if (to_insert.empty()) {
+            return *this;
+        }
 
         auto p = order_ - 1;
         auto n = cpoints_.size() - 1;
@@ -173,8 +178,8 @@ public:
         auto s = to_insert.size();
         auto r = s - 1;
 
-        auto a = cdb_.interval(to_insert.front());
-        auto b = cdb_.interval(to_insert.back()) + 1;
+        auto a = find_span(to_insert.front(), order_, knots_);
+        auto b = find_span(to_insert.back(), order_, knots_);
         size_t j, l;
 
         std::vector<CPoint> new_cpoints(cpoints_.size() + s);
@@ -221,9 +226,13 @@ public:
             --k;
         }
 
-        return BasicBsplineCurve<N>(order_, std::move(new_knots),
-                                    std::move(new_cpoints));
+        knots_ = std::move(new_knots);
+        cpoints_ = std::move(new_cpoints);
+        cdb_ = CoxDeBoorType(order_, knots_, cpoints_);
+
+        return *this;
     }
+
     std::vector<BezierPatch<N>> bezier_patches() const
     {
         static constexpr auto npos = size_t(-1);

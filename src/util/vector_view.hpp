@@ -20,7 +20,7 @@ public:
         , size_(0)
     {
     }
-    explicit VectorView(const owner_type& owner)
+    VectorView(const owner_type& owner)
         : data_(owner.data())
         , size_(owner.size())
     {

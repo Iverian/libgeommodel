@@ -5,7 +5,7 @@ find_package(GTest MODULE REQUIRED)
 file(GLOB_RECURSE
   ALLTESTS_SOURCES
   CONFIGURE_DEPENDS
-  "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/test_*.cpp"
 )
 
 add_executable(alltests)
@@ -14,9 +14,13 @@ target_sources(alltests
   PRIVATE
     ${ALLTESTS_SOURCES}
 )
+target_include_directories(alltests
+  PRIVATE
+    "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR};${PROJECT_SOURCE_DIR}/src>"
+)
 target_link_libraries(alltests
   PRIVATE
-    geommodel
+    GeomModel::GeomModel
     fmt::fmt
     GTest::GTest
     GTest::Main

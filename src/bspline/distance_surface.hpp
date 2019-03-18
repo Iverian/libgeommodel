@@ -24,6 +24,7 @@ public:
     SurfPoint pback() const noexcept;
 
     SurfPoint itarg(const std::pair<size_t, size_t>& i) const noexcept;
+    SurfPoint itarg(size_t i) const noexcept;
     SurfPoint argti(SurfPoint arg) const noexcept;
     SurfPoint tocparg(SurfPoint arg,
                       std::pair<bool, bool> dir = {false, false}) const
@@ -32,7 +33,8 @@ public:
     double f(const SurfPoint& p) const noexcept;
     std::pair<SurfPoint, double> min_init() const noexcept;
     bool is_candidate(double d) const noexcept;
-    std::vector<Point> point_hull(double d) noexcept;
+    std::pair<std::vector<gm::SurfPoint>, std::vector<gm::SurfPoint>>
+    point_hull(double d) const noexcept;
     bool eliminate_segment(double d) noexcept;
     bool is_flat_enough() const noexcept;
 

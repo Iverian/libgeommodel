@@ -7,7 +7,7 @@
 #include <iterator>
 #include <optional>
 
-double pget(gm::DistanceCurve::Super::CPoint cp) noexcept;
+#define pget(cp) ((cp).p()[0])
 
 namespace gm {
 
@@ -122,25 +122,10 @@ std::vector<SurfPoint> DistanceCurve::point_hull(double d) const
 
 bool DistanceCurve::eliminate_segment(double d) noexcept
 {
-    static constexpr auto max_roots = size_t(2);
     static constexpr auto npos = size_t(-1);
 
     auto convex_hull = point_hull(d);
-
-    std::vector<double> roots;
-    roots.reserve(max_roots);
-
-    auto it = CyclicIterator(std::begin(convex_hull), std::end(convex_hull));
-    do {
-        if (auto u = zero_intersect({*it, *std::next(it)}); u) {
-            auto v = u.value();
-            if (!cmp::near(v, c_.pfront()) && !cmp::near(v, c_.pback())
-                && (roots.empty() || !cmp::near(v, roots.back()))) {
-                roots.emplace_back(v);
-            }
-        }
-    } while (++it, roots.size() != max_roots && it.iter() != it.first());
-    std::sort(std::begin(roots), std::end(roots));
+    auto roots = single_eliminate(convex_hull, c_.pfront(), c_.pback());
 
     for (size_t i = roots.size() - 1; i != npos; --i) {
         if (auto v = tocparg(roots[i], bool(i % 2)); f(v) < d) {
@@ -151,8 +136,8 @@ bool DistanceCurve::eliminate_segment(double d) noexcept
 
     auto result = !roots.empty();
     if (result) {
-        auto new_c = c_.refine_knots(roots);
-        auto pc = new_c.bezier_patches();
+        c_.refine_knots(roots);
+        auto pc = c_.bezier_patches();
 
         if (roots.size() == 1
             && cmp::le(convex_hull.front().u, roots.front())) {
@@ -199,7 +184,4 @@ bool DistanceCurve::peak_point() const noexcept
 
 } // namespace gm
 
-inline double pget(gm::DistanceCurve::Super::CPoint cp) noexcept
-{
-    return cp.p()[0];
-}
+#undef pget

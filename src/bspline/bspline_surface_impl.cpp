@@ -144,6 +144,12 @@ const BSplineSurface::Impl::CPointsType& BSplineSurface::Impl::cpoints() const
     return c_.cpoints();
 }
 
+std::vector<BSplineSurface::Impl::BezierPatch>
+BSplineSurface::Impl::bezier_patches() const noexcept
+{
+    return c_.bezier_patches();
+}
+
 #define _w(i, j) ((w.empty()) ? (1.) : (w[(i)][(j)]))
 
 void BSplineSurface::Impl::init_surface(

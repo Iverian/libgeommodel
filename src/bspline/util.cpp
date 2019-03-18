@@ -1,8 +1,8 @@
 #include "util.hpp"
 
 #include <gm/compare.hpp>
-
-namespace gm {
+#include <util/cyclic_iterator.hpp>
+#include <util/vector_view.hpp>
 
 #define next_to_top(stack) (*std::prev(std::end(stack), 2))
 #define top(stack) ((stack).back())
@@ -72,4 +72,50 @@ zero_intersect(const std::pair<gm::SurfPoint, gm::SurfPoint>& line)
     return std::nullopt;
 }
 
-} // namespace gm
+std::vector<double>
+single_eliminate(const std::vector<gm::SurfPoint>& convex_hull, double pfront,
+                 double pback) noexcept
+{
+    static constexpr auto max_roots = size_t(2);
+
+    std::vector<double> roots;
+    roots.reserve(max_roots);
+    auto it = CyclicIterator(std::begin(convex_hull), std::end(convex_hull));
+    do {
+        if (auto u = zero_intersect({*it, *std::next(it)}); u) {
+            auto v = u.value();
+            if (!gm::cmp::near(v, pfront) && !gm::cmp::near(v, pback)
+                && (roots.empty() || !gm::cmp::near(v, roots.back()))) {
+                roots.emplace_back(v);
+            }
+        }
+    } while (++it, roots.size() != max_roots && it.iter() != it.first());
+    std::sort(std::begin(roots), std::end(roots));
+
+    return roots;
+}
+
+double find_span(double t, size_t order,
+                 const VectorView<double>& knots) noexcept
+{
+    auto p = order - 1;
+    auto n = knots.size() - order - 1;
+
+    if (gm::cmp::near(t, knots[n + 1])) {
+        return n;
+    }
+
+    auto low = p;
+    auto high = n + 1;
+    auto mid = (low + high) / 2;
+    while (t < knots[mid] || gm::cmp::ge(t, knots[mid + 1])) {
+        if (t < knots[mid]) {
+            high = mid;
+        } else {
+            low = mid;
+        }
+        mid = (low + high) / 2;
+    }
+
+    return mid;
+}

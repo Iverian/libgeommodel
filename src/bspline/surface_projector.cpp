@@ -1,18 +1,54 @@
+#include "C:\Users\trololo\Documents\Projects\libgeommodel\src\bspline\distance_curve.hpp"
+#include "C:\Users\trololo\Documents\Projects\libgeommodel\src\bspline\distance_surface.hpp"
 #include <bspline/surface_projector.hpp>
 #include <gm/point.hpp>
 
+#include <limits>
 #include <optional>
 #include <stdexcept>
+#include <xutility>
 
 namespace gm {
 
 SurfaceProjector::SurfaceProjector(const BSplineSurface::Impl& impl)
     : impl_(&impl)
+    , patches_(impl.bezier_patches())
 {
 }
 
 SurfPoint SurfaceProjector::call(const Point& p) const
 {
+    std::optional<SurfPoint> u = std::nullopt;
+    auto d = std::numeric_limits<double>::max();
+
+    for (auto i = std::begin(patches_);
+         !cmp::zero(d) && i != std::end(patches_); ++i) {
+        auto c = DistanceSurface(*i, p);
+
+        while (true) {
+            auto [umin, dmin] = c.min_init();
+            d = std::min(d, dmin);
+
+            if (c.is_candidate(d)) {
+                auto v = minimize(p, umin, c.pfront(), c.pback());
+                if (v) {
+                    auto fv = c.f(v.value());
+                    if (cmp::le(fv, d)) {
+                        u = v;
+                        d = fv;
+                        break;
+                    }
+                    // break; ?
+                }
+                if (!c.eliminate_segment(d)) {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+    }
+
     throw std::runtime_error("not implemented");
     return SurfPoint();
 }

@@ -17,125 +17,134 @@ list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_SOURCE_DIR}/cmake")
 
 # Configure dependencies
 find_package(fmt CONFIG REQUIRED)
+find_package(GeomModel REQUIRED)
 #
 
 # Find source files
+set(PROJECT_TARGET GeomModel)
+set(PROJECT_SHORT_NAME gm)
+string(TOUPPER ${PROJECT_TARGET} PROJECT_TARGET_UPPER)
+string(TOUPPER ${PROJECT_SHORT_NAME} PROJECT_SHORT_NAME_UPPER)
+
 file(GLOB_RECURSE
-  GEOMMODEL_SOURCES
+  PROJECT_SOURCES
   CONFIGURE_DEPENDS
   "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp"
-  "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp"
 )
+file(GLOB_RECURSE
+  PROJECT_PUBLIC_HEADERS
+  CONFIGURE_DEPENDS
+  "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp"
+  "${CMAKE_CURRENT_BINARY_DIR}/exports.hpp"
+ )
 #
 
 # Create target and set properties
-add_library(geommodel SHARED)
+add_library(${PROJECT_TARGET} SHARED)
 
-target_sources(geommodel
+target_sources(${PROJECT_TARGET}
   PRIVATE
-    ${GEOMMODEL_SOURCES}
+    ${PROJECT_SOURCES}
+    ${PROJECT_PUBLIC_HEADERS}
 )
-target_include_directories(geommodel
+target_include_directories(${PROJECT_TARGET}
   PUBLIC
-    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_INCLUDEDIR}>"
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR};${CMAKE_CURRENT_SOURCE_DIR}/src;${CMAKE_CURRENT_SOURCE_DIR}/include>"
+    "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
+  PRIVATE
+    "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR};${PROJECT_SOURCE_DIR}/src>"
 )
-target_compile_features(geommodel
+target_compile_features(${PROJECT_TARGET}
   PUBLIC
     cxx_std_17
 )
-target_compile_definitions(geommodel
+target_compile_definitions(${PROJECT_TARGET}
   PUBLIC
     $<BUILD_INTERFACE:_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS>
 )
-target_link_libraries(geommodel
+target_link_libraries(${PROJECT_TARGET}
   PRIVATE
     fmt::fmt
+  PUBLIC
+    GeomModel::GeomModel
 )
-set_target_properties(geommodel
+set_target_properties(${PROJECT_TARGET}
   PROPERTIES
     DEBUG_POSTFIX d
-    EXPORT_NAME GeomModel
     CXX_EXTENSIONS NO
     WINDOWS_EXPORT_ALL_SYMBOLS ${ENABLE_TESTS}
 )
 
 include(GenerateExportHeader)
-generate_export_header(geommodel
-  BASE_NAME GM
-  EXPORT_FILE_NAME exports.hpp
-  NO_DEPRECATED_MACRO_NAME GM_OMIT_DEPRECATED
-  INCLUDE_GUARD_NAME GEOMMODEL_INCLUDE_GM_EXPORTS_H_
+generate_export_header(${PROJECT_TARGET}
+  BASE_NAME "${PROJECT_SHORT_NAME_UPPER}"
+  EXPORT_FILE_NAME "exports.hpp"
+  NO_DEPRECATED_MACRO_NAME "${PROJECT_SHORT_NAME_UPPER}_OMIT_DEPRECATED"
+  INCLUDE_GUARD_NAME
+    "${PROJECT_NAME_UPPER}_INCLUDE_${PROJECT_SHORT_NAME_UPPER}_EXPORTS_HPP_"
   DEFINE_NO_DEPRECATED
 )
 if (ENABLE_TESTS)
-  target_compile_definitions(geommodel
+  target_compile_definitions(${PROJECT_TARGET}
     PUBLIC
-      $<BUILD_INTERFACE:GM_STATIC_DEFINE>
+      "${PROJECT_SHORT_NAME_UPPER}_STATIC_DEFINE"
   )
 endif()
+
+add_library(${PROJECT_TARGET}::${PROJECT_TARGET} ALIAS ${PROJECT_TARGET})
 #
 
-# Install package
-set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/geom_model)
-
-install(
-  TARGETS geommodel
-  EXPORT geommodel_targets
-  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+install(TARGETS ${PROJECT_TARGET}
+  EXPORT ${PROJECT_TARGET}_targets
+  RUNTIME
+    DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  LIBRARY
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  ARCHIVE
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  INCLUDES
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 )
 install(
-  DIRECTORY "include/"
+  DIRECTORY "${PROJECT_SOURCE_DIR}/include/"
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 )
 install(
-  EXPORT geommodel_targets
-  FILE GeomModelTargets.cmake
-  NAMESPACE GeomModel::
+  FILES "${PROJECT_BINARY_DIR}/exports.hpp"
+  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_SHORT_NAME}"
+)
+
+set(INSTALL_CONFIGDIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_TARGET}")
+install(EXPORT ${PROJECT_TARGET}_targets
   DESTINATION "${INSTALL_CONFIGDIR}"
+  NAMESPACE "${PROJECT_TARGET}::"
+  FILE "${PROJECT_TARGET}Targets.cmake"
 )
 if (WIN32)
   install(
-    FILES "$<TARGET_PDB_FILE:geommodel>"
+    FILES "$<TARGET_PDB_FILE:${PROJECT_TARGET}>"
     DESTINATION "${CMAKE_INSTALL_BINDIR}"
     OPTIONAL
   )
 endif()
-install(
-  FILES "${CMAKE_CURRENT_BINARY_DIR}/exports.hpp"
-  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/gm"
-)
 
 write_basic_package_version_file(
-  "${CMAKE_CURRENT_BINARY_DIR}/GeomModelConfigVersion.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_TARGET}ConfigVersion.cmake"
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY AnyNewerVersion
 )
 configure_package_config_file(
-  "${CMAKE_CURRENT_LIST_DIR}/cmake/GeomModelConfig.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/GeomModelConfig.cmake"
+  "${CMAKE_CURRENT_LIST_DIR}/cmake/${PROJECT_TARGET}Config.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_TARGET}Config.cmake"
   INSTALL_DESTINATION "${INSTALL_CONFIGDIR}"
 )
 
 # Install the config, configversion and custom find modules
 install(
-  FILES "${CMAKE_CURRENT_BINARY_DIR}/GeomModelConfig.cmake"
-  "${CMAKE_CURRENT_BINARY_DIR}/GeomModelConfigVersion.cmake"
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_TARGET}Config.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_TARGET}ConfigVersion.cmake"
   DESTINATION "${INSTALL_CONFIGDIR}"
 )
-#
-
-export(
-  EXPORT geommodel_targets
-  FILE "${CMAKE_CURRENT_BINARY_DIR}/GeomModelTargets.cmake"
-  NAMESPACE GeomModel::
-)
-
-# Register package in user's package registry
-export(PACKAGE GeomModel)
 #
 
 # Add tests

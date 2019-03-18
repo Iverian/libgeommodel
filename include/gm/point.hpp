@@ -11,7 +11,7 @@
 
 namespace gm {
 
-class GM_EXPORT Vec;
+class Vec;
 
 class GM_EXPORT Point {
 public:

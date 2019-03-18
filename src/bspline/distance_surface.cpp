@@ -1,7 +1,7 @@
-#include "C:\Users\trololo\Documents\Projects\libgeommodel\include\gm\compare.hpp"
 #include <bspline/distance_surface.hpp>
 #include <bspline/util.hpp>
 #include <bspline/wpoint.hpp>
+#include <gm/compare.hpp>
 #include <gm/surf_point.hpp>
 #include <stdexcept>
 #include <util/cyclic_iterator.hpp>
@@ -10,7 +10,6 @@
 #include <algorithm>
 #include <limits>
 #include <utility>
-#include <xutility>
 
 #define pget(cp) ((cp).p()[0])
 

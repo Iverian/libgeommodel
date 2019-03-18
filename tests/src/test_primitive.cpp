@@ -76,15 +76,3 @@ TEST(TestPrimitive, init_axis)
     ASSERT_EQ(ax[2], z);
     ASSERT_EQ(ax.c(), c);
 }
-
-TEST(TestPrimitive, rotation)
-{
-    auto ax = Axis::from_zx({0, 0, 1}, {1, 0, 0}, {0, 0, 0});
-    auto a = unit({1, 0, 0});
-    auto b = unit({1, 1, 0});
-    auto c = M_PI_2;
-    debug_fmt(std::cout, "r(a): {}, r(b): {}", ax.rotate_z(c, a),
-              ax.rotate_z(c, b));
-
-    SUCCEED();
-}

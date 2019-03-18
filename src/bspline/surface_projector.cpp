@@ -1,12 +1,11 @@
-#include "C:\Users\trololo\Documents\Projects\libgeommodel\src\bspline\distance_curve.hpp"
-#include "C:\Users\trololo\Documents\Projects\libgeommodel\src\bspline\distance_surface.hpp"
+#include <bspline/distance_curve.hpp>
+#include <bspline/distance_surface.hpp>
 #include <bspline/surface_projector.hpp>
 #include <gm/point.hpp>
 
 #include <limits>
 #include <optional>
 #include <stdexcept>
-#include <xutility>
 
 namespace gm {
 

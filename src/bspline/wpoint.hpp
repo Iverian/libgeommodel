@@ -2,6 +2,7 @@
 #define GEOM_MODEL_SRC_BSPLINE_WPOINT_HPP_
 
 // #include <bspline/array_operators.hpp>
+#include <gm/compare.hpp>
 #include <util/debug.hpp>
 #include <util/itertools.hpp>
 

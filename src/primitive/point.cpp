@@ -219,12 +219,12 @@ double dist(const Point& lhs, const Point& rhs) noexcept
 
 bool isnan(const Point& obj) noexcept
 {
-    return ::isnan(obj[0]) || ::isnan(obj[1]) || ::isnan(obj[2]);
+    return std::isnan(obj[0]) || std::isnan(obj[1]) || std::isnan(obj[2]);
 }
 
 bool isinf(const Point& obj) noexcept
 {
-    return ::isinf(obj[0]) || ::isinf(obj[1]) || ::isinf(obj[2]);
+    return std::isinf(obj[0]) || std::isinf(obj[1]) || std::isinf(obj[2]);
 }
 
 std::ostream& operator<<(std::ostream& os, const Point& obj)

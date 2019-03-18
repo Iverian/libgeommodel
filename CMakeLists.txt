@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.10)
 project(libgeommodel VERSION 2.0.0 LANGUAGES CXX)
 
 option(ENABLE_TESTS "Enable unit tests" YES)
@@ -17,7 +17,6 @@ list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_SOURCE_DIR}/cmake")
 
 # Configure dependencies
 find_package(fmt CONFIG REQUIRED)
-find_package(GeomModel REQUIRED)
 #
 
 # Find source files
@@ -65,8 +64,6 @@ target_compile_definitions(${PROJECT_TARGET}
 target_link_libraries(${PROJECT_TARGET}
   PRIVATE
     fmt::fmt
-  PUBLIC
-    GeomModel::GeomModel
 )
 set_target_properties(${PROJECT_TARGET}
   PROPERTIES
@@ -80,8 +77,7 @@ generate_export_header(${PROJECT_TARGET}
   BASE_NAME "${PROJECT_SHORT_NAME_UPPER}"
   EXPORT_FILE_NAME "exports.hpp"
   NO_DEPRECATED_MACRO_NAME "${PROJECT_SHORT_NAME_UPPER}_OMIT_DEPRECATED"
-  INCLUDE_GUARD_NAME
-    "${PROJECT_NAME_UPPER}_INCLUDE_${PROJECT_SHORT_NAME_UPPER}_EXPORTS_HPP_"
+  # INCLUDE_GUARD_NAME "${PROJECT_NAME_UPPER}_INCLUDE_${PROJECT_SHORT_NAME_UPPER}_EXPORTS_HPP_"
   DEFINE_NO_DEPRECATED
 )
 if (ENABLE_TESTS)

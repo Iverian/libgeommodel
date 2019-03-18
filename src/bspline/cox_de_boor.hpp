@@ -5,6 +5,7 @@
 #include <bspline/wpoint.hpp>
 #include <gm/compare.hpp>
 #include <util/debug.hpp>
+#include <util/math.hpp>
 #include <util/vector_view.hpp>
 
 #include <array>

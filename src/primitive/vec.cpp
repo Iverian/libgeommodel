@@ -199,12 +199,12 @@ double dist(const Vec& lhs, const Vec& rhs) noexcept
 
 bool isnan(const Vec& obj) noexcept
 {
-    return ::isnan(obj[0]) || ::isnan(obj[1]) || ::isnan(obj[2]);
+    return std::isnan(obj[0]) || std::isnan(obj[1]) || std::isnan(obj[2]);
 }
 
 bool isinf(const Vec& obj) noexcept
 {
-    return ::isinf(obj[0]) || ::isinf(obj[1]) || ::isinf(obj[2]);
+    return std::isinf(obj[0]) || std::isinf(obj[1]) || std::isinf(obj[2]);
 }
 
 double cos(const Vec& a, const Vec& b) noexcept
@@ -229,7 +229,7 @@ Vec unit(const Vec& obj) __GM_NOEXCEPT_RELEASE__
     auto n = norm(obj);
     check_ifd(!cmp::zero(n), "Unit vector of zero");
 
-    return obj / norm(obj);
+    return obj / n;
 }
 
 std::ostream& operator<<(std::ostream& os, const Vec& obj)

@@ -8,28 +8,28 @@ file(GLOB_RECURSE
   "${CMAKE_CURRENT_SOURCE_DIR}/src/test_*.cpp"
 )
 
-add_executable(alltests)
+add_executable(AllTests)
 
-target_sources(alltests
+target_sources(AllTests
   PRIVATE
     ${ALLTESTS_SOURCES}
 )
-target_include_directories(alltests
+target_include_directories(AllTests
   PRIVATE
     "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR};${PROJECT_SOURCE_DIR}/src>"
 )
-target_link_libraries(alltests
+target_link_libraries(AllTests
   PRIVATE
     GeomModel::GeomModel
     fmt::fmt
     GTest::GTest
     GTest::Main
 )
-set_target_properties(alltests
+set_target_properties(AllTests
   PROPERTIES
     DEBUG_POSTFIX d
     CXX_EXTENSIONS NO
     RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}
 )
 
-gtest_discover_tests(alltests WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+gtest_discover_tests(AllTests WORKING_DIRECTORY ${PROJECT_BINARY_DIR})

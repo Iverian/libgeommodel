@@ -180,18 +180,18 @@ TEST_F(TestBSpline, surface_proj_3)
     for (size_t i = 0; i < niter; ++i) {
         auto t = SurfPoint(udist(rnd), udist(rnd));
         auto p = s.f(t);
-        auto x = p + (0.5 + udist(rnd)) * s.unit_normal(t);
+        auto x = p + (0.5 + udist(rnd)) * s.normal(t);
 
         debug_fmt(std::cout, "TEST 3: POINT #{} t: {} p: {} p + a*n: {}", i, t,
                   p, x);
         auto r = s.project(x);
         auto q = s.f(r);
+        auto m = s.normal(r);
 
-        auto d_xq = dist(x, q);
-        auto d_xp = dist(x, p);
-        debug_fmt(std::cout, "r: {} dist(x, q): {} dist(x, p): {}", r, d_xq,
-                  d_xp);
-        ASSERT_TRUE(d_xq < d_xp || cmp::near(d_xp, d_xq, Tolerance::SINGLE));
+        auto qx = Vec(q, x);
+        debug_fmt(std::cout, "r: {} qx: {}", r, qx);
+        ASSERT_LE(dist(q, x), dist(p, x));
+        ASSERT_NEAR(sin(qx, m), 0., cmp::tol());
     }
 }
 

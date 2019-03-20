@@ -71,8 +71,6 @@ public:
         {
             auto r = range(2);
             auto p = r[1].wdiv(r[0].w()) - r[0].wmul(r[1].w() / sqr(r[0].w()));
-            // auto p = r[1].wp() / r[0].w()
-            //     - (r[1].w() / sqr(r[0].w())) * r[0].wp();
 
             return value_type(p.wp(), 1);
         }
@@ -83,11 +81,6 @@ public:
             auto sw = sqr(r[0].w());
             auto p = r[2].wdiv(r[0].w()) - r[1].wmul(2 * r[1].w() / sw)
                 + r[0].wmul((2 * r[1].w() / r[0].w() - r[2].w()) / sw);
-            // auto p = (r[1].wp() * (-2 * r[1].w() / r[0].w())
-            //           + r[0].wp() * (2 * r[1].w() / sqr(r[0].w())) +
-            //           r[2].wp()
-            //           - r[0].wp() * (r[2].w() / r[0].w()))
-            //     / r[0].w();
 
             return value_type(p.wp(), 1);
         }

@@ -1,12 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
-project(libgeommodel VERSION 2.0.0 LANGUAGES CXX)
 
-option(ENABLE_TESTS "Enable unit tests" YES)
+project(geommodel VERSION 2.0.0 LANGUAGES CXX)
 
-if(EXTRA_CXX_FLAGS)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_FLAGS}")
-  message(STATUS "Added extra c++ compiler flags ${EXTRA_CXX_FLAGS}")
-endif()
+option(GM_ENABLE_TESTS "Enable unit tests (requires GTest to be installed)" YES)
 
 # Include additional CMake packages
 include(GNUInstallDirs)
@@ -36,11 +32,11 @@ file(GLOB_RECURSE
   CONFIGURE_DEPENDS
   "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp"
   "${CMAKE_CURRENT_BINARY_DIR}/exports.hpp"
- )
+)
 #
 
 # Create target and set properties
-add_library(${PROJECT_TARGET} SHARED)
+add_library(${PROJECT_TARGET})
 
 target_sources(${PROJECT_TARGET}
   PRIVATE
@@ -69,7 +65,7 @@ set_target_properties(${PROJECT_TARGET}
   PROPERTIES
     DEBUG_POSTFIX d
     CXX_EXTENSIONS NO
-    WINDOWS_EXPORT_ALL_SYMBOLS ${ENABLE_TESTS}
+    WINDOWS_EXPORT_ALL_SYMBOLS ${GM_ENABLE_TESTS}
 )
 
 include(GenerateExportHeader)
@@ -77,10 +73,9 @@ generate_export_header(${PROJECT_TARGET}
   BASE_NAME "${PROJECT_SHORT_NAME_UPPER}"
   EXPORT_FILE_NAME "exports.hpp"
   NO_DEPRECATED_MACRO_NAME "${PROJECT_SHORT_NAME_UPPER}_OMIT_DEPRECATED"
-  # INCLUDE_GUARD_NAME "${PROJECT_NAME_UPPER}_INCLUDE_${PROJECT_SHORT_NAME_UPPER}_EXPORTS_HPP_"
   DEFINE_NO_DEPRECATED
 )
-if (ENABLE_TESTS)
+if (GM_ENABLE_TESTS)
   target_compile_definitions(${PROJECT_TARGET}
     PUBLIC
       "${PROJECT_SHORT_NAME_UPPER}_STATIC_DEFINE"
@@ -116,7 +111,11 @@ install(EXPORT ${PROJECT_TARGET}_targets
   NAMESPACE "${PROJECT_TARGET}::"
   FILE "${PROJECT_TARGET}Targets.cmake"
 )
-if (WIN32 AND NOT (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
+
+get_target_property(PROJECT_TARGET_TYPE ${PROJECT_TARGET} TYPE)
+if (WIN32 AND
+    PROJECT_TARGET_TYPE STREQUAL "SHARED_LIBRARY" AND
+    NOT (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
   install(
     FILES "$<TARGET_PDB_FILE:${PROJECT_TARGET}>"
     DESTINATION "${CMAKE_INSTALL_BINDIR}"
@@ -144,7 +143,7 @@ install(
 #
 
 # Add tests
-if (ENABLE_TESTS)
+if (GM_ENABLE_TESTS)
   add_subdirectory(tests)
 endif()
 #

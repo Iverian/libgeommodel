@@ -79,7 +79,6 @@ std::optional<double> CurveProjector::minimize(const Point& p, double u0,
         u += h;
     }
 
-    debug_fmt(std::cout, "i = max_iter u = std::nullopt");
     return std::nullopt;
 }
 

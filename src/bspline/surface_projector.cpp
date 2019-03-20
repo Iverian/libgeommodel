@@ -2,6 +2,7 @@
 #include <bspline/distance_surface.hpp>
 #include <bspline/surface_projector.hpp>
 #include <gm/point.hpp>
+#include <util/debug.hpp>
 
 #include <limits>
 #include <optional>
@@ -31,7 +32,8 @@ SurfPoint SurfaceProjector::call(const Point& p) const
             if (c.is_candidate(d)) {
                 auto v = minimize(p, umin, c.pfront(), c.pback());
                 if (v) {
-                    auto fv = c.f(v.value());
+                    auto fv
+                        = sqr(dist(p, impl_->f(v.value()))); // c.f(v.value());
                     if (cmp::le(fv, d)) {
                         u = v;
                         d = fv;
@@ -48,21 +50,22 @@ SurfPoint SurfaceProjector::call(const Point& p) const
         }
     }
 
-    throw std::runtime_error("not implemented");
-    return SurfPoint();
+    check_if(u.has_value(), "Unable to project point {} on bspline curve", p);
+    return u.value();
 }
 
 std::optional<SurfPoint>
 SurfaceProjector::minimize(const Point& p, SurfPoint r, const SurfPoint& a,
                            const SurfPoint& b) const noexcept
 {
-    static constexpr auto max_iter = size_t(100);
+    static constexpr auto max_iter = size_t(10000);
 
     for (size_t i = 0; i < max_iter; ++i) {
         auto w = Vec(p, impl_->f(r));
         auto u = impl_->dfu(r);
         auto v = impl_->dfv(r);
         if (cmp::zero(w) || cmp::zero(sin(w, cross(u, v)))) {
+            // debug_fmt(std::cout, "i = {8d} r = {}", i, r);
             return r;
         }
 
@@ -73,6 +76,7 @@ SurfaceProjector::minimize(const Point& p, SurfPoint r, const SurfPoint& a,
         r += h;
     }
 
+    // debug_fmt(std::cout, "i = max_iter r = {}", r);
     return std::nullopt;
 }
 

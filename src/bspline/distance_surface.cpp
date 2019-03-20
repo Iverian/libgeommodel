@@ -65,6 +65,8 @@ DistanceSurface::DistanceSurface(
             t /= c;
         }
     }
+
+    c_ = Super(order, order, std::move(knots), std::move(cp));
 }
 
 SurfPoint DistanceSurface::pfront() const noexcept
@@ -188,7 +190,6 @@ bool DistanceSurface::eliminate_segment(double d) noexcept
 
 bool DistanceSurface::is_flat_enough() const noexcept
 {
-    throw std::runtime_error("not implemented");
     return false;
 }
 

@@ -1,9 +1,9 @@
 #ifndef GEOM_MODEL_SRC_BSPLINE_SURFACE_PROJECTOR_HPP_
 #define GEOM_MODEL_SRC_BSPLINE_SURFACE_PROJECTOR_HPP_
 
-#include "C:\Users\trololo\Documents\Projects\libgeommodel\include\gm\bspline_surface.hpp"
-#include "C:\Users\trololo\Documents\Projects\libgeommodel\src\bspline\basic_bspline_surface.hpp"
+#include <bspline/basic_bspline_surface.hpp>
 #include <bspline/bspline_surface_impl.hpp>
+#include <gm/bspline_surface.hpp>
 #include <gm/surf_point.hpp>
 #include <util/debug.hpp>
 

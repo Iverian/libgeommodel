@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <array>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 template <size_t N>
@@ -36,25 +37,34 @@ public:
     {
     }
 
+    BezierSurfacePatch(std::pair<size_t, size_t> order,
+                       std::pair<gm::SurfPoint, gm::SurfPoint> limits,
+                       CPointsType&& cpoints)
+        : order_(std::move(order))
+        , limits_(std::move(limits))
+        , cpoints_(cpoints)
+    {
+    }
+
     const std::pair<size_t, size_t>& order() const noexcept
     {
         return order_;
     }
     gm::SurfPoint& pfront() noexcept
     {
-        return limits_[0];
+        return limits_.first;
     }
     gm::SurfPoint& pback() noexcept
     {
-        return limits_[1];
+        return limits_.second;
     }
     const gm::SurfPoint& pfront() const noexcept
     {
-        return limits_[0];
+        return limits_.first;
     }
     const gm::SurfPoint& pback() const noexcept
     {
-        return limits_[1];
+        return limits_.second;
     }
     KnotsType knots() const noexcept
     {
@@ -96,7 +106,7 @@ public:
 
 private:
     std::pair<size_t, size_t> order_;
-    std::array<gm::SurfPoint, 2> limits_;
+    std::pair<gm::SurfPoint, gm::SurfPoint> limits_;
     CPointsType cpoints_;
 };
 
@@ -110,7 +120,17 @@ public:
     using CPointsType = typename Traits::CPointsType;
     using CoxDeBoorType = typename Traits::CoxDeBoorType;
     using CoxDeBoorTypeU = typename Traits::CoxDeBoorTypeU;
-    enum class RefineDir { U_DIRECTION = 0, V_DIRECTION = 1 };
+
+    struct PartialBezierPatches {
+        std::vector<CPointsType> cpoints;
+        std::vector<double> unique_knots;
+        std::pair<size_t, size_t> shape;
+
+        auto size() const noexcept
+        {
+            return cpoints.size();
+        }
+    };
 
     BasicBSplineSurface()
         : order_(0, 0)
@@ -200,7 +220,7 @@ public:
         return cpoints_[ind(i.first, i.second)];
     }
 
-    typename CPoint::Proj f(const gm::SurfPoint& p) const noexcept
+    auto f(const gm::SurfPoint& p) const noexcept
     {
         CPointsType ubuf(cdb_.size());
         CoxDeBoorTypeU ucdb(order_.first, knots_.first, ubuf);
@@ -210,7 +230,7 @@ public:
         return ucdb.proxy(p.u).f().p();
     }
 
-    typename CPoint::Proj dfu(const gm::SurfPoint& p) const noexcept
+    auto dfu(const gm::SurfPoint& p) const noexcept
     {
         CPointsType ubuf(cdb_.size());
         CoxDeBoorTypeU ucdb(order_.first, knots_.first, ubuf);
@@ -220,7 +240,7 @@ public:
         return ucdb.proxy(p.u).df().p();
     }
 
-    typename CPoint::Proj dfv(const gm::SurfPoint& p) const noexcept
+    auto dfv(const gm::SurfPoint& p) const noexcept
     {
         CPointsType ubuf(cdb_.size());
         CoxDeBoorTypeU ucdb(order_.first, knots_.first, ubuf);
@@ -230,7 +250,7 @@ public:
         return ucdb.proxy(p.u).f().p();
     }
 
-    typename CPoint::Proj dfuu(const gm::SurfPoint& p) const noexcept
+    auto dfuu(const gm::SurfPoint& p) const noexcept
     {
         CPointsType ubuf(cdb_.size());
         CoxDeBoorTypeU ucdb(order_.first, knots_.first, ubuf);
@@ -240,7 +260,7 @@ public:
         return ucdb.proxy(p.u).df2().p();
     }
 
-    typename CPoint::Proj dfuv(const gm::SurfPoint& p) const noexcept
+    auto dfuv(const gm::SurfPoint& p) const noexcept
     {
         CPointsType ubuf(cdb_.size());
         CoxDeBoorTypeU ucdb(order_.first, knots_.first, ubuf);
@@ -250,7 +270,7 @@ public:
         return ucdb.proxy(p.u).df().p();
     }
 
-    typename CPoint::Proj dfvv(const gm::SurfPoint& p) const noexcept
+    auto dfvv(const gm::SurfPoint& p) const noexcept
     {
         CPointsType ubuf(cdb_.size());
         CoxDeBoorTypeU ucdb(order_.first, knots_.first, ubuf);
@@ -260,13 +280,35 @@ public:
         return ucdb.proxy(p.u).f().p();
     }
 
-    std::vector<BezierSurfacePatch<N>> bezier_patches() const noexcept
+    auto bezier_patches() const
     {
-        throw std::runtime_error("not implemented");
-        return {};
+        std::vector<BezierSurfacePatch<N>> result;
+        auto u_patches = u_bezier_patches(cpoints_, shape_);
+        auto n = u_patches.size();
+
+        for (size_t i = 0; i < n; ++i) {
+            auto v_patches
+                = v_bezier_patches(u_patches.cpoints[i], u_patches.shape);
+            auto m = v_patches.size();
+            auto& ua = u_patches.unique_knots[i];
+            auto& ub = u_patches.unique_knots[i + 1];
+
+            for (size_t j = 0; j < m; ++j) {
+                auto& cp = v_patches.cpoints[j];
+                auto& va = v_patches.unique_knots[j];
+                auto& vb = v_patches.unique_knots[j + 1];
+
+                result.emplace_back(v_patches.shape,
+                                    std::make_pair(gm::SurfPoint(ua, va),
+                                                   gm::SurfPoint(ub, vb)),
+                                    std::move(cp));
+            }
+        }
+
+        return result;
     }
 
-    BasicBSplineSurface& refine_knots(const KnotsType& to_insert)
+    auto refine_knots(const KnotsType& to_insert)
     {
         u_refine_knots(to_insert.first);
         v_refine_knots(to_insert.second);
@@ -274,7 +316,7 @@ public:
         return *this;
     }
 
-    BasicBSplineSurface& u_refine_knots(const std::vector<double>& to_insert)
+    auto u_refine_knots(const std::vector<double>& to_insert)
     {
         static constexpr auto npos = size_t(-1);
 
@@ -296,9 +338,10 @@ public:
         auto s = to_insert.size();
         auto i = b + p - 1;
         auto k = b + p + s - 1;
+        auto new_shape = shape + s;
         size_t j, l, r;
 
-        std::vector<CPoint> new_cpoints((shape + s) * second);
+        std::vector<CPoint> new_cpoints(new_shape * second);
         std::vector<double> new_knots(knots.size() + s);
         for (j = 0; j <= a; ++j) {
             new_knots[j] = knots[j];
@@ -308,19 +351,19 @@ public:
         }
         for (j = 0; j <= a - p; ++j) {
             for (r = 0; r < second; ++r) {
-                new_cpoints[ind(j, r)] = cpoints_[ind(j, r)];
+                new_cpoints[second * j + r] = cpoints_[ind(j, r)];
             }
         }
         for (j = b - 1; j <= n; ++j) {
             for (r = 0; r < second; ++r) {
-                new_cpoints[ind(j + s, r)] = cpoints_[ind(j, r)];
+                new_cpoints[second * (j + s) + r] = cpoints_[ind(j, r)];
             }
         }
 
         for (j = s - 1; j != npos; --j) {
             while (gm::cmp::le(to_insert[j], knots[i]) && i > a) {
                 for (r = 0; r < second; ++r) {
-                    new_cpoints[ind(k - p - 1, r)]
+                    new_cpoints[second * (k - p - 1) + r]
                         = cpoints_[ind(i - p - 1, r)];
                 }
                 new_knots[k] = knots[i];
@@ -328,7 +371,8 @@ public:
                 --i;
             }
             for (r = 0; r < second; ++r) {
-                new_cpoints[ind(k - p - 1, r)] = new_cpoints[ind(k - p, r)];
+                new_cpoints[second * (k - p - 1) + r]
+                    = new_cpoints[second * (k - p) + r];
             }
 
             for (l = 1; l <= p; ++l) {
@@ -337,8 +381,8 @@ public:
 
                 if (gm::cmp::zero(alpha)) {
                     for (r = 0; r < second; ++r) {
-                        auto& cur = new_cpoints[ind(pos, r)];
-                        auto& prv = new_cpoints[ind(pos - 1, r)];
+                        auto& cur = new_cpoints[second * pos + r];
+                        auto& prv = new_cpoints[second * (pos - 1) + r];
 
                         prv = cur;
                     }
@@ -346,8 +390,8 @@ public:
                     alpha /= new_knots[k + l] - knots[i - p + l];
 
                     for (r = 0; r < second; ++r) {
-                        auto& cur = new_cpoints[ind(pos, r)];
-                        auto& prv = new_cpoints[ind(pos - 1, r)];
+                        auto& cur = new_cpoints[second * pos + r];
+                        auto& prv = new_cpoints[second * (pos - 1) + r];
 
                         prv = alpha * prv + (1. - alpha) * cur;
                     }
@@ -357,7 +401,7 @@ public:
             --k;
         }
 
-        shape_ = std::make_pair(shape + s, second);
+        shape_ = std::make_pair(new_shape, second);
         knots_.first = std::move(new_knots);
         cpoints_ = std::move(new_cpoints);
         cdb_.clear();
@@ -366,7 +410,7 @@ public:
         return *this;
     }
 
-    BasicBSplineSurface& v_refine_knots(const std::vector<double>& to_insert)
+    auto v_refine_knots(const std::vector<double>& to_insert)
     {
         static constexpr auto npos = size_t(-1);
 
@@ -388,9 +432,10 @@ public:
         auto s = to_insert.size();
         auto i = b + p - 1;
         auto k = b + p + s - 1;
+        auto new_shape = shape + s;
         size_t j, l, r;
 
-        std::vector<CPoint> new_cpoints(first * (shape + s));
+        std::vector<CPoint> new_cpoints(first * new_shape);
         std::vector<double> new_knots(knots.size() + s);
         for (j = 0; j <= a; ++j) {
             new_knots[j] = knots[j];
@@ -400,19 +445,19 @@ public:
         }
         for (r = 0; r < first; ++r) {
             for (j = 0; j <= a - p; ++j) {
-                new_cpoints[ind(r, j)] = cpoints_[ind(r, j)];
+                new_cpoints[new_shape * r + j] = cpoints_[ind(r, j)];
             }
         }
         for (r = 0; r < first; ++r) {
             for (j = b - 1; j <= n; ++j) {
-                new_cpoints[ind(r, j + s)] = cpoints_[ind(r, j)];
+                new_cpoints[new_shape * r + j + s] = cpoints_[ind(r, j)];
             }
         }
 
         for (j = s - 1; j != npos; --j) {
             while (gm::cmp::le(to_insert[j], knots[i]) && i > a) {
                 for (r = 0; r < first; ++r) {
-                    new_cpoints[ind(r, k - p - 1)]
+                    new_cpoints[new_shape * r + k - p - 1]
                         = cpoints_[ind(r, i - p - 1)];
                 }
                 new_knots[k] = knots[i];
@@ -420,7 +465,8 @@ public:
                 --i;
             }
             for (r = 0; r < first; ++r) {
-                new_cpoints[ind(r, k - p - 1)] = new_cpoints[ind(r, k - p)];
+                new_cpoints[new_shape * r + k - p - 1]
+                    = new_cpoints[new_shape * r + k - p];
             }
 
             for (l = 1; l <= p; ++l) {
@@ -429,8 +475,8 @@ public:
 
                 if (gm::cmp::zero(alpha)) {
                     for (r = 0; r < first; ++r) {
-                        auto& cur = new_cpoints[ind(r, pos)];
-                        auto& prv = new_cpoints[ind(r, pos - 1)];
+                        auto& cur = new_cpoints[new_shape * r + pos];
+                        auto& prv = new_cpoints[new_shape * r + pos - 1];
 
                         prv = cur;
                     }
@@ -438,8 +484,8 @@ public:
                     alpha /= new_knots[k + l] - knots[i - p + l];
 
                     for (r = 0; r < first; ++r) {
-                        auto& cur = new_cpoints[ind(r, pos)];
-                        auto& prv = new_cpoints[ind(r, pos - 1)];
+                        auto& cur = new_cpoints[new_shape * r + pos];
+                        auto& prv = new_cpoints[new_shape * r + pos - 1];
 
                         prv = alpha * prv + (1. - alpha) * cur;
                     }
@@ -449,7 +495,7 @@ public:
             --k;
         }
 
-        shape_ = std::make_pair(first, shape + s);
+        shape_ = std::make_pair(first, new_shape);
         knots_.second = std::move(new_knots);
         cpoints_ = std::move(new_cpoints);
         cdb_.clear();
@@ -459,12 +505,183 @@ public:
     }
 
 protected:
-    size_t ind(size_t i, size_t j) const noexcept
+    auto ind(size_t i, size_t j) const noexcept
     {
         return j + shape_.second * i;
     }
 
 private:
+    auto u_bezier_patches(const CPointsType& cp,
+                          std::pair<size_t, size_t> shape) const
+    {
+        static constexpr auto npos = size_t(-1);
+
+        PartialBezierPatches result;
+        std::vector<double> alphas(order_.first);
+
+        auto& knots = knots_.first;
+        auto p = order_.first - 1;
+        auto m = knots.size() - 1;
+        auto size = order_.first * shape.second;
+        auto a = p;
+        auto b = p + 1;
+        size_t i, j, k, l, nb = 0;
+
+        result.shape = std::make_pair(order_.first, shape.second);
+        result.cpoints.emplace_back(size);
+        for (i = 0; i < order_.first; ++i) {
+            for (j = 0; j < shape.second; ++j) {
+                result.cpoints[nb][shape.second * i + j]
+                    = cp[shape.second * i + j];
+            }
+        }
+
+        result.unique_knots.emplace_back(knots[a]);
+        while (b < m) {
+            i = b;
+            for (; b < m && gm::cmp::near(knots[b], knots[b + 1]); ++b)
+                ;
+            result.unique_knots.emplace_back(knots[b]);
+
+            if (b < m) {
+                result.cpoints.emplace_back(size);
+            }
+
+            auto mult = b - i + 1;
+            if (mult < p) {
+                auto numer = knots[b] - knots[a];
+                auto r = p - mult;
+                for (j = p; j > mult; --j) {
+                    alphas[j - mult - 1] = numer / (knots[a + j] - knots[a]);
+                }
+                for (j = 1; j < r + 1; ++j) {
+                    auto save = r - j;
+                    auto s = mult + j;
+                    for (k = p; k >= s && k != npos; --k) {
+                        auto& alpha = alphas[k - s];
+
+                        for (l = 0; l < shape.second; ++l) {
+                            auto& cur
+                                = result.cpoints[nb][shape.second * k + l];
+                            auto& prv
+                                = result
+                                      .cpoints[nb][shape.second * (k - 1) + l];
+
+                            cur = alpha * cur + (1. - alpha) * prv;
+                        }
+                    }
+
+                    if (b < m) {
+                        for (l = 0; l < shape.second; ++l) {
+                            result.cpoints[nb + 1][shape.second * save + l]
+                                = result.cpoints[nb][shape.second * p + l];
+                        }
+                    }
+                }
+                std::fill(std::begin(alphas), std::end(alphas), 0.);
+            }
+
+            ++nb;
+            if (b < m) {
+                for (i = p - mult; i < order_.first; ++i) {
+                    for (j = 0; j < shape.second; ++j) {
+                        result.cpoints[nb][shape.second * i + j]
+                            = cp[shape.second * (b - p + i) + j];
+                    }
+                }
+                a = b;
+                ++b;
+            }
+        }
+
+        return result;
+    }
+
+    auto v_bezier_patches(const CPointsType& cp,
+                          std::pair<size_t, size_t> shape) const
+    {
+        static constexpr auto npos = size_t(-1);
+
+        PartialBezierPatches result;
+        std::vector<double> alphas(order_.second);
+
+        auto& knots = knots_.second;
+        auto p = order_.second - 1;
+        auto m = knots.size() - 1;
+        auto size = shape.first * order_.second;
+        auto a = p;
+        auto b = p + 1;
+        size_t i, j, k, l, nb = 0;
+
+        result.shape = std::make_pair(shape.first, order_.second);
+        result.cpoints.emplace_back(size);
+        for (i = 0; i < shape.first; ++i) {
+            for (j = 0; j < order_.second; ++j) {
+                result.cpoints[nb][order_.second * i + j]
+                    = cp[shape.second * i + j];
+            }
+        }
+
+        result.unique_knots.emplace_back(knots[a]);
+        while (b < m) {
+            i = b;
+            for (; b < m && gm::cmp::near(knots[b], knots[b + 1]); ++b)
+                ;
+            result.unique_knots.emplace_back(knots[b]);
+
+            if (b < m) {
+                result.cpoints.emplace_back(size);
+            }
+
+            auto mult = b - i + 1;
+            if (mult < p) {
+                auto numer = knots[b] - knots[a];
+                auto r = p - mult;
+                for (j = p; j > mult; --j) {
+                    alphas[j - mult - 1] = numer / (knots[a + j] - knots[a]);
+                }
+                for (j = 1; j < r + 1; ++j) {
+                    auto save = r - j;
+                    auto s = mult + j;
+                    for (k = p; k >= s && k != npos; --k) {
+                        auto& alpha = alphas[k - s];
+
+                        for (l = 0; l < shape.first; ++l) {
+                            auto& cur
+                                = result.cpoints[nb][order_.second * l + k];
+                            auto& prv = result.cpoints[nb][order_.second * l
+                                                           + (k - 1)];
+
+                            cur = alpha * cur + (1. - alpha) * prv;
+                        }
+                    }
+
+                    if (b < m) {
+                        for (l = 0; l < shape.first; ++l) {
+                            result.cpoints[nb + 1][order_.second * l + save]
+                                = result.cpoints[nb][order_.second * l + p];
+                        }
+                    }
+                }
+                std::fill(std::begin(alphas), std::end(alphas), 0.);
+            }
+
+            ++nb;
+            if (b < m) {
+                for (i = 0; i < shape.first; ++i) {
+                    for (j = p - mult; j < order_.second; ++j) {
+                        result.cpoints[nb][order_.second * i + j]
+                            = cp[shape.second * i + (b - p + j)];
+                    }
+                }
+                a = b;
+                ++b;
+            }
+        }
+
+        return result;
+    }
+
     void init_cdb()
     {
         cdb_.reserve(shape_.first);
@@ -475,9 +692,6 @@ private:
         for (; ptr < end; ptr += shape_.second) {
             cdb_.emplace_back(order_.second, knots,
                               VectorView<CPoint>(ptr, shape_.second));
-        }
-        if (ptr == end) {
-            end = nullptr;
         }
     }
 

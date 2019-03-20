@@ -20,7 +20,7 @@ target_include_directories(AllTests
 )
 target_link_libraries(AllTests
   PRIVATE
-    GeomModel::GeomModel
+    ${PROJECT_TARGET}
     fmt::fmt
     GTest::GTest
     GTest::Main
@@ -32,4 +32,6 @@ set_target_properties(AllTests
     RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}
 )
 
-gtest_discover_tests(AllTests WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+gtest_discover_tests(AllTests
+  WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+ )

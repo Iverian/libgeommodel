@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <limits>
 #include <utility>
+#include <vector>
 
 #define pget(cp) ((cp).p()[0])
 
@@ -191,6 +192,59 @@ bool DistanceSurface::eliminate_segment(double d) noexcept
 bool DistanceSurface::is_flat_enough() const noexcept
 {
     return false;
+}
+
+std::pair<WhereMin, WhereMin> DistanceSurface::min_bord_check() const noexcept
+{
+    std::pair<WhereMin, WhereMin> result = {WhereMin::NIL, WhereMin::NIL};
+    std::vector<double> pp(c_.cpoints().size());
+    auto& s = c_.shape();
+    size_t i, j;
+
+    std::transform(std::begin(c_.cpoints()), std::end(c_.cpoints()),
+                   std::begin(pp), [](auto& x) { return pget(x); });
+
+    result.first = WhereMin::FRONT;
+    result.second = WhereMin::FRONT;
+    for (i = 0; i < s.first; ++i) {
+        for (j = 0; j < s.second; ++j) {
+            if (pp[s.second * i + j] < pp[s.second * 0 + j]) {
+                result.first = WhereMin::NIL;
+            }
+            if (pp[s.second * i + j] < pp[s.second * i + 0]) {
+                result.second = WhereMin::NIL;
+            }
+            if (result.first != WhereMin::FRONT
+                && result.second != WhereMin::FRONT) {
+                break;
+            }
+        }
+    }
+
+    if (result.first == WhereMin::NIL) {
+        result.first = WhereMin::BACK;
+    }
+    if (result.second == WhereMin::NIL) {
+        result.second = WhereMin::BACK;
+    }
+    for (i = 0; i < s.first; ++i) {
+        for (j = 0; j < s.second; ++j) {
+            if (result.first == WhereMin::BACK
+                && pp[s.second * i + j] < pp[s.second * (s.first - 1) + j]) {
+                result.first = WhereMin::NIL;
+            }
+            if (result.second == WhereMin::BACK
+                && pp[s.second * i + j] < pp[s.second * i + (s.second - 1)]) {
+                result.second = WhereMin::NIL;
+            }
+            if (result.first != WhereMin::BACK
+                && result.second != WhereMin::BACK) {
+                break;
+            }
+        }
+    }
+
+    return result;
 }
 
 } // namespace gm

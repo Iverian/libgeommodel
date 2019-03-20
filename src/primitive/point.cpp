@@ -229,7 +229,7 @@ bool isinf(const Point& obj) noexcept
 
 std::ostream& operator<<(std::ostream& os, const Point& obj)
 {
-    fmt::print(os, "[{:.5g}, {:5.g}, {:.5g}]", obj[0], obj[1], obj[2]);
+    fmt::print(os, "[{:.5g}, {:.5g}, {:.5g}]", obj[0], obj[1], obj[2]);
     return os;
 }
 

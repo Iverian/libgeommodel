@@ -1,3 +1,4 @@
+#include "C:\Users\trololo\Documents\Projects\libgeommodel\include\gm\vec.hpp"
 #include <gtest/gtest.h>
 
 #include <gm/bspline_curve.hpp>
@@ -180,18 +181,76 @@ TEST_F(TestBSpline, surface_proj_3)
     for (size_t i = 0; i < niter; ++i) {
         auto t = SurfPoint(udist(rnd), udist(rnd));
         auto p = s.f(t);
-        auto x = p + (0.5 + udist(rnd)) * s.normal(t);
+        auto x = p + udist(rnd) * s.unit_normal(t);
 
-        debug_fmt(std::cout, "TEST 3: POINT #{} t: {} p: {} p + a*n: {}", i, t,
-                  p, x);
-        auto r = s.project(x);
-        auto q = s.f(r);
-        auto m = s.normal(r);
+        // debug_fmt(std::cout,
+        //           "TEST 3: POINT #{} t: {} p: {} p + a*n: {} dist(p, x):
+        //           {}", i, t, p, x, dist(p, x));
+        EXPECT_NO_THROW({
+            auto r = s.project(x);
+            auto q = s.f(r);
+            auto aqx = angle(Vec(q, x), s.normal(r));
 
-        auto qx = Vec(q, x);
-        debug_fmt(std::cout, "r: {} qx: {}", r, qx);
-        ASSERT_LE(dist(q, x), dist(p, x));
-        ASSERT_NEAR(sin(qx, m), 0., cmp::tol());
+            // debug_fmt(std::cout,
+            //           " r: {} dist(p, q): {} dist(q, x): {} angle(qx): {}",
+            //           r, dist(p, q), dist(q, x), aqx);
+            EXPECT_TRUE(cmp::le(dist(q, x), dist(p, x)));
+            EXPECT_NEAR(aqx, 0., cmp::tol(Tolerance::SINGLE));
+        });
+    }
+}
+
+TEST_F(TestBSpline, surface_proj_4)
+{
+    std::minstd_rand0 rnd;
+    std::uniform_real_distribution<double> udist;
+
+    for (size_t i = 0; i < niter; ++i) {
+        auto t = SurfPoint(rnd() % 2, udist(rnd));
+        auto p = s.f(t);
+        auto x = p + udist(rnd) * s.unit_normal(t);
+
+        debug_fmt(std::cout,
+                  "TEST 3: POINT #{} t: {} p: {} p + a*n: {} dist(p, x): {}",
+                  i, t, p, x, dist(p, x));
+        EXPECT_NO_THROW({
+            auto r = s.project(x);
+            auto q = s.f(r);
+            auto aqx = angle(Vec(q, x), s.normal(r));
+
+            debug_fmt(std::cout,
+                      " r: {} dist(p, q): {} dist(q, x): {} angle(qx): {}", r,
+                      dist(p, q), dist(q, x), aqx);
+            EXPECT_TRUE(cmp::le(dist(q, x), dist(p, x)));
+            EXPECT_NEAR(aqx, 0., cmp::tol(Tolerance::SINGLE));
+        });
+    }
+}
+
+TEST_F(TestBSpline, surface_proj_5)
+{
+    std::minstd_rand0 rnd;
+    std::uniform_real_distribution<double> udist;
+
+    for (size_t i = 0; i < niter; ++i) {
+        auto t = SurfPoint(udist(rnd), rnd() % 2);
+        auto p = s.f(t);
+        auto x = p + udist(rnd) * s.unit_normal(t);
+
+        debug_fmt(std::cout,
+                  "TEST 3: POINT #{} t: {} p: {} p + a*n: {} dist(p, x): {}",
+                  i, t, p, x, dist(p, x));
+        EXPECT_NO_THROW({
+            auto r = s.project(x);
+            auto q = s.f(r);
+            auto aqx = angle(Vec(q, x), s.normal(r));
+
+            debug_fmt(std::cout,
+                      " r: {} dist(p, q): {} dist(q, x): {} angle(qx): {}", r,
+                      dist(p, q), dist(q, x), aqx);
+            EXPECT_TRUE(cmp::le(dist(q, x), dist(p, x)));
+            EXPECT_NEAR(aqx, 0., cmp::tol(Tolerance::SINGLE));
+        });
     }
 }
 

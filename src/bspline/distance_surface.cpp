@@ -70,6 +70,16 @@ DistanceSurface::DistanceSurface(
     c_ = Super(order, order, std::move(knots), std::move(cp));
 }
 
+const std::pair<size_t, size_t>& DistanceSurface::order() const noexcept
+{
+    return c_.order();
+}
+
+const std::pair<size_t, size_t>& DistanceSurface::shape() const noexcept
+{
+    return c_.shape();
+}
+
 SurfPoint DistanceSurface::pfront() const noexcept
 {
     return c_.pfront();
@@ -84,9 +94,9 @@ SurfPoint DistanceSurface::itarg(const std::pair<size_t, size_t>& i) const
     noexcept
 {
     auto u = pfront().u
-        + i.first * (pback().u - pfront().u) / (c_.order().first - 1);
+        + i.first * (pback().u - pfront().u) / (c_.shape().first - 1);
     auto v = pfront().v
-        + i.second * (pback().v - pfront().v) / (c_.order().second - 1);
+        + i.second * (pback().v - pfront().v) / (c_.shape().second - 1);
 
     return {u, v};
 }
@@ -99,47 +109,6 @@ SurfPoint DistanceSurface::itarg(size_t i) const noexcept
     return itarg({p, q});
 }
 
-SurfPoint DistanceSurface::argti(SurfPoint arg) const noexcept
-{
-    auto u = (c_.order().first - 1) * (arg.u - pfront().u)
-        / (pback().u - pfront().u);
-    auto v = (c_.order().second - 1) * (arg.v - pfront().v)
-        / (pback().v - pfront().v);
-
-    return {u, v};
-}
-SurfPoint DistanceSurface::tocparg(SurfPoint arg,
-                                   std::pair<bool, bool> dir) const noexcept
-{
-    arg = argti(arg);
-    return itarg({dir.first ? ceil<size_t>(arg.u) : floor<size_t>(arg.u),
-                  dir.second ? ceil<size_t>(arg.v) : floor<size_t>(arg.v)});
-}
-
-double DistanceSurface::f(const SurfPoint& p) const noexcept
-{
-    return c_.f(p)[0];
-}
-
-std::pair<SurfPoint, double> DistanceSurface::min_init() const noexcept
-{
-    auto s = c_.shape();
-    auto dmin = std::numeric_limits<double>::max();
-    SurfPoint argmin {};
-
-    for (size_t i = 0; i < s.first; ++i) {
-        for (size_t j = 0; j < s.second; ++j) {
-            auto r = itarg({i, j});
-            auto d = f(r);
-            if (d < dmin) {
-                argmin = r;
-                dmin = d;
-            }
-        }
-    }
-
-    return {argmin, dmin};
-}
 bool DistanceSurface::is_candidate(double d) const noexcept
 {
     return std::any_of(std::begin(c_.cpoints()), std::end(c_.cpoints()),
@@ -172,76 +141,20 @@ bool DistanceSurface::eliminate_segment(double d) noexcept
     auto ru = single_eliminate(cu, c_.pfront().u, c_.pback().u);
     auto rv = single_eliminate(cv, c_.pfront().v, c_.pback().v);
 
-    auto result = !ru.empty() && !rv.empty();
+    auto result = !ru.empty() || !rv.empty();
     if (result) {
         c_.refine_knots({ru, rv});
         auto p = c_.bezier_patches();
         size_t i = 1, j = 1;
-        if (ru.size() == 1 && cmp::le(cu.front().u, ru.front())) {
+        if (ru.empty()
+            || (ru.size() == 1 && cmp::le(cu.front().u, ru.front()))) {
             i = 0;
         }
-        if (rv.size() == 1 && cmp::le(cv.front().u, rv.front())) {
+        if (rv.empty()
+            || (rv.size() == 1 && cmp::le(cv.front().u, rv.front()))) {
             j = 0;
         }
         c_ = p[i * (rv.size() + 1) + j];
-    }
-
-    return result;
-}
-
-bool DistanceSurface::is_flat_enough() const noexcept
-{
-    return false;
-}
-
-std::pair<WhereMin, WhereMin> DistanceSurface::min_bord_check() const noexcept
-{
-    std::pair<WhereMin, WhereMin> result = {WhereMin::NIL, WhereMin::NIL};
-    std::vector<double> pp(c_.cpoints().size());
-    auto& s = c_.shape();
-    size_t i, j;
-
-    std::transform(std::begin(c_.cpoints()), std::end(c_.cpoints()),
-                   std::begin(pp), [](auto& x) { return pget(x); });
-
-    result.first = WhereMin::FRONT;
-    result.second = WhereMin::FRONT;
-    for (i = 0; i < s.first; ++i) {
-        for (j = 0; j < s.second; ++j) {
-            if (pp[s.second * i + j] < pp[s.second * 0 + j]) {
-                result.first = WhereMin::NIL;
-            }
-            if (pp[s.second * i + j] < pp[s.second * i + 0]) {
-                result.second = WhereMin::NIL;
-            }
-            if (result.first != WhereMin::FRONT
-                && result.second != WhereMin::FRONT) {
-                break;
-            }
-        }
-    }
-
-    if (result.first == WhereMin::NIL) {
-        result.first = WhereMin::BACK;
-    }
-    if (result.second == WhereMin::NIL) {
-        result.second = WhereMin::BACK;
-    }
-    for (i = 0; i < s.first; ++i) {
-        for (j = 0; j < s.second; ++j) {
-            if (result.first == WhereMin::BACK
-                && pp[s.second * i + j] < pp[s.second * (s.first - 1) + j]) {
-                result.first = WhereMin::NIL;
-            }
-            if (result.second == WhereMin::BACK
-                && pp[s.second * i + j] < pp[s.second * i + (s.second - 1)]) {
-                result.second = WhereMin::NIL;
-            }
-            if (result.first != WhereMin::BACK
-                && result.second != WhereMin::BACK) {
-                break;
-            }
-        }
     }
 
     return result;

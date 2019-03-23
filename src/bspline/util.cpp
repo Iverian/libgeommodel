@@ -95,27 +95,22 @@ single_eliminate(const std::vector<gm::SurfPoint>& convex_hull, double pfront,
     return roots;
 }
 
-double find_span(double t, size_t order,
+size_t find_span(double t, size_t order,
                  const VectorView<double>& knots) noexcept
 {
-    auto p = order - 1;
-    auto n = knots.size() - order - 1;
+    auto result = size_t(-1);
+    auto last = knots.size() - order;
 
-    if (gm::cmp::near(t, knots[n + 1])) {
-        return n;
-    }
-
-    auto low = p;
-    auto high = n + 1;
-    auto mid = (low + high) / 2;
-    while (t < knots[mid] || gm::cmp::ge(t, knots[mid + 1])) {
-        if (t < knots[mid]) {
-            high = mid;
-        } else {
-            low = mid;
+    if (gm::cmp::near(t, knots.back())) {
+        result = last - 1;
+    } else {
+        for (auto i = order - 1; i <= last; ++i) {
+            if (t < knots[i]) {
+                result = i - 1;
+                break;
+            }
         }
-        mid = (low + high) / 2;
     }
 
-    return mid;
+    return result;
 }

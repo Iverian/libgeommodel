@@ -5,13 +5,23 @@
 
 namespace gm {
 
-enum class Tolerance : unsigned { ZERO = 0, SINGLE = 1, DOUBLE = 2, MAX = 3 };
+enum class Tolerance : unsigned {
+    ZERO = 0,
+    SINGLE = 1,
+    DOUBLE = 2,
+    TRIPLE = 3,
+    MAX = 4
+};
 
 namespace cmp {
     static constexpr auto default_tolerance = Tolerance::DOUBLE;
 
     [[nodiscard]] GM_EXPORT double tol(Tolerance t
                                        = default_tolerance) noexcept;
+
+    [[nodiscard]] GM_EXPORT bool
+    isnear(double lhs, double rhs, Tolerance t = default_tolerance) noexcept;
+
     [[nodiscard]] GM_EXPORT bool
     near(double lhs, double rhs, Tolerance t = default_tolerance) noexcept;
 

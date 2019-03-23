@@ -26,7 +26,7 @@
 
 #define check_if(condition, fmt_string, ...)                                  \
     do {                                                                      \
-        if (!(condition)) {                                                   \
+        if (!bool(condition)) {                                               \
             throw_fmt(fmt_string, ##__VA_ARGS__);                             \
         }                                                                     \
     } while (0)

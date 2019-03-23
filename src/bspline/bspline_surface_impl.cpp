@@ -2,9 +2,12 @@
 #include <bspline/surface_projector.hpp>
 #include <bspline/wpoint.hpp>
 #include <gm/bspline_surface.hpp>
+#include <memory>
 #include <util/itertools.hpp>
 
 #include <fmt/ostream.h>
+
+// #define GEOMMODEL_BSPLINE_PROJECT_SUBDIV
 
 namespace gm {
 
@@ -27,8 +30,9 @@ BSplineSurface::Impl::Impl(const Impl& rhs)
 BSplineSurface::Impl& BSplineSurface::Impl::operator=(const Impl& rhs)
 {
     c_ = rhs.c_;
-    proj_
-        = rhs.proj_ ? std::make_unique<SurfaceProjector>(*rhs.proj_) : nullptr;
+    if (rhs.proj_) {
+        proj_ = std::make_unique<SurfaceProjector>(*rhs.proj_);
+    }
 
     return *this;
 }

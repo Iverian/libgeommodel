@@ -12,8 +12,6 @@
 
 namespace gm {
 
-enum class WhereMin { NIL, FRONT, BACK };
-
 class DistanceSurface {
 public:
     using Super = ::BasicBSplineSurface<1>;
@@ -22,25 +20,18 @@ public:
     DistanceSurface(const BSplineSurface::Impl::BezierPatch& patch,
                     const Point& p);
 
+    const std::pair<size_t, size_t>& order() const noexcept;
+    const std::pair<size_t, size_t>& shape() const noexcept;
     SurfPoint pfront() const noexcept;
     SurfPoint pback() const noexcept;
 
     SurfPoint itarg(const std::pair<size_t, size_t>& i) const noexcept;
     SurfPoint itarg(size_t i) const noexcept;
-    SurfPoint argti(SurfPoint arg) const noexcept;
-    SurfPoint tocparg(SurfPoint arg,
-                      std::pair<bool, bool> dir = {false, false}) const
-        noexcept;
 
-    double f(const SurfPoint& p) const noexcept;
-    std::pair<SurfPoint, double> min_init() const noexcept;
     bool is_candidate(double d) const noexcept;
     std::pair<std::vector<gm::SurfPoint>, std::vector<gm::SurfPoint>>
     point_hull(double d) const noexcept;
     bool eliminate_segment(double d) noexcept;
-    bool is_flat_enough() const noexcept;
-
-    std::pair<WhereMin, WhereMin> min_bord_check() const noexcept;
 
 private:
     Super c_;

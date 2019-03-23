@@ -17,7 +17,7 @@ zero_intersect(const std::pair<gm::SurfPoint, gm::SurfPoint>& line);
 std::vector<double>
 single_eliminate(const std::vector<gm::SurfPoint>& convex_hull, double pfront,
                  double pback) noexcept;
-double find_span(double t, size_t order,
+size_t find_span(double t, size_t order,
                  const VectorView<double>& knots) noexcept;
 
 #endif // GEOM_MODEL_SRC_BSPLINE_UTIL_HPP_

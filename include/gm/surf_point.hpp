@@ -106,6 +106,7 @@ struct GM_EXPORT SurfPoint {
 
 GM_EXPORT std::ostream& operator<<(std::ostream& os, const SurfPoint& p);
 GM_EXPORT SurfPoint abs(const SurfPoint& p);
+GM_EXPORT double hypot(const SurfPoint& p);
 
 constexpr SurfPoint operator*(double x, const SurfPoint& p)
 {

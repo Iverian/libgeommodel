@@ -17,7 +17,7 @@ BSplineCurve::BSplineCurve(size_t degree,
                            std::vector<Point> points,
                            std::vector<double> weights)
     : pimpl_(std::make_unique<BSplineCurve::Impl>(degree, knot_multiplies,
-                                                  knot_list, points))
+                                                  knot_list, points, weights))
 {
 }
 

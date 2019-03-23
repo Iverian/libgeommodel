@@ -2,6 +2,7 @@
 
 #include <gm/compare.hpp>
 #include <gm/point.hpp>
+#include <gm/surf_point.hpp>
 #include <gm/surfaces.hpp>
 #include <util/debug.hpp>
 #include <util/math.hpp>

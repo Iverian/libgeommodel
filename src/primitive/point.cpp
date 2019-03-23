@@ -234,9 +234,14 @@ std::ostream& operator<<(std::ostream& os, const Point& obj)
 }
 
 namespace cmp {
-    bool near(const Point& lhs, const Point& rhs, Tolerance tol) noexcept
+    bool isnear(const Point& lhs, const Point& rhs, Tolerance tol) noexcept
     {
         return zero(dist(lhs, rhs), tol);
+    }
+
+    bool near(const Point& lhs, const Point& rhs, Tolerance tol) noexcept
+    {
+        return isnear(lhs, rhs, tol);
     }
 
     bool zero(const Point& lhs, Tolerance tol) noexcept

@@ -10,28 +10,27 @@
 #include <optional>
 #include <util/debug.hpp>
 
-
 #include <vector>
 
 namespace gm {
 
 class SurfaceProjector {
 public:
-    enum class Mode { BOTH, U, V };
     explicit SurfaceProjector(const BSplineSurface::Impl& impl);
     SurfPoint call(const Point& p) const;
 
-    std::optional<SurfPoint> bminimize(const DistanceSurface& c,
-                                       const Point& p,
-                                       const SurfPoint& r) const noexcept;
-
-    std::optional<SurfPoint> minimize(const Point& p, SurfPoint r,
-                                      const SurfPoint& a, const SurfPoint& b,
-                                      Mode m) const noexcept;
+protected:
+    std::optional<SurfPoint> minimize(const DistanceSurface& c, const Point& p,
+                                      SurfPoint r) const noexcept;
     SurfPoint next_step(SurfPoint r, const Vec& w, const Vec& fu,
-                        const Vec& fv, Mode m) const noexcept;
+                        const Vec& fv) const noexcept;
     SurfPoint bord_check(SurfPoint r, const SurfPoint& a,
                          const SurfPoint& b) const noexcept;
+
+    double rf(const Point& p, const SurfPoint& r) const noexcept;
+    std::pair<SurfPoint, double> min_init(const Point& p,
+                                          const DistanceSurface& c) const
+        noexcept;
 
 private:
     const BSplineSurface::Impl* impl_;

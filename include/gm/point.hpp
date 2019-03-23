@@ -95,6 +95,9 @@ namespace cmp {
     [[nodiscard]] GM_EXPORT bool near(const Point& lhs, const Point& rhs,
                                       Tolerance tol
                                       = default_tolerance) noexcept;
+    [[nodiscard]] GM_EXPORT bool isnear(const Point& lhs, const Point& rhs,
+                                        Tolerance tol
+                                        = default_tolerance) noexcept;
     [[nodiscard]] GM_EXPORT bool
     zero(const Point& obj, Tolerance tol = default_tolerance) noexcept;
 } // namespace cmp

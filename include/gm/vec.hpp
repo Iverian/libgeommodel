@@ -87,6 +87,9 @@ namespace cmp {
     [[nodiscard]] GM_EXPORT bool near(const Vec& lhs, const Vec& rhs,
                                       Tolerance tol
                                       = default_tolerance) noexcept;
+    [[nodiscard]] GM_EXPORT bool isnear(const Vec& lhs, const Vec& rhs,
+                                        Tolerance tol
+                                        = default_tolerance) noexcept;
     [[nodiscard]] GM_EXPORT bool
     zero(const Vec& obj, Tolerance tol = default_tolerance) noexcept;
 } // namespace cmp

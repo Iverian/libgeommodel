@@ -239,9 +239,14 @@ std::ostream& operator<<(std::ostream& os, const Vec& obj)
 }
 
 namespace cmp {
-    bool near(const Vec& lhs, const Vec& rhs, Tolerance tol) noexcept
+    bool isnear(const Vec& lhs, const Vec& rhs, Tolerance tol) noexcept
     {
         return zero(dist(lhs, rhs), tol);
+    }
+
+    bool near(const Vec& lhs, const Vec& rhs, Tolerance tol) noexcept
+    {
+        return isnear(lhs, rhs, tol);
     }
 
     bool zero(const Vec& lhs, Tolerance tol) noexcept

@@ -3,16 +3,15 @@
 #include <bspline/wpoint.hpp>
 #include <gm/compare.hpp>
 #include <gm/surf_point.hpp>
-#include <stdexcept>
 #include <util/cyclic_iterator.hpp>
 #include <util/math.hpp>
 
 #include <algorithm>
 #include <limits>
+#include <optional>
+#include <stdexcept>
 #include <utility>
 #include <vector>
-
-#define pget(cp) ((cp).p()[0])
 
 namespace gm {
 
@@ -121,18 +120,20 @@ bool DistanceSurface::is_candidate(double d) const noexcept
 std::pair<std::vector<gm::SurfPoint>, std::vector<gm::SurfPoint>>
 DistanceSurface::point_hull(double d) const noexcept
 {
-    std::pair<std::vector<gm::SurfPoint>, std::vector<gm::SurfPoint>> result;
-    auto s = c_.cpoints().size();
-    result.first.reserve(s);
-    result.second.reserve(s);
-    for (size_t i = 0; i < s; ++i) {
-        auto t = itarg(i);
-        auto f = pget(c_.cpoints()[i]) - d;
-        result.first.emplace_back(t.u, f);
-        result.second.emplace_back(t.v, f);
+    std::vector<gm::SurfPoint> pu, pv;
+    auto s = c_.shape();
+    pu.reserve(s.first * s.second);
+    pv.reserve(s.first * s.second);
+    for (size_t i = 0; i < s.first; ++i) {
+        for (size_t j = 0; j < s.second; ++j) {
+            auto& cp = c_[{i, j}];
+            auto t = itarg({i, j});
+            auto f = cp.wp()[0] - cp.w() * d;
+            pu.emplace_back(t.u, f);
+            pv.emplace_back(t.v, f);
+        }
     }
-
-    return {graham_scan(result.first), graham_scan(result.second)};
+    return {graham_scan(pu), graham_scan(pv)};
 }
 
 bool DistanceSurface::eliminate_segment(double d) noexcept
@@ -160,6 +161,72 @@ bool DistanceSurface::eliminate_segment(double d) noexcept
     return result;
 }
 
-} // namespace gm
+std::optional<WhereMin> DistanceSurface::is_min_on_border() const noexcept
+{
+    std::optional<WhereMin> result;
+    auto s = c_.shape();
+    size_t i, j;
 
-#undef pget
+    result = WhereMin::UFRONT;
+    for (i = 0; i < s.first; ++i) {
+        for (j = 0; j < s.second; ++j) {
+            if (pget(c_[{0, j}]) > pget(c_[{i, j}])) {
+                result = std::nullopt;
+                break;
+            }
+        }
+    }
+    if (result) {
+        return result;
+    }
+
+    result = WhereMin::UBACK;
+    for (i = 0; i < s.first; ++i) {
+        for (j = 0; j < s.second; ++j) {
+            if (pget(c_[{s.first - 1, j}]) > pget(c_[{i, j}])) {
+                result = std::nullopt;
+                break;
+            }
+        }
+    }
+    if (result) {
+        return result;
+    }
+
+    result = WhereMin::VFRONT;
+    for (i = 0; i < s.first; ++i) {
+        auto v = pget(c_[{i, 0}]);
+        for (j = 0; j < s.second; ++j) {
+            if (v > pget(c_[{i, j}])) {
+                result = std::nullopt;
+                break;
+            }
+        }
+    }
+    if (result) {
+        return result;
+    }
+
+    result = WhereMin::VBACK;
+    for (i = 0; i < s.first; ++i) {
+        auto v = pget(c_[{i, s.second - 1}]);
+        for (j = 0; j < s.second; ++j) {
+            if (v > pget(c_[{i, j}])) {
+                result = std::nullopt;
+                break;
+            }
+        }
+    }
+    if (result) {
+        return result;
+    }
+
+    return result;
+}
+
+double DistanceSurface::f(const SurfPoint& u) const
+{
+    return c_.f(u)[0];
+}
+
+} // namespace gm

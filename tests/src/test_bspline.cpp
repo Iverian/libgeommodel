@@ -1,4 +1,3 @@
-#include "C:\Users\trololo\Documents\Projects\libgeommodel\include\gm\vec.hpp"
 #include <gtest/gtest.h>
 
 #include <gm/bspline_curve.hpp>
@@ -183,18 +182,19 @@ TEST_F(TestBSpline, surface_proj_3)
         auto p = s.f(t);
         auto x = p + udist(rnd) * s.unit_normal(t);
 
-        // debug_fmt(std::cout,
-        //           "TEST 3: POINT #{} t: {} p: {} p + a*n: {} dist(p, x):
-        //           {}", i, t, p, x, dist(p, x));
+        debug_fmt(std::cout, "TEST 3: POINT #{} t: {} p: {} p + a*n: {}",
+                  i, t, p, x);
         EXPECT_NO_THROW({
             auto r = s.project(x);
             auto q = s.f(r);
             auto aqx = angle(Vec(q, x), s.normal(r));
+            auto dqx = dist(q, x);
+            auto dpx = dist(p, x);
 
             // debug_fmt(std::cout,
             //           " r: {} dist(p, q): {} dist(q, x): {} angle(qx): {}",
             //           r, dist(p, q), dist(q, x), aqx);
-            EXPECT_TRUE(cmp::le(dist(q, x), dist(p, x)));
+            EXPECT_PRED3(cmp::le, dqx, dpx, cmp::default_tolerance);
             EXPECT_NEAR(aqx, 0., cmp::tol(Tolerance::SINGLE));
         });
     }

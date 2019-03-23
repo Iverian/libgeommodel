@@ -1,13 +1,11 @@
-#include "util.hpp"
 #include <bspline/distance_curve.hpp>
+#include <bspline/util.hpp>
 #include <bspline/wpoint.hpp>
 #include <util/cyclic_iterator.hpp>
 #include <util/math.hpp>
 
 #include <iterator>
 #include <optional>
-
-#define pget(cp) ((cp).p()[0])
 
 namespace gm {
 
@@ -183,5 +181,3 @@ bool DistanceCurve::peak_point() const noexcept
 }
 
 } // namespace gm
-
-#undef pget

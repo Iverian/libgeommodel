@@ -45,7 +45,7 @@ public:
                 std::vector<value_type> cp(n);
 
                 for (size_t i = 0; i < n; ++i) {
-                    cp[i] = parent_->pget(p_ - n + 1 + i, k);
+                    cp[i] = parent_->findif(p_ - n + 1 + i, k);
                 }
                 result = parent_->eval(t_, p_, cp);
             }
@@ -147,14 +147,14 @@ public:
     //     return mid;
     // }
 
-    value_type pget(size_t i, size_t k) const
+    value_type findif(size_t i, size_t k) const
     {
         value_type result;
         if (k == 0) {
             result = cpoints_.at(i);
         } else {
             result = scalar_type(order_ - k)
-                * (pget(i, k - 1) - pget(i - 1, k - 1))
+                * (findif(i, k - 1) - findif(i - 1, k - 1))
                 / (knots_.at(i + order_ - 1) - knots_.at(i));
         }
         return result;

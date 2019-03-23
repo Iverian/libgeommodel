@@ -12,6 +12,8 @@
 
 namespace gm {
 
+enum class WhereMin { UFRONT, UBACK, VFRONT, VBACK };
+
 class DistanceSurface {
 public:
     using Super = ::BasicBSplineSurface<1>;
@@ -33,6 +35,9 @@ public:
     point_hull(double d) const noexcept;
     bool eliminate_segment(double d) noexcept;
 
+    std::optional<WhereMin> is_min_on_border() const noexcept;
+
+    double f(const SurfPoint& u) const;
 private:
     Super c_;
 };

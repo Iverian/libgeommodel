@@ -114,3 +114,32 @@ size_t find_span(double t, size_t order,
 
     return result;
 }
+
+double pget(const gm::WPoint<double, 1>& cp) noexcept
+{
+    return cp.p()[0];
+}
+
+double bord_check(double r, double a, double b)
+{
+    if (r < a) {
+        r = a;
+    }
+    if (r > b) {
+        r = b;
+    }
+    return r;
+}
+
+double bord_bounce(double r, double a, double b)
+{
+    while (r < a || r > b) {
+        if (r < a) {
+            r = 2 * a - r;
+        }
+        if (r > b) {
+            r = 2 * b - r;
+        }
+    }
+    return r;
+}

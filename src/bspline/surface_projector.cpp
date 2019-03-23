@@ -49,7 +49,6 @@ SurfPoint SurfaceProjector::call(const Point& p) const
                     break;
                 }
             }
-            // break;
 
             if (!c.eliminate_segment(d)) {
                 break;

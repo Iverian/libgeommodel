@@ -43,7 +43,7 @@ SurfPoint SurfaceProjector::call(const Point& p) const
             auto [init, mode] = init_value(c, uloc);
             auto v = minimize(c, p, init, mode);
             if (v) {
-                if (auto fv = rf(p, v.value()); fv < d) {
+                if (auto fv = rf(p, v.value()); cmp::le(fv, d)) {
                     u = v;
                     d = fv;
                     break;

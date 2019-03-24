@@ -139,8 +139,10 @@ DistanceSurface::point_hull(double d) const noexcept
 bool DistanceSurface::eliminate_segment(double d) noexcept
 {
     auto [cu, cv] = point_hull(d);
-    auto ru = single_eliminate(cu, c_.pfront().u, c_.pback().u);
-    auto rv = single_eliminate(cv, c_.pfront().v, c_.pback().v);
+    auto ru = ::single_eliminate(cu, c_.pfront().u, c_.pback().u,
+                                 gm::Tolerance::ZERO);
+    auto rv = ::single_eliminate(cv, c_.pfront().v, c_.pback().v,
+                                 gm::Tolerance::ZERO);
 
     auto result = !ru.empty() || !rv.empty();
     if (result) {

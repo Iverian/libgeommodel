@@ -74,7 +74,7 @@ zero_intersect(const std::pair<gm::SurfPoint, gm::SurfPoint>& line)
 
 std::vector<double>
 single_eliminate(const std::vector<gm::SurfPoint>& convex_hull, double pfront,
-                 double pback) noexcept
+                 double pback, gm::Tolerance tol) noexcept
 {
     static constexpr auto max_roots = size_t(2);
 
@@ -84,7 +84,7 @@ single_eliminate(const std::vector<gm::SurfPoint>& convex_hull, double pfront,
     do {
         if (auto u = zero_intersect({*it, *std::next(it)}); u) {
             auto v = u.value();
-            if (!gm::cmp::near(v, pfront) && !gm::cmp::near(v, pback)
+            if (!gm::cmp::near(v, pfront, tol) && !gm::cmp::near(v, pback, tol)
                 && (roots.empty() || !gm::cmp::near(v, roots.back()))) {
                 roots.emplace_back(v);
             }

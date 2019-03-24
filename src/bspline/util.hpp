@@ -1,6 +1,7 @@
 #ifndef GEOM_MODEL_SRC_BSPLINE_UTIL_HPP_
 #define GEOM_MODEL_SRC_BSPLINE_UTIL_HPP_
 
+#include "C:\Users\trololo\Documents\Projects\libgeommodel\include\gm\compare.hpp"
 #include <bspline/wpoint.hpp>
 #include <gm/surf_point.hpp>
 #include <util/vector_view.hpp>
@@ -17,7 +18,8 @@ std::optional<double>
 zero_intersect(const std::pair<gm::SurfPoint, gm::SurfPoint>& line);
 std::vector<double>
 single_eliminate(const std::vector<gm::SurfPoint>& convex_hull, double pfront,
-                 double pback) noexcept;
+                 double pback,
+                 gm::Tolerance tol = gm::cmp::default_tolerance) noexcept;
 double pget(const gm::WPoint<double, 1>& cp) noexcept;
 
 double bord_check(double r, double a, double b);

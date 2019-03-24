@@ -1,8 +1,8 @@
 #ifndef GEOM_MODEL_SRC_BSPLINE_UTIL_HPP_
 #define GEOM_MODEL_SRC_BSPLINE_UTIL_HPP_
 
-#include "C:\Users\trololo\Documents\Projects\libgeommodel\include\gm\compare.hpp"
 #include <bspline/wpoint.hpp>
+#include <gm/compare.hpp>
 #include <gm/surf_point.hpp>
 #include <util/vector_view.hpp>
 

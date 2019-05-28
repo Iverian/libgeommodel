@@ -1,7 +1,10 @@
 #include <gtest/gtest.h>
 
 #include <gm/curves.hpp>
+#include <gm/point.hpp>
+#include <util/debug.hpp>
 
+#include <random>
 #include <stdexcept>
 
 using namespace gm;
@@ -16,10 +19,27 @@ TEST(TestCurve, circle_project)
 
 TEST(TestCurve, line_project)
 {
-    auto p = Point(2, 1, 0);
-    Line curve;
-    auto u = curve.project(p);
-    ASSERT_DOUBLE_EQ(dist(p, curve(u)), 1);
+    Line c(Vec(10000, 100, 0), Point(1, 2, 3));
+
+    std::default_random_engine rnd;
+    std::uniform_real_distribution<double> udist;
+    Vec z(0, 0, 1);
+
+    for (size_t i = 0; i < 100; ++i) {
+        auto t = udist(rnd);
+
+        auto p = c.f(t);
+        auto x = p + (2. + udist(rnd)) * z;
+        auto r = c.project(x);
+        auto q = c.f(r);
+        auto d = c.df(r);
+
+        debug_fmt(std::cout, "TEST 1: POINT #{} t: {}", i, t);
+
+        auto qx = Vec(q, x);
+        ASSERT_LE(dist(q, x), dist(p, x));
+        ASSERT_NEAR(cos(qx, d), 0., cmp::tol());
+    }
 }
 
 TEST(TestCurve, b_spline_init)

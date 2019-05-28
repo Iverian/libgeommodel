@@ -10,10 +10,6 @@
 #include <utility>
 #include <vector>
 
-std::vector<gm::SurfPoint> graham_scan(std::vector<gm::SurfPoint>& points);
-double polar_angle(const gm::SurfPoint& lhs, const gm::SurfPoint& rhs);
-bool counter_clockwise(const gm::SurfPoint& a, const gm::SurfPoint& b,
-                       const gm::SurfPoint& c);
 std::optional<double>
 zero_intersect(const std::pair<gm::SurfPoint, gm::SurfPoint>& line);
 std::vector<double>

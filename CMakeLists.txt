@@ -13,6 +13,7 @@ list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_SOURCE_DIR}/cmake")
 
 # Configure dependencies
 find_package(fmt CONFIG REQUIRED)
+find_package(Commons CONFIG REQUIRED)
 #
 
 # Find source files
@@ -65,6 +66,7 @@ target_compile_definitions(${PROJECT_TARGET}
 target_link_libraries(${PROJECT_TARGET}
   PRIVATE
     fmt::fmt
+    Commons::Commons
 )
 set_target_properties(${PROJECT_TARGET}
   PROPERTIES

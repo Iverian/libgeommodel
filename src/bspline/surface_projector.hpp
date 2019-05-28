@@ -35,6 +35,7 @@ protected:
                          const SurfPoint& b) const noexcept;
 
     double rf(const Point& p, const SurfPoint& r) const noexcept;
+    double init_global(const Point& p) const;
     std::pair<SurfPoint, double> min_init(const Point& p,
                                           const DistanceSurface& c) const
         noexcept;

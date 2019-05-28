@@ -2,6 +2,7 @@
 #include <bspline/util.hpp>
 #include <bspline/wpoint.hpp>
 #include <gm/compare.hpp>
+#include <gm/misc.hpp>
 #include <gm/surf_point.hpp>
 #include <util/cyclic_iterator.hpp>
 #include <util/math.hpp>

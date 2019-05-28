@@ -1,3 +1,4 @@
+#include "C:\Users\trololo\Documents\Projects\libgeommodel\include\gm\vec.hpp"
 #include <gm/line.hpp>
 #include <util/debug.hpp>
 
@@ -46,7 +47,7 @@ Vec Line::df2(double u) const noexcept
 
 double Line::project(const Point& p) const
 {
-    return dot(p - c_, dir_);
+    return dot(p - c_, dir_) / sqr(dir_);
 }
 
 double Line::approx_length(double begin, double end, size_t n) const

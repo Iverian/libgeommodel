@@ -3,6 +3,7 @@
 #include <bspline/wpoint.hpp>
 #include <util/cyclic_iterator.hpp>
 #include <util/math.hpp>
+#include <gm/misc.hpp>
 
 #include <iterator>
 #include <optional>

@@ -36,10 +36,8 @@ Edge::Edge(std::shared_ptr<AbstractCurve> curve, const Point& front,
     check_if(
         cmp::near(f, front, Tolerance::ZERO)
             && cmp::near(b, back, Tolerance::ZERO),
-        "unable to construct edge with \"curve\": {0}, \"std::begin\": {1}, "
-        "\"std::end\": {2}: projections \"std::begin_p\": {3}, "
-        "\"std::end_p\": {4} do "
-        "not match original points",
+        "unable to construct edge with curve: {}, begin: {}, end: {}: "
+        "projections: (begin_p: {}, end_p: {}) do not match original points",
         *curve_, front, back, f, b);
 }
 

@@ -24,6 +24,7 @@ target_link_libraries(AllTests
     fmt::fmt
     GTest::GTest
     GTest::Main
+    Commons::Commons
 )
 set_target_properties(AllTests
   PROPERTIES

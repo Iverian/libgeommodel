@@ -28,7 +28,7 @@ SurfaceProjector::SurfaceProjector(const BSplineSurface::Impl& impl)
 SurfPoint SurfaceProjector::call(const Point& p) const
 {
     std::optional<SurfPoint> u = std::nullopt;
-    auto d = std::numeric_limits<double>::max();
+    auto d = init_global(p);
 
     for (auto i = std::begin(patches_);
          !cmp::zero(d) && i != std::end(patches_); ++i) {
@@ -174,6 +174,24 @@ SurfPoint SurfaceProjector::bord_check(SurfPoint r, const SurfPoint& a,
 double SurfaceProjector::rf(const Point& p, const SurfPoint& r) const noexcept
 {
     return sqr(Vec(p, impl_->f(r)));
+}
+
+double SurfaceProjector::init_global(const Point& p) const
+{
+    auto result = std::numeric_limits<double>::max();
+    auto& ku = impl_->knots().first;
+    auto& kv = impl_->knots().second;
+
+    for (auto u : {ku.front(), ku.back()}) {
+        for (auto v : {kv.front(), kv.back()}) {
+            auto d = rf(p, {u, v});
+            if (result < d) {
+                result = d;
+            }
+        }
+    }
+
+    return result;
 }
 
 std::pair<SurfPoint, double>

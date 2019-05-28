@@ -29,9 +29,9 @@ Vec AbstractSurface::unit_normal(const SurfPoint& p) const
     return unit(normal(p));
 }
 
-Plane AbstractSurface::tangent(const SurfPoint& p) const noexcept
+Axis AbstractSurface::tangent(const SurfPoint& p) const noexcept
 {
-    return Plane(Axis::from_xy(dfu(p), dfv(p), f(p)));
+    return Axis::from_xy(dfu(p), dfv(p), f(p));
 }
 
 Point AbstractSurface::gproject(const Point& p) const noexcept

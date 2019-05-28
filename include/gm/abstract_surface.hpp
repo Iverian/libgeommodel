@@ -1,6 +1,7 @@
 #ifndef GEOM_MODEL_INCLUDE_GM_ABSTRACT_SURFACE_HPP_
 #define GEOM_MODEL_INCLUDE_GM_ABSTRACT_SURFACE_HPP_
 
+#include "axis.hpp"
 #include "debug.hpp"
 #include "exports.hpp"
 #include "point.hpp"
@@ -32,7 +33,7 @@ public:
     [[nodiscard]] Vec normal(const SurfPoint& p) const noexcept;
     [[nodiscard]] Vec
     unit_normal(const SurfPoint& p) const __GM_NOEXCEPT_RELEASE__;
-    [[nodiscard]] Plane tangent(const SurfPoint& p) const noexcept;
+    [[nodiscard]] Axis tangent(const SurfPoint& p) const noexcept;
     [[nodiscard]] Point gproject(const Point& p) const noexcept;
 
     [[nodiscard]] std::function<Vec(double)> u_fixed(double v) const;

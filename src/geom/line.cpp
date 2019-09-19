@@ -1,4 +1,4 @@
-#include "C:\Users\trololo\Documents\Projects\libgeommodel\include\gm\vec.hpp"
+#include <gm/vec.hpp>
 #include <gm/line.hpp>
 #include <util/debug.hpp>
 

@@ -8,25 +8,25 @@ file(GLOB_RECURSE
   "${CMAKE_CURRENT_SOURCE_DIR}/src/test_*.cpp"
 )
 
-add_executable(AllTests)
-
-target_sources(AllTests
+set(TESTS_TARGET alltests)
+add_executable(${TESTS_TARGET})
+target_sources(${TESTS_TARGET}
   PRIVATE
     ${ALLTESTS_SOURCES}
 )
-target_include_directories(AllTests
+target_include_directories(${TESTS_TARGET}
   PRIVATE
     "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR};${PROJECT_SOURCE_DIR}/src>"
 )
-target_link_libraries(AllTests
+target_link_libraries(${TESTS_TARGET}
   PRIVATE
     ${PROJECT_TARGET}
     fmt::fmt
     GTest::GTest
     GTest::Main
-    Commons::Commons
+    commons::commons
 )
-set_target_properties(AllTests
+set_target_properties(${TESTS_TARGET}
   PROPERTIES
     DEBUG_POSTFIX d
     CXX_EXTENSIONS NO
@@ -35,6 +35,6 @@ set_target_properties(AllTests
     ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_ARCHIVE_OUTPUT_DIR}
 )
 
-gtest_discover_tests(AllTests
+gtest_discover_tests(${TESTS_TARGET}
   WORKING_DIRECTORY ${PROJECT_RUNTIME_OUTPUT_DIR}
- )
+)

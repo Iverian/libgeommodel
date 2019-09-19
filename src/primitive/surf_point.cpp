@@ -3,12 +3,13 @@
 #include <fmt/ostream.h>
 
 #include <cmath>
+#include <utility>
 
 namespace gm {
 
 SurfPoint abs(const SurfPoint& p)
 {
-    return {::abs(p.u), ::abs(p.v)};
+    return {std::abs(p.u), std::abs(p.v)};
 }
 
 double hypot(const SurfPoint& p)

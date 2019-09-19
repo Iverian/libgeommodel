@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(geommodel VERSION 2.0.0 LANGUAGES CXX)
+set(PROJECT_TARGET geommodel)
+set(PROJECT_SHORT_NAME gm)
+string(TOUPPER ${PROJECT_TARGET} PROJECT_TARGET_UPPER)
+string(TOUPPER ${PROJECT_SHORT_NAME} PROJECT_SHORT_NAME_UPPER)
+
+project(${PROJECT_TARGET} VERSION 2.0.0 LANGUAGES CXX)
 
 option(GM_ENABLE_TESTS "Enable unit tests (requires GTest to be installed)" YES)
 
@@ -13,7 +18,7 @@ list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_SOURCE_DIR}/cmake")
 
 # Configure dependencies
 find_package(fmt CONFIG REQUIRED)
-find_package(Commons CONFIG REQUIRED)
+find_package(commons CONFIG REQUIRED)
 #
 
 # Find source files
@@ -21,11 +26,6 @@ set(PROJECT_RUNTIME_OUTPUT_DIR "${PROJECT_BINARY_DIR}/bin")
 set(PROJECT_LIBRARY_OUTPUT_DIR "${PROJECT_BINARY_DIR}/lib")
 set(PROJECT_ARCHIVE_OUTPUT_DIR "${PROJECT_LIBRARY_OUTPUT_DIR}")
 
-
-set(PROJECT_TARGET GeomModel)
-set(PROJECT_SHORT_NAME gm)
-string(TOUPPER ${PROJECT_TARGET} PROJECT_TARGET_UPPER)
-string(TOUPPER ${PROJECT_SHORT_NAME} PROJECT_SHORT_NAME_UPPER)
 
 file(GLOB_RECURSE
   PROJECT_SOURCES
@@ -66,7 +66,7 @@ target_compile_definitions(${PROJECT_TARGET}
 target_link_libraries(${PROJECT_TARGET}
   PRIVATE
     fmt::fmt
-    Commons::Commons
+    commons::commons
 )
 set_target_properties(${PROJECT_TARGET}
   PROPERTIES

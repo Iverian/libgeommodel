@@ -1,7 +1,9 @@
 #include <cmath>
 #include <gm/compare.hpp>
 
-namespace gm::cmp {
+namespace gm {
+
+namespace cmp {
 
 double tol(Tolerance t) noexcept
 {
@@ -34,4 +36,11 @@ bool ge(double lhs, double rhs, Tolerance t) noexcept
     return lhs > rhs || isnear(lhs, rhs, t);
 }
 
-} // namespace gm::cmp
+} // namespace cmp
+
+std::ostream& operator<<(std::ostream& os, const Tolerance& obj)
+{
+    return os << cmp::tol(obj);
+}
+
+} // namespace gm

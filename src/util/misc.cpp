@@ -1,6 +1,8 @@
 #include <gm/misc.hpp>
 #include <gm/surf_point.hpp>
 
+#include <cmath>
+
 double polar_angle(const gm::SurfPoint& lhs, const gm::SurfPoint& rhs);
 bool counter_clockwise(const gm::SurfPoint& a, const gm::SurfPoint& b,
                        const gm::SurfPoint& c);

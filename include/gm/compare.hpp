@@ -3,6 +3,8 @@
 
 #include "exports.hpp"
 
+#include <ostream>
+
 namespace gm {
 
 enum class Tolerance : unsigned {
@@ -12,6 +14,8 @@ enum class Tolerance : unsigned {
     TRIPLE = 3,
     MAX = 4
 };
+
+GM_EXPORT std::ostream& operator<<(std::ostream& os, const Tolerance& obj);
 
 namespace cmp {
     static constexpr auto default_tolerance = Tolerance::DOUBLE;

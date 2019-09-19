@@ -1,0 +1,14 @@
+get_filename_component(geommodel_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+list(APPEND CMAKE_MODULE_PATH ${geommodel_CMAKE_DIR})
+
+find_package(fmt CONFIG REQUIRED)
+
+list(REMOVE_AT CMAKE_MODULE_PATH -1)
+
+if(NOT TARGET geommodel::geommodel)
+    include("${geommodel_CMAKE_DIR}/geommodelTargets.cmake")
+endif()
+
+set(geommodel_LIBRARIES geommodel::geommodel)

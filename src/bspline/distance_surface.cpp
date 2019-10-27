@@ -52,13 +52,13 @@ DistanceSurface::DistanceSurface(
             auto j_first = (j < deg.second) ? size_t(0) : (j - deg.second);
             auto j_last = std::min(deg.second, j) + 1;
 
-            for (auto p = i_first; p < i_last; ++p) {
-                for (auto q = j_first; q < j_last; ++q) {
-                    auto a = patch[{p, q}] - r;
-                    auto b = patch[{i - p, j - q}] - r;
+            for (auto ii = i_first; ii < i_last; ++ii) {
+                for (auto jj = j_first; jj < j_last; ++jj) {
+                    auto a = patch[{ii, jj}] - r;
+                    auto b = patch[{i - ii, j - jj}] - r;
 
-                    c = binom(deg.first, p) * binom(deg.first, i - p)
-                        * binom(deg.second, q) * binom(deg.second, j - q);
+                    c = binom(deg.first, ii) * binom(deg.first, i - ii)
+                        * binom(deg.second, jj) * binom(deg.second, j - jj);
                     t += c * wdot(a, b);
                 }
             }

@@ -35,4 +35,6 @@ build*/
 scripts/
 .vscode/
 .ccls-cache/
+.clangd/
+tags
 compile_commands.json

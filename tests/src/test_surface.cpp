@@ -53,6 +53,38 @@ TEST(TestSurface, cylinder_projection)
     ASSERT_NEAR(dist(s(q), Point(v, v, 1)), 0, 1e-5);
 }
 
+TEST(TestSurface, cylinder_projection_1)
+{
+    CylindricalSurface s(5, Axis::from_xy({1, 0, 0}, {0, 1, 0}, {1, 1, 1}));
+
+    static constexpr size_t niter = 1000;
+
+    std::minstd_rand0 rnd;
+    std::uniform_real_distribution<double> udist;
+
+    for (size_t i = 0; i < niter; ++i) {
+        auto t = SurfPoint(udist(rnd), udist(rnd));
+        auto p = s.f(t);
+        auto x = p + udist(rnd) * s.unit_normal(t);
+
+        debug_fmt(std::cout, "TEST 3: POINT #{} t: {} p: {} p + a*n: {}", i, t,
+                  p, x);
+        EXPECT_NO_THROW({
+            auto r = s.project(x);
+            auto q = s.f(r);
+            auto aqx = angle(Vec(q, x), s.normal(r));
+            auto dqx = dist(q, x);
+            auto dpx = dist(p, x);
+
+            debug_fmt(std::cout,
+                      " r: {} dist(p, q): {} dist(q, x): {} angle(qx): {}", r,
+                      dist(p, q), dist(q, x), aqx);
+            EXPECT_PRED3(cmp::le, dqx, dpx, cmp::default_tolerance);
+            EXPECT_NEAR(aqx, 0., cmp::tol(Tolerance::SINGLE));
+        });
+    }
+}
+
 TEST(TestSurface, toroidal_projection)
 {
     ToroidalSurface s(0.5, 1, Axis::from_xy({1, 0, 0}, {0, 1, 0}, {0, 0, 0}));

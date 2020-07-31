@@ -35,6 +35,8 @@ public:
     unit_normal(const SurfPoint& p) const __GM_NOEXCEPT_RELEASE__;
     [[nodiscard]] Axis tangent(const SurfPoint& p) const noexcept;
     [[nodiscard]] Point gproject(const Point& p) const noexcept;
+    [[nodiscard]] std::pair<double, double>
+    main_curvatures(const SurfPoint& p) const noexcept;
 
     [[nodiscard]] std::function<Vec(double)> u_fixed(double v) const;
     [[nodiscard]] std::function<Vec(double)> v_fixed(double u) const;

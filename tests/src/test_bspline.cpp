@@ -25,6 +25,10 @@ protected:
              Point(70, 10, 30), Point(60, 10, 0), Point(50, 10, -30),
              Point(40, 10, 0), Point(30, 10, 20), Point(20, 10, 0),
              Point(10, 10, -20), Point(0, 10, 0)})
+        , c1(3, {0, 0, 0, 0, 0.5, 1, 1, 1, 1},
+             {gm::Point(-10, 40, 10), gm::Point(-10, 10, 10),
+              gm::Point(0, -10, 10), gm::Point(10, 10, 10),
+              gm::Point(10, 40, 10)})
         , s()
     {
         std::array<Point, 4> cp = {Point(0.99131233, -0.04928702, 0),
@@ -40,10 +44,27 @@ protected:
     }
 
     BSplineCurve c;
+    BSplineCurve c1;
     BSplineSurface s;
 };
 
-TEST_F(TestBSpline, eval)
+TEST_F(TestBSpline, print)
+{
+    EXPECT_NO_THROW({ fmt::print(std::cout, "{}", s); });
+}
+
+TEST_F(TestBSpline, curve_diff)
+{
+    static constexpr auto eps = 1e-2;
+    auto& f = c1;
+
+    for (double u = 0.; gm::cmp::le(u, 1.); u += eps) {
+        auto b = f.df2(u);
+        debug_fmt(std::cout, "{} : {}", u, b);
+    }
+}
+
+TEST_F(TestBSpline, eval_surface)
 {
     static constexpr auto eps = 1e-1;
     static constexpr auto eps2 = 1e-3;
@@ -54,6 +75,7 @@ TEST_F(TestBSpline, eval)
     ASSERT_NEAR(dist(f({0, 1}), Point(1, 0, 0)), 0, eps);
     ASSERT_NEAR(dist(f({0.5, 1}), Point(0, 1, 0)), 0, eps);
 
+    fmt::print(std::cout, "{}", s);
     std::array<SurfPoint, 6> test_points
         = {SurfPoint(0.1, 0.1), SurfPoint(0.1, 0.9), SurfPoint(0.9, 0.1),
            SurfPoint(0.5, 0.5), SurfPoint(0.1, 0.5), SurfPoint(0.5, 0.1)};
@@ -182,8 +204,8 @@ TEST_F(TestBSpline, surface_proj_3)
         auto p = s.f(t);
         auto x = p + udist(rnd) * s.unit_normal(t);
 
-        debug_fmt(std::cout, "TEST 3: POINT #{} t: {} p: {} p + a*n: {}",
-                  i, t, p, x);
+        debug_fmt(std::cout, "TEST 3: POINT #{} t: {} p: {} p + a*n: {}", i, t,
+                  p, x);
         EXPECT_NO_THROW({
             auto r = s.project(x);
             auto q = s.f(r);
@@ -191,9 +213,9 @@ TEST_F(TestBSpline, surface_proj_3)
             auto dqx = dist(q, x);
             auto dpx = dist(p, x);
 
-            // debug_fmt(std::cout,
-            //           " r: {} dist(p, q): {} dist(q, x): {} angle(qx): {}",
-            //           r, dist(p, q), dist(q, x), aqx);
+            debug_fmt(std::cout,
+                      " r: {} dist(p, q): {} dist(q, x): {} angle(qx): {}", r,
+                      dist(p, q), dist(q, x), aqx);
             EXPECT_PRED3(cmp::le, dqx, dpx, cmp::default_tolerance);
             EXPECT_NEAR(aqx, 0., cmp::tol(Tolerance::SINGLE));
         });

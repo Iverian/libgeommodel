@@ -4,8 +4,11 @@
 #include "compare.hpp"
 #include "debug.hpp"
 #include "dot.hpp"
+#include "exports.hpp"
 
 #include <array>
+#include <cmath>
+#include <initializer_list>
 #include <ostream>
 
 namespace gm {
@@ -76,7 +79,14 @@ GM_EXPORT bool operator!=(const Vec& lhs, const Vec& rhs) noexcept;
 [[nodiscard]] GM_EXPORT double cos(const Vec& lhs, const Vec& rhs) noexcept;
 [[nodiscard]] GM_EXPORT double sin(const Vec& lhs, const Vec& rhs) noexcept;
 [[nodiscard]] GM_EXPORT double angle(const Vec& lhs, const Vec& rhs) noexcept;
+[[nodiscard]] GM_EXPORT double mixed(const Vec& a, const Vec& b,
+                                     const Vec& c) noexcept;
 [[nodiscard]] GM_EXPORT Vec unit(const Vec& obj) __GM_NOEXCEPT_RELEASE__;
+
+[[nodiscard]] GM_EXPORT Vec bisect(const Vec& lhs,
+                                   const Vec& rhs) __GM_NOEXCEPT_RELEASE__;
+[[nodiscard]] GM_EXPORT Vec bisect(std::initializer_list<Vec> list)
+    __GM_NOEXCEPT_RELEASE__;
 
 [[nodiscard]] GM_EXPORT bool isnan(const Vec& obj) noexcept;
 [[nodiscard]] GM_EXPORT bool isinf(const Vec& obj) noexcept;
@@ -99,10 +109,15 @@ namespace cmp {
 namespace std {
 template <>
 struct hash<gm::Vec> {
+    static constexpr gm::Vec::value_type mult = 100000;
+
     size_t operator()(const gm::Vec& key) const
     {
-        return (hasher_(key[0]) << 2) ^ (hasher_(key[1]) << 1)
-            ^ hasher_(key[0]);
+        size_t result = 44119;
+        for (auto& i : key) {
+            result = (result << 1) ^ hasher_(std::ceil(i * mult));
+        }
+        return result;
     }
 
 private:

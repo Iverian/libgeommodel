@@ -28,18 +28,6 @@ public:
     using const_pointer = typename Data::const_pointer;
     using iterator = typename Data::iterator;
     using const_iterator = typename Data::const_iterator;
-    // using typename Super::const_pointer;
-    // using typename Super::const_reference;
-    // using typename Super::difference_type;
-    // using typename Super::pointer;
-    // using typename Super::reference;
-    // using typename Super::size_type;
-    // using typename Super::value_type;
-
-    // using Super::operator[];
-    // using Super::begin;
-    // using Super::end;
-    // using Super::size;
 
     using Proj = std::array<T, N>;
 

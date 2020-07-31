@@ -8,33 +8,29 @@
 
 template <class ForwardIt>
 struct RangePrint {
-    RangePrint(ForwardIt first, ForwardIt last)
-        : first_(first)
-        , last_(last)
+    RangePrint(ForwardIt pfirst, ForwardIt plast)
+        : first(std::move(pfirst))
+        , last(std::move(plast))
     {
     }
 
-    ForwardIt first() const
+    template <class T>
+    RangePrint(const T& container)
+        : first(std::begin(container))
+        , last(std::end(container))
     {
-        return first_;
     }
 
-    ForwardIt last() const
-    {
-        return last_;
-    }
-
-private:
-    ForwardIt first_;
-    ForwardIt last_;
+    ForwardIt first;
+    ForwardIt last;
 };
 
 template <class ForwardIt>
 std::ostream& operator<<(std::ostream& os, const RangePrint<ForwardIt>& obj)
 {
     os << "[";
-    for (auto i = obj.first(); i != obj.last(); ++i) {
-        os << (*i) << ((std::next(i) != obj.last()) ? ", " : "]");
+    for (auto i = obj.first; i != obj.last; ++i) {
+        os << (*i) << ((std::next(i) != obj.last) ? ", " : "]");
     }
     return os;
 }

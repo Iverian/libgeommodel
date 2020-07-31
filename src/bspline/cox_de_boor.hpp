@@ -78,9 +78,9 @@ public:
         value_type df2() const
         {
             auto r = range(3);
-            auto sw = sqr(r[0].w());
-            auto p = r[2].wdiv(r[0].w()) - r[1].wmul(2 * r[1].w() / sw)
-                + r[0].wmul((2 * r[1].w() / r[0].w() - r[2].w()) / sw);
+            auto w2 = sqr(r[0].w());
+            auto p = r[0].wmul((2 * sqr(r[1].w()) / r[0].w() - r[2].w()) / w2)
+                - r[1].wmul(2 * r[1].w() / w2) + r[2].wdiv(r[0].w());
 
             return value_type(p.wp(), 1);
         }
@@ -155,7 +155,7 @@ public:
         } else {
             result = scalar_type(order_ - k)
                 * (findif(i, k - 1) - findif(i - 1, k - 1))
-                / (knots_.at(i + order_ - 1) - knots_.at(i));
+                / (knots_.at(i + order_ - k) - knots_.at(i));
         }
         return result;
     }

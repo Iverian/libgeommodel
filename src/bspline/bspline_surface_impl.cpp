@@ -19,8 +19,8 @@ BSplineSurface::Impl::Impl()
 
 BSplineSurface::Impl::~Impl() = default;
 BSplineSurface::Impl::Impl(Impl&&) noexcept = default;
-BSplineSurface::Impl& BSplineSurface::Impl::operator=(Impl&&) noexcept
-    = default;
+BSplineSurface::Impl&
+BSplineSurface::Impl::operator=(Impl&&) noexcept = default;
 BSplineSurface::Impl::Impl(const Impl& rhs)
     : c_(rhs.c_)
     , proj_(rhs.proj_ ? std::make_unique<SurfaceProjector>(*rhs.proj_)
@@ -109,15 +109,14 @@ Vec BSplineSurface::Impl::dfuv(const SurfPoint& p) const noexcept
 std::ostream& BSplineSurface::Impl::print(std::ostream& os) const
 {
     auto s = c_.shape();
-    fmt::print(
-        os,
-        "{{ \"type\": \"bspline\", \"du\": {}, \"dv\": {}, \"ku\": "
-        "{}, \"kv\": {}, \"cpoints\": {}, \"shape\": [{}, {}] }}",
-        c_.order().first - 1, c_.order().second - 1,
-        RangePrint(std::begin(c_.knots().first), std::end(c_.knots().first)),
-        RangePrint(std::begin(c_.knots().first), std::end(c_.knots().second)),
-        RangePrint(std::begin(c_.cpoints()), std::end(c_.cpoints())), s.first,
-        s.second);
+    fmt::print(os,
+               "{{ \"type\": \"bspline\", \"du\": {}, \"dv\": {}, \"ku\": "
+               "{}, \"kv\": {}, \"cpoints\": {}, \"shape\": [{}, {}] }}",
+               c_.order().first - 1, c_.order().second - 1,
+               RangePrint(c_.knots().first.begin(), c_.knots().first.end()),
+               RangePrint(c_.knots().second.begin(), c_.knots().second.end()),
+               RangePrint(c_.cpoints().begin(), c_.cpoints().end()), s.first,
+               s.second);
     return os;
 }
 
@@ -130,20 +129,20 @@ SurfPoint BSplineSurface::Impl::project(const Point& p) const
     return proj_->call(p);
 }
 
-const BSplineSurface::Impl::OrderType& BSplineSurface::Impl::order() const
-    noexcept
+const BSplineSurface::Impl::OrderType&
+BSplineSurface::Impl::order() const noexcept
 {
     return c_.order();
 }
 
-const BSplineSurface::Impl::KnotsType& BSplineSurface::Impl::knots() const
-    noexcept
+const BSplineSurface::Impl::KnotsType&
+BSplineSurface::Impl::knots() const noexcept
 {
     return c_.knots();
 }
 
-const BSplineSurface::Impl::CPointsType& BSplineSurface::Impl::cpoints() const
-    noexcept
+const BSplineSurface::Impl::CPointsType&
+BSplineSurface::Impl::cpoints() const noexcept
 {
     return c_.cpoints();
 }

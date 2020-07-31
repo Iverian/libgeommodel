@@ -67,8 +67,8 @@ SurfPoint SurfaceProjector::call(const Point& p) const
 }
 
 std::pair<SurfPoint, SurfaceProjector::OptMode>
-SurfaceProjector::init_value(const DistanceSurface& c, SurfPoint r) const
-    noexcept
+SurfaceProjector::init_value(const DistanceSurface& c,
+                             SurfPoint r) const noexcept
 {
     OptMode m = OptMode::BOTH;
     auto b = c.is_min_on_border();
@@ -195,8 +195,8 @@ double SurfaceProjector::init_global(const Point& p) const
 }
 
 std::pair<SurfPoint, double>
-SurfaceProjector::min_init(const Point& p, const DistanceSurface& c) const
-    noexcept
+SurfaceProjector::min_init(const Point& p,
+                           const DistanceSurface& c) const noexcept
 {
     auto s = c.shape();
     auto dmin = std::numeric_limits<double>::max();

@@ -7,6 +7,7 @@
 #include "exports.hpp"
 
 #include <array>
+#include <cmath>
 #include <ostream>
 
 namespace gm {
@@ -107,10 +108,15 @@ namespace cmp {
 namespace std {
 template <>
 struct hash<gm::Point> {
+    static constexpr gm::Point::value_type mult = 100000;
+
     size_t operator()(const gm::Point& key) const
     {
-        return (hasher_(key[0]) << 2) ^ (hasher_(key[1]) << 1)
-            ^ hasher_(key[2]);
+        size_t result = 44119;
+        for (auto& i : key) {
+            result = (result << 1) ^ hasher_(std::ceil(i * mult));
+        }
+        return result;
     }
 
 private:

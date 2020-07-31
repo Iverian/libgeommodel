@@ -224,12 +224,32 @@ double angle(const Vec& a, const Vec& b) noexcept
     return atan2(y, x);
 }
 
+double mixed(const Vec& a, const Vec& b, const Vec& c) noexcept
+{
+    return dot(a, cross(b, c));
+}
+
 Vec unit(const Vec& obj) __GM_NOEXCEPT_RELEASE__
 {
     auto n = norm(obj);
     check_ifd(!cmp::zero(n), "Unit vector of zero");
 
     return obj / n;
+}
+
+Vec bisect(const Vec& lhs, const Vec& rhs) __GM_NOEXCEPT_RELEASE__
+{
+    return unit(unit(lhs) + unit(rhs));
+}
+
+Vec bisect(std::initializer_list<Vec> list) __GM_NOEXCEPT_RELEASE__
+{
+    auto i = std::begin(list);
+    auto result = *i++;
+    for (; i != std::end(list); ++i) {
+        result = unit(result) + unit(*i);
+    }
+    return unit(result);
 }
 
 std::ostream& operator<<(std::ostream& os, const Vec& obj)

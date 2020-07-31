@@ -11,8 +11,7 @@ BSplineCurve::Impl::~Impl() = default;
 BSplineCurve::Impl::Impl(BSplineCurve::Impl&&) noexcept = default;
 
 BSplineCurve::Impl&
-BSplineCurve::Impl::operator=(BSplineCurve::Impl&&) noexcept
-    = default;
+BSplineCurve::Impl::operator=(BSplineCurve::Impl&&) noexcept = default;
 
 BSplineCurve::Impl::Impl(const BSplineCurve::Impl& rhs)
     : c_(rhs.c_)

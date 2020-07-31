@@ -20,7 +20,7 @@ CylindricalSurface::CylindricalSurface(double r, Axis ax) noexcept
 
 Point CylindricalSurface::f(const SurfPoint& p) const noexcept
 {
-    return r_ * ax_.pglobal(::cos(p.u), ::sin(p.u), p.v);
+    return ax_.pglobal(r_ * ::cos(p.u), r_ * ::sin(p.u), r_ * p.v);
 }
 
 Vec CylindricalSurface::dfu(const SurfPoint& p) const noexcept
